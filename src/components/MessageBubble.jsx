@@ -263,12 +263,15 @@ export const MessageBubble = ({
     setTimeout(() => setJustReacted(null), 600);
   };
 
-  if (msg.deleted) return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--text-light)', fontStyle: 'italic', padding: '2px 0', marginBottom: gap }}>
-      <TrashIcon size={13} />
-      This message was deleted
-    </div>
-  );
+  if (msg.deleted) {
+    if (!isOwn) return null; // Hide deleted messages from receiver
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--text-light)', fontStyle: 'italic', padding: '2px 0', marginBottom: gap, justifyContent: 'flex-end' }}>
+        <TrashIcon size={13} />
+        You deleted this message
+      </div>
+    );
+  }
 
   const reactionGroups = {};
   (msg.reactions || []).forEach(r => {
