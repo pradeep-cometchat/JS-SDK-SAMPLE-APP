@@ -188,7 +188,7 @@ const VoiceNotePlayer = ({ file, isOwn }) => {
 export const MessageBubble = ({
   msg, prevMsg, isOwn, allUsers, currentUser,
   onReact, onDelete, onEditRequest, onThreadOpen,
-  onReply, density, onVote, onMarkUnread, onPin, pinnedMsgId, isGroup
+  onReply, density, onVote, onMarkUnread, onPin, pinnedMsgIds, isGroup
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -342,7 +342,7 @@ export const MessageBubble = ({
                 {msg.text && (() => {
                   const plainText = new DOMParser().parseFromString(msg.text, 'text/html').body.textContent || '';
                   const lineCount = (plainText.match(/\n/g) || []).length + 1;
-                  const isLong = plainText.length > 300 || lineCount > 8;
+                  const isLong = plainText.length > 200 || lineCount > 6;
                   return (
                     <>
                       <div className={`msg-text${isLong && !expanded ? ' clamped' : ''}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
@@ -366,19 +366,24 @@ export const MessageBubble = ({
                   </div>
                 </div>
               ) : msg.file.type === 'image' ? (
-                <div style={{ marginTop: msg.text ? 8 : 0 }}>
+                <div style={{ marginTop: msg.text ? 8 : 0, maxWidth: '100%', overflow: 'hidden' }}>
                   {msg.file.previewUrl ? (
-                    <img src={msg.file.previewUrl} alt={msg.file.name} style={{ maxWidth: 260, maxHeight: 180, borderRadius: 8, objectFit: 'cover', display: 'block', cursor: 'pointer' }} onClick={() => window.open(msg.file.previewUrl, '_blank')} />
+                    <img src={msg.file.previewUrl} alt={msg.file.name} style={{ maxWidth: '100%', width: '100%', maxHeight: 220, borderRadius: 8, objectFit: 'cover', display: 'block', cursor: 'pointer' }} onClick={() => window.open(msg.file.previewUrl, '_blank')} />
                   ) : (
-                    <div style={{ width: 260, height: 140, borderRadius: 8, background: isOwn ? 'rgba(255,255,255,0.1)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <FileIcon type="image" size={32} color={isOwn ? 'rgba(255,255,255,0.5)' : 'var(--text-muted)'} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', background: isOwn ? 'rgba(255,255,255,0.1)' : 'var(--bg)', borderRadius: 8, marginTop: msg.text ? 4 : 0 }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={isOwn ? 'rgba(255,255,255,0.6)' : 'var(--text-muted)'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{msg.file.name}</div>
+                        {msg.file.size && <div style={{ fontSize: 11, opacity: 0.6, marginTop: 1 }}>{msg.file.size}</div>}
+                      </div>
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 11, opacity: 0.65 }}>
-                    <FileIcon type="image" size={11} color="currentColor" />
-                    <span>{msg.file.name}</span>
-                    {msg.file.size && <span>· {msg.file.size}</span>}
-                  </div>
+                  {msg.file.previewUrl && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 11, opacity: 0.65 }}>
+                      <span>{msg.file.name}</span>
+                      {msg.file.size && <span>· {msg.file.size}</span>}
+                    </div>
+                  )}
                 </div>
               ) : msg.file.type === 'video' ? (
                 <div style={{ marginTop: msg.text ? 8 : 0 }}>
@@ -431,8 +436,8 @@ export const MessageBubble = ({
             )}
             {/* Inline timestamp + read receipt + pin */}
             <div className="msg-bubble-footer">
-              {pinnedMsgId === msg.id && (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--accent)" stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+              {pinnedMsgIds?.includes(msg.id) && (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill={isOwn ? 'rgba(255,255,255,0.8)' : 'var(--accent)'} stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
               )}
               <span className="msg-bubble-time">{formatTime(msg.ts)}</span>
               {msg.edited && <span className="msg-bubble-edited">(edited)</span>}
@@ -471,7 +476,7 @@ export const MessageBubble = ({
                 setShowMoreMenu(false);
               }}><CopyIcon /> Copy text</button>
               <button className="more-menu-item" onClick={() => { onPin?.(msg); setShowMoreMenu(false); }}>
-                <PinIcon /> {pinnedMsgId === msg.id ? 'Unpin message' : 'Pin message'}
+                <PinIcon /> {pinnedMsgIds?.includes(msg.id) ? 'Unpin message' : 'Pin message'}
               </button>
               <button className="more-menu-item" onClick={() => { onMarkUnread?.(msg); setShowMoreMenu(false); }}>
                 <BellIcon /> Mark unread
@@ -540,7 +545,7 @@ export const MessageBubble = ({
                   <CopyIcon size={16} /> Copy text
                 </button>
                 <button className="bottomsheet-action" onClick={() => { onPin?.(msg); setShowMobileActions(false); }}>
-                  <PinIcon size={16} /> {pinnedMsgId === msg.id ? 'Unpin message' : 'Pin message'}
+                  <PinIcon size={16} /> {pinnedMsgIds?.includes(msg.id) ? 'Unpin message' : 'Pin message'}
                 </button>
                 <button className="bottomsheet-action" onClick={() => { onMarkUnread?.(msg); setShowMobileActions(false); }}>
                   <BellIcon size={16} /> Mark unread

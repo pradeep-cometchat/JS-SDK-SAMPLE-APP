@@ -33,12 +33,15 @@ export const Avatar = ({ user, size = 36 }) => {
   );
 };
 
-export const StatusDot = ({ status, size = 10 }) => (
-  <div style={{
-    position: 'absolute', bottom: -1, right: -1,
-    width: size, height: size, borderRadius: '50%',
-    background: STATUS_COLORS[status] || '#9ca3af',
-    border: '2px solid var(--surface)',
-    boxSizing: 'border-box',
-  }} />
-);
+export const StatusDot = ({ status, size = 10 }) => {
+  if (status !== 'online') return null;
+  return (
+    <div style={{
+      position: 'absolute', bottom: -1, right: -1,
+      width: size, height: size, borderRadius: '50%',
+      background: '#22c55e',
+      border: '2px solid var(--surface)',
+      boxSizing: 'border-box',
+    }} />
+  );
+};

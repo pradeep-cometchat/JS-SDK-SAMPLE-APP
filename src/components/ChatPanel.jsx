@@ -373,7 +373,9 @@ const ChatPanel = ({
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkText, setLinkText] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
-  const [pinnedMsgId, setPinnedMsgId] = useState(null);
+  const [pinnedMsgIds, setPinnedMsgIds] = useState([]);
+  const [pinnedViewIdx, setPinnedViewIdx] = useState(0);
+  const [highlightMsgId, setHighlightMsgId] = useState(null);
   const [activeGroupCall, setActiveGroupCall] = useState(null);
   const savedSelectionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -698,7 +700,8 @@ const ChatPanel = ({
     setSearchIdx(0);
     if (inputRef.current) { inputRef.current.innerHTML = ''; inputRef.current.focus(); }
     setActiveFormats({});
-    setPinnedMsgId(null);
+    setPinnedMsgIds([]);
+    setPinnedViewIdx(0);
     setActiveGroupCall(null);
     // Clean up any active voice recording
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
@@ -858,10 +861,10 @@ const ChatPanel = ({
           {conv.type === 'dm' && (
             <>
               <button className="header-btn" onClick={() => onCallStart('audio', otherUser)} title="Voice call">
-                <PhoneIcon size={16} />
+                <PhoneIcon size={20} />
               </button>
               <button className="header-btn" onClick={() => onCallStart('video', otherUser)} title="Video call">
-                <VideoIcon size={16} />
+                <VideoIcon size={20} />
               </button>
             </>
           )}
@@ -873,7 +876,7 @@ const ChatPanel = ({
                   setActiveGroupCall({ type: 'audio', startedBy: currentUser, ts: Date.now(), members: 1 });
                 }});
               }} title="Voice call">
-                <PhoneIcon size={16} />
+                <PhoneIcon size={20} />
               </button>
               <button className="header-btn" onClick={() => {
                 onSend(conv.id, '', { name: 'Video call', type: 'group-call', callType: 'video', callTs: Date.now() });
@@ -881,7 +884,7 @@ const ChatPanel = ({
                   setActiveGroupCall({ type: 'video', startedBy: currentUser, ts: Date.now(), members: 1 });
                 }});
               }} title="Video call">
-                <VideoIcon size={16} />
+                <VideoIcon size={20} />
               </button>
             </>
           )}
@@ -890,7 +893,7 @@ const ChatPanel = ({
             onClick={() => setSearchOpen(v => !v)}
             title="Search"
           >
-            <SearchIcon size={15} />
+            <SearchIcon size={20} />
           </button>
         </div>
       </div>
@@ -941,23 +944,34 @@ const ChatPanel = ({
         </div>
       )}
 
-      {/* Pinned message banner */}
-      {pinnedMsgId && (() => {
-        const pinnedMsg = messages.find(m => m.id === pinnedMsgId);
+      {/* Pinned messages banner */}
+      {pinnedMsgIds.length > 0 && (() => {
+        const safeIdx = Math.min(pinnedViewIdx, pinnedMsgIds.length - 1);
+        const currentPinId = pinnedMsgIds[safeIdx];
+        const pinnedMsg = messages.find(m => m.id === currentPinId);
         if (!pinnedMsg) return null;
         const pinnedSender = getUserById(pinnedMsg.senderId);
         return (
           <div className="pinned-banner" onClick={() => {
-            const el = listRef.current?.querySelector(`[data-msg-id="${pinnedMsgId}"]`);
+            // Navigate to current pin
+            const el = listRef.current?.querySelector(`[data-msg-id="${currentPinId}"]`);
             if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            setHighlightMsgId(currentPinId);
+            setTimeout(() => setHighlightMsgId(null), 3000);
+            // Cycle to next pin for next click
+            if (pinnedMsgIds.length > 1) {
+              setPinnedViewIdx(i => i < pinnedMsgIds.length - 1 ? i + 1 : 0);
+            }
           }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>Pinned by {pinnedSender?.name}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>
+                {pinnedMsgIds.length > 1 ? `Pin ${safeIdx + 1} of ${pinnedMsgIds.length}` : 'Pinned message'} · {pinnedSender?.name}
+              </div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                 dangerouslySetInnerHTML={{ __html: pinnedMsg.text?.slice(0, 80) || 'Attachment' }} />
             </div>
-            <button onClick={(e) => { e.stopPropagation(); setPinnedMsgId(null); }} style={{ padding: 4, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: 4, flexShrink: 0 }}>
+            <button onClick={(e) => { e.stopPropagation(); setPinnedMsgIds(prev => prev.filter(id => id !== currentPinId)); setPinnedViewIdx(0); }} title="Unpin this message" style={{ padding: 4, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: 4, flexShrink: 0 }}>
               <CloseIcon size={14} />
             </button>
           </div>
@@ -968,7 +982,7 @@ const ChatPanel = ({
       {activeGroupCall && conv.type === 'group' && (
         <div className="group-call-banner">
           <div className="group-call-banner-icon">
-            {activeGroupCall.type === 'video' ? <VideoIcon size={16} /> : <PhoneIcon size={16} />}
+            {activeGroupCall.type === 'video' ? <VideoIcon size={18} /> : <PhoneIcon size={18} />}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
@@ -999,9 +1013,12 @@ const ChatPanel = ({
             </div>
           ) : (
             <div
-              key={item.msg.id}
+              key={highlightMsgId === item.msg.id ? `${item.msg.id}-hl-${highlightMsgId}` : item.msg.id}
               data-msg-id={item.msg.id}
-              className={searchQuery && currentMatchId === item.msg.id ? 'search-highlight-row' : ''}
+              className={
+                (searchQuery && currentMatchId === item.msg.id) || highlightMsgId === item.msg.id
+                  ? 'search-highlight-row' : ''
+              }
             >
               <MessageBubble
                 msg={item.msg}
@@ -1025,9 +1042,9 @@ const ChatPanel = ({
                   }
                 }}
                 onPin={(msg) => {
-                  setPinnedMsgId(prev => prev === msg.id ? null : msg.id);
+                  setPinnedMsgIds(prev => prev.includes(msg.id) ? prev.filter(id => id !== msg.id) : [...prev, msg.id]);
                 }}
-                pinnedMsgId={pinnedMsgId}
+                pinnedMsgIds={pinnedMsgIds}
               />
             </div>
           )

@@ -604,7 +604,7 @@ export const GroupModal = ({ allUsers, currentUser, onClose, onCreate }) => {
                 <div className="selected-chips">
                   {selectedIds.map(id => { const u = getUserById(id); return u ? (
                     <span key={id} className="selected-chip" onClick={() => toggleUser(id)}>
-                      <span style={{ color: u.color }}>{u.initials}</span> {u.name.split(' ')[0]} ×
+                      <Avatar user={u} size={18} /> {u.name.split(' ')[0]} ×
                     </span>
                   ) : null; })}
                 </div>

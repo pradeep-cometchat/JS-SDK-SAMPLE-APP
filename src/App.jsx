@@ -65,7 +65,7 @@ const LoginScreen = ({ onLogin }) => {
   const handleContinue = () => {
     const targetId = uid.trim() || selected;
     const user = ALL_USERS.find(u => u.id === targetId || u.username === targetId);
-    if (!user) { setError('User not found. Try a username like alex.chen'); return; }
+    if (!user) { setError('User not found. Try a username like user-comet-chat-1'); return; }
     onLogin(user);
   };
 

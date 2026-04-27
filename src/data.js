@@ -1,7 +1,7 @@
 // CometChat Sample App — Mock Data
 
 export const CURRENT_USER = {
-  id: 'u1', name: 'Alex Chen', username: 'alex.chen',
+  id: 'u1', name: 'Alex Chen', username: 'user-comet-chat-1',
   initials: 'AC', color: '#6851D6', status: 'online', role: 'Frontend Developer'
 };
 
