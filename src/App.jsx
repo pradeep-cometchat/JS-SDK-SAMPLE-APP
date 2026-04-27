@@ -476,18 +476,15 @@ const App = () => {
   const handlePinConv = (convId) =>
     setConversations(prev => prev.map(c => c.id === convId ? { ...c, pinned: !c.pinned } : c));
 
-  const handleMuteConv = (convId) =>
-    setConversations(prev => prev.map(c => c.id === convId ? { ...c, muted: !c.muted } : c));
-
   const handleLogout = () => setLoggedInUser(null);
 
   const handleCreateGroup = (data) => {
     const nc = {
       id: 'grp_' + Date.now(), type: 'group',
-      name: '#' + (data.name.replace(/^#/, '').toLowerCase().replace(/\s+/g, '-')),
+      name: data.name.replace(/^#/, '').trim(),
       initials: data.name.slice(0, 2).toUpperCase(), color: tweaks.accentColor,
       icon: '💬', memberIds: data.memberIds, description: data.description,
-      groupType: data.groupType, unread: 0, muted: false, pinned: false, ownerId: loggedInUser.id,
+      groupType: data.groupType, unread: 0, pinned: false, ownerId: loggedInUser.id,
     };
     setConversations(prev => [nc, ...prev]);
     setMessages(prev => ({ ...prev, [nc.id]: [] }));
@@ -530,7 +527,7 @@ const App = () => {
         <Sidebar
           conversations={conversations} activeId={activeId} onSelect={handleSelect}
           currentUser={loggedInUser} onNewGroup={() => setShowGroupModal(true)} onNewDM={() => setShowNewDM(true)}
-          onDeleteConv={handleDeleteConv} onMuteConv={handleMuteConv} onPinConv={handlePinConv}
+          onDeleteConv={handleDeleteConv} onPinConv={handlePinConv}
           onLogout={handleLogout} callHistory={callHistory} onCallStart={handleCallStart}
           onCallSelect={(call) => {
             const dmId = 'dm_' + call.withUserId;

@@ -428,7 +428,7 @@ export const ProfilePanel = ({ user, onClose, onCall, onBlock, blockedUsers }) =
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
   const isBlocked = blockedUsers.has(user.id);
   const isMobile = useIsMobile();
-  const statusLabel = { online: 'Active now', away: 'Away', dnd: 'Do not disturb', offline: 'Offline' };
+  const statusLabel = { online: 'Active now', offline: 'Offline' };
 
   return (
     <div className="profile-panel">
@@ -554,7 +554,7 @@ export const GroupModal = ({ allUsers, currentUser, onClose, onCreate }) => {
             <div className="modal-step-content">
               <div className="form-field">
                 <label className="form-label">Group Name *</label>
-                <input className="form-input" placeholder="e.g. #team-frontend" value={name} onChange={e => setName(e.target.value)} autoFocus />
+                <input className="form-input" placeholder="e.g. team-frontend" value={name} onChange={e => setName(e.target.value)} autoFocus />
               </div>
               <div className="form-field">
                 <label className="form-label">Description</label>
@@ -719,7 +719,7 @@ export const GroupMembersPanel = ({ conv, currentUser, onClose, onViewProfile, o
       </div>
       <div className="profile-body">
         <div className="profile-hero" style={{ paddingBottom: 16 }}>
-          <div className="group-avatar-lg" style={{ background: conv.color + '22', color: conv.color, width: 56, height: 56, fontSize: 28 }}>{conv.icon}</div>
+          <div className="group-avatar-lg" style={{ background: conv.color + '22', color: conv.color, width: 56, height: 56, fontSize: 28 }}>{conv.initials}</div>
           <div className="profile-name">{conv.name}</div>
           <div className="profile-username">{conv.groupType} group</div>
         </div>

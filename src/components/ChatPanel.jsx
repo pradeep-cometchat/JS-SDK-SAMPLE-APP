@@ -312,7 +312,6 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
 
   return (
     <div ref={menuRef} className="attach-menu">
-      <div className="attach-menu-title">Add to message</div>
       <div className="attach-grid">
         {items.map(item => (
           <button key={item.id} className="attach-item" onClick={() => handleClick(item)}>
@@ -793,26 +792,21 @@ const ChatPanel = ({
               <div>
                 <div style={{display:'flex',alignItems:'center',gap:6}}>
                   <div className="header-name">{otherUser.name}</div>
-                  {conv.muted && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:0.6}}><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8"/></svg>}
                 </div>
                 <div className="header-sub">
                   {otherUser.role} ·{' '}
-                  {otherUser.status === 'online' ? 'Active now'
-                    : otherUser.status === 'away' ? 'Away'
-                    : otherUser.status === 'dnd' ? 'Do not disturb'
-                    : 'Offline'}
+                  {otherUser.status === 'online' ? 'Active now' : 'Offline'}
                 </div>
               </div>
             </button>
           ) : (
             <div className="header-identity" style={{ cursor: 'default' }}>
               <div className="group-avatar-sm" style={{ background: conv.color + '22', color: conv.color }}>
-                {conv.icon || conv.initials}
+                {conv.initials}
               </div>
               <div>
                 <div style={{display:'flex',alignItems:'center',gap:6}}>
                   <div className="header-name">{convName}</div>
-                  {conv.muted && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:0.6}}><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8"/></svg>}
                 </div>
                 <div className="header-sub">{conv.memberIds?.length} members · {conv.groupType}</div>
               </div>
@@ -898,28 +892,6 @@ const ChatPanel = ({
 
       {/* Messages */}
       <div className="msg-list" ref={listRef}>
-        <div className="conv-start-card">
-          {conv.type === 'dm' && otherUser ? (
-            <>
-              <Avatar user={otherUser} size={56} />
-              <div className="conv-start-name">{otherUser.name}</div>
-              <div className="conv-start-sub">{otherUser.role}</div>
-              <p className="conv-start-desc">
-                Beginning of your direct message history with <strong>{otherUser.name}</strong>.
-              </p>
-            </>
-          ) : (
-            <>
-              <div className="group-avatar-lg" style={{ background: conv.color + '22', color: conv.color }}>
-                {conv.icon}
-              </div>
-              <div className="conv-start-name">{convName}</div>
-              <div className="conv-start-sub">{conv.memberIds?.length} members</div>
-              <p className="conv-start-desc">{conv.description}</p>
-            </>
-          )}
-        </div>
-
         {groupedMessages.map((item, idx) =>
           item.type === 'date' ? (
             <div key={`d-${idx}`} className="date-divider">

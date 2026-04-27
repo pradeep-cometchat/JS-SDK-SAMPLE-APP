@@ -7,37 +7,37 @@ export const CURRENT_USER = {
 
 export const USERS = [
   { id: 'u2', name: 'Jordan Lee',   username: 'jordan.lee',  initials: 'JL', color: '#0ea5e9', status: 'online',  role: 'Product Designer',  avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' },
-  { id: 'u3', name: 'Sam Rivera',   username: 'sam.rivera',  initials: 'SR', color: '#10b981', status: 'away',    role: 'Product Manager',   avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' },
+  { id: 'u3', name: 'Sam Rivera',   username: 'sam.rivera',  initials: 'SR', color: '#10b981', status: 'offline',    role: 'Product Manager',   avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' },
   { id: 'u4', name: 'Morgan Kim',   username: 'morgan.kim',  initials: 'MK', color: '#f59e0b', status: 'offline', role: 'Engineering Lead',  avatarUrl: null },
   { id: 'u5', name: 'Taylor Park',  username: 'taylor.park', initials: 'TP', color: '#ec4899', status: 'online',  role: 'Full-Stack Dev',    avatarUrl: 'https://randomuser.me/api/portraits/women/65.jpg' },
-  { id: 'u6', name: 'Casey Wong',   username: 'casey.wong',  initials: 'CW', color: '#8b5cf6', status: 'dnd',     role: 'Backend Engineer',  avatarUrl: null },
+  { id: 'u6', name: 'Casey Wong',   username: 'casey.wong',  initials: 'CW', color: '#8b5cf6', status: 'offline',     role: 'Backend Engineer',  avatarUrl: null },
   { id: 'u7', name: 'Riley Okafor', username: 'riley.okafor',initials: 'RO', color: '#f97316', status: 'online',  role: 'DevOps Engineer',   avatarUrl: 'https://randomuser.me/api/portraits/men/75.jpg' },
 ];
 
 export const ALL_USERS = [CURRENT_USER, ...USERS];
 
 export const CONVERSATIONS = [
-  { id: 'dm_u2', type: 'dm',    userId: 'u2', unread: 2,  muted: false, pinned: true },
-  { id: 'dm_u3', type: 'dm',    userId: 'u3', unread: 0,  muted: false, pinned: false },
-  { id: 'dm_u5', type: 'dm',    userId: 'u5', unread: 0,  muted: true,  pinned: false },
-  { id: 'dm_u6', type: 'dm',    userId: 'u6', unread: 1,  muted: false, pinned: false },
+  { id: 'dm_u2', type: 'dm',    userId: 'u2', unread: 2,  pinned: true },
+  { id: 'dm_u3', type: 'dm',    userId: 'u3', unread: 0,  pinned: false },
+  { id: 'dm_u5', type: 'dm',    userId: 'u5', unread: 0,  pinned: false },
+  { id: 'dm_u6', type: 'dm',    userId: 'u6', unread: 1,  pinned: false },
   {
-    id: 'grp_eng', type: 'group', name: '#engineering', initials: 'EN',
+    id: 'grp_eng', type: 'group', name: 'engineering', initials: 'EN',
     color: '#6851D6', icon: '⚙️', memberIds: ['u1','u2','u4','u5','u6','u7'],
     description: 'Engineering team discussions, code reviews, architecture decisions.',
-    groupType: 'private', unread: 5, muted: false, pinned: true, ownerId: 'u4',
+    groupType: 'private', unread: 5, pinned: true, ownerId: 'u4',
   },
   {
-    id: 'grp_design', type: 'group', name: '#design', initials: 'DS',
+    id: 'grp_design', type: 'group', name: 'design', initials: 'DS',
     color: '#ec4899', icon: '🎨', memberIds: ['u1','u2','u3','u5'],
     description: 'Design reviews, Figma links, and UI/UX discussions.',
-    groupType: 'public', unread: 0, muted: false, pinned: false, ownerId: 'u2',
+    groupType: 'public', unread: 0, pinned: false, ownerId: 'u2',
   },
   {
-    id: 'grp_random', type: 'group', name: '#random', initials: 'RD',
+    id: 'grp_random', type: 'group', name: 'random', initials: 'RD',
     color: '#10b981', icon: '🎲', memberIds: ['u1','u2','u3','u4','u5','u6','u7'],
     description: 'Off-topic conversations and fun stuff.',
-    groupType: 'public', unread: 0, muted: false, pinned: false, ownerId: 'u1',
+    groupType: 'public', unread: 0, pinned: false, ownerId: 'u1',
   },
 ];
 
@@ -114,7 +114,7 @@ export const THREAD_MESSAGES = {
 
 export const EMOJIS = ['👍','❤️','😂','😮','😢','🙏','🚀','👀','🎉','💯','✅','🔥','💙','🤯','😅','🙌','✨','👋'];
 
-export const STATUS_COLORS = { online: '#22c55e', away: '#f59e0b', dnd: '#ef4444', offline: '#9ca3af' };
+export const STATUS_COLORS = { online: '#22c55e', offline: '#9ca3af' };
 
 export const formatTime = (ts) => {
   const d = new Date(ts);

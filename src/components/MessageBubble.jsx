@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { getUserById, formatTime, formatFullTime, EMOJIS, STATUS_COLORS } from '../data';
 import { Avatar } from './Avatar';
 import { FileIcon } from './FileIcon';
-import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, ForwardIcon, PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon } from './Icons';
+import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, DownloadIcon, CloseIcon, InfoIcon } from './Icons';
 
 // Detect mobile for bottom sheet rendering
 const useIsMobile = () => {
@@ -344,22 +344,34 @@ export const MessageBubble = ({
             ) : (
               <>
                 {msg.text && <div className="msg-text" dangerouslySetInnerHTML={{ __html: msg.text }} />}
-                {isOwn && !showName && <span className="own-ts">{formatTime(msg.ts)}</span>}
+                {isOwn && !showName && !msg.file && <span className="own-ts">{formatTime(msg.ts)}</span>}
               </>
             )}
             {msg.file && (
-              msg.file.type === 'image' && msg.file.previewUrl ? (
+              msg.file.type === 'image' ? (
                 <div style={{ marginTop: msg.text ? 8 : 0 }}>
-                  <img src={msg.file.previewUrl} alt={msg.file.name} style={{ maxWidth: 260, maxHeight: 180, borderRadius: 8, objectFit: 'cover', display: 'block', cursor: 'pointer' }} />
+                  {msg.file.previewUrl ? (
+                    <img src={msg.file.previewUrl} alt={msg.file.name} style={{ maxWidth: 260, maxHeight: 180, borderRadius: 8, objectFit: 'cover', display: 'block', cursor: 'pointer' }} onClick={() => window.open(msg.file.previewUrl, '_blank')} />
+                  ) : (
+                    <div style={{ width: 260, height: 140, borderRadius: 8, background: isOwn ? 'rgba(255,255,255,0.1)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FileIcon type="image" size={32} color={isOwn ? 'rgba(255,255,255,0.5)' : 'var(--text-muted)'} />
+                    </div>
+                  )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 11, opacity: 0.65 }}>
                     <FileIcon type="image" size={11} color="currentColor" />
                     <span>{msg.file.name}</span>
                     {msg.file.size && <span>· {msg.file.size}</span>}
                   </div>
                 </div>
-              ) : msg.file.type === 'video' && msg.file.previewUrl ? (
+              ) : msg.file.type === 'video' ? (
                 <div style={{ marginTop: msg.text ? 8 : 0 }}>
-                  <video src={msg.file.previewUrl} controls preload="metadata" style={{ maxWidth: 260, maxHeight: 180, borderRadius: 8, display: 'block', background: '#000' }} />
+                  {msg.file.previewUrl ? (
+                    <video src={msg.file.previewUrl} controls preload="metadata" style={{ maxWidth: 260, maxHeight: 180, borderRadius: 8, display: 'block', background: '#000' }} />
+                  ) : (
+                    <div style={{ width: 260, height: 140, borderRadius: 8, background: isOwn ? 'rgba(255,255,255,0.1)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FileIcon type="video" size={32} color={isOwn ? 'rgba(255,255,255,0.5)' : 'var(--text-muted)'} />
+                    </div>
+                  )}
                 </div>
               ) : msg.file.type === 'audio' && msg.file.previewUrl ? (
                 <VoiceNotePlayer file={msg.file} isOwn={isOwn} />
@@ -377,6 +389,10 @@ export const MessageBubble = ({
               )
             )}
           </div>
+          {/* Timestamp outside bubble for file messages */}
+          {msg.file && isOwn && !showName && (
+            <span className="own-ts" style={{ marginTop: 2 }}>{formatTime(msg.ts)}</span>
+          )}
           {/* Emoji picker */}
           {showEmojiPicker && !isMobile && (() => {
             const rect = addBtnRef.current?.getBoundingClientRect();
@@ -402,17 +418,8 @@ export const MessageBubble = ({
                 navigator.clipboard?.writeText(plain).then(() => { setCopiedToast(true); setTimeout(() => setCopiedToast(false), 1500); });
                 setShowMoreMenu(false);
               }}><CopyIcon /> Copy text</button>
-              <button className="more-menu-item" onClick={() => {
-                const plain = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent : '';
-                if (navigator.share) { navigator.share({ text: plain }).catch(() => {}); }
-                else { navigator.clipboard?.writeText(plain); }
-                setShowMoreMenu(false);
-              }}><ForwardIcon /> Forward message</button>
               <button className="more-menu-item" onClick={() => { setPinned(p => !p); setShowMoreMenu(false); }}>
                 <PinIcon /> {pinned ? 'Unpin message' : 'Pin message'}
-              </button>
-              <button className="more-menu-item" onClick={() => { setShowMoreMenu(false); }}>
-                <BellIcon /> Mark unread
               </button>
               {isOwn && (
                 <button className="more-menu-item" onClick={() => { setShowInfoModal(true); setShowMoreMenu(false); }}>
@@ -431,8 +438,8 @@ export const MessageBubble = ({
           )}
           {/* Pin indicator */}
           {pinned && !hovered && (
-            <div style={{ position: 'absolute', top: -6, right: isOwn ? 'auto' : -6, left: isOwn ? -6 : 'auto', zIndex: 5 }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+            <div style={{ position: 'absolute', bottom: -6, right: isOwn ? 'auto' : -6, left: isOwn ? -6 : 'auto', zIndex: 5 }}>
+              <PinIcon size={12} />
             </div>
           )}
           {/* Delete confirm */}
@@ -478,19 +485,8 @@ export const MessageBubble = ({
                 }}>
                   <CopyIcon size={16} /> Copy text
                 </button>
-                <button className="bottomsheet-action" onClick={() => {
-                  const plain = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent : '';
-                  if (navigator.share) { navigator.share({ text: plain }).catch(() => {}); }
-                  else { navigator.clipboard?.writeText(plain); }
-                  setShowMobileActions(false);
-                }}>
-                  <ForwardIcon size={16} /> Forward message
-                </button>
                 <button className="bottomsheet-action" onClick={() => { setPinned(p => !p); setShowMobileActions(false); }}>
                   <PinIcon size={16} /> {pinned ? 'Unpin message' : 'Pin message'}
-                </button>
-                <button className="bottomsheet-action" onClick={() => setShowMobileActions(false)}>
-                  <BellIcon size={16} /> Mark unread
                 </button>
                 {isOwn && (
                   <button className="bottomsheet-action" onClick={() => { onEditRequest(msg); setShowMobileActions(false); }}>

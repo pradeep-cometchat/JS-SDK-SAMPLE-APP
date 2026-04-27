@@ -17,8 +17,6 @@ import {
   SettingsIcon,
   LogoutIcon,
   StarIcon,
-  MuteIcon,
-  UnmuteIcon,
   TrashIcon,
   VerticalDotsIcon,
   NewChatIcon,
@@ -42,8 +40,6 @@ const useIsMobile = () => {
 /* ─── STATUS LABELS ───────────────────────────────────────── */
 const STATUS_LABELS = {
   online: 'Online',
-  away: 'Away',
-  dnd: 'Do not disturb',
   offline: 'Offline',
 };
 
@@ -65,7 +61,7 @@ const TABS = [
 /* ═══════════════════════════════════════════════════════════
    ConvItem — Individual conversation row
    ═══════════════════════════════════════════════════════════ */
-const ConvItem = ({ conv, active, onSelect, onDelete, onMute, onPin }) => {
+const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
   const isMobile = useIsMobile();
@@ -101,7 +97,7 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onMute, onPin }) => {
                 color,
               }}
             >
-              {conv.icon || initials}
+              {initials}
             </div>
           )}
           {conv.type === 'dm' && user && <StatusDot status={user.status} />}
@@ -112,7 +108,6 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onMute, onPin }) => {
           <div className="conv-row">
             <span className="conv-name">{name}</span>
             <div className="conv-meta">
-              {conv.muted && <span style={{color:'rgba(255,255,255,0.55)',display:'flex'}}><MuteIcon size={12} /></span>}
               {conv.pinned && (
                 <span style={{color:'rgba(255,255,255,0.4)',display:'flex'}}><StarIcon size={10} /></span>
               )}
@@ -157,16 +152,6 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onMute, onPin }) => {
               <StarIcon />
               {conv.pinned ? 'Unpin' : 'Pin'}
             </button>
-            <button
-              className="conv-ctx-item"
-              onClick={() => {
-                onMute?.(conv.id);
-                setShowMenu(false);
-              }}
-            >
-              {conv.muted ? <UnmuteIcon /> : <MuteIcon />}
-              {conv.muted ? 'Unmute' : 'Mute'}
-            </button>
             <div style={{ height: 1, background: 'var(--border)', margin: '3px 8px' }} />
             <button
               className="conv-ctx-item danger"
@@ -190,10 +175,6 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onMute, onPin }) => {
                 <button className="bottomsheet-action" onClick={() => { onPin?.(conv.id); setShowMenu(false); }}>
                   <StarIcon size={16} /> {conv.pinned ? 'Unpin' : 'Pin'}
                 </button>
-                <button className="bottomsheet-action" onClick={() => { onMute?.(conv.id); setShowMenu(false); }}>
-                  {conv.muted ? <UnmuteIcon size={16} /> : <MuteIcon size={16} />}
-                  {conv.muted ? 'Unmute' : 'Mute'}
-                </button>
                 <div className="bottomsheet-divider" />
                 <button className="bottomsheet-action danger" onClick={() => { onDelete?.(conv.id); setShowMenu(false); }}>
                   <TrashIcon size={16} /> {conv.type === 'dm' ? 'Delete conversation' : 'Delete group'}
@@ -212,7 +193,7 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onMute, onPin }) => {
    CallHistoryList — Shown when "Calls" tab is active
    ═══════════════════════════════════════════════════════════ */
 const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }) => {
-  const [selectedCall, setSelectedCall] = useState(null);
+  const [selectedCallId, setSelectedCallId] = useState(null);
 
   const filtered = callHistory.filter((c) => {
     const u = getUserById(c.withUserId);
@@ -220,7 +201,7 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
   });
 
   const handleSelect = (call) => {
-    setSelectedCall((prev) => (prev?.id === call.id ? null : call));
+    setSelectedCallId((prev) => (prev === call.id ? null : call.id));
     onCallSelect?.(call);
   };
 
@@ -233,7 +214,7 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
         const user = getUserById(call.withUserId);
         if (!user) return null;
         const meta = CALL_STATUS_META[call.status] || CALL_STATUS_META.completed;
-        const isSelected = selectedCall?.id === call.id;
+        const isSelected = selectedCallId === call.id;
 
         return (
           <div key={call.id}>
@@ -302,9 +283,9 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
 
                   {/* Call type icon */}
                   {call.type === 'video' ? (
-                    <VideoIcon size={11} />
+                    <span style={{ color: meta.color, display: 'flex' }}><VideoIcon size={11} /></span>
                   ) : (
-                    <PhoneIcon size={11} />
+                    <span style={{ color: meta.color, display: 'flex' }}><PhoneIcon size={11} /></span>
                   )}
 
                   <span
@@ -401,7 +382,6 @@ const Sidebar = ({
   onNewGroup,
   onNewDM,
   onDeleteConv,
-  onMuteConv,
   onPinConv,
   callHistory,
   onCallSelect,
@@ -529,7 +509,6 @@ const Sidebar = ({
                 active={activeId === c.id}
                 onSelect={onSelect}
                 onDelete={onDeleteConv}
-                onMute={onMuteConv}
                 onPin={onPinConv}
               />
             ))}
@@ -545,7 +524,6 @@ const Sidebar = ({
                 active={activeId === c.id}
                 onSelect={onSelect}
                 onDelete={onDeleteConv}
-                onMute={onMuteConv}
                 onPin={onPinConv}
               />
             ))}
