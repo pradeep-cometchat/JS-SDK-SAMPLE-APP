@@ -73,7 +73,7 @@ const LoginScreen = ({ onLogin }) => {
     return (
       <div className="login-screen">
         <div className="login-logo">
-          <img src="/cometchat-wordmark.png" alt="CometChat" height="40" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /><span className="login-brand-fallback" style={{display:'none',alignItems:'center',gap:8}}><img src="/favicon.png" alt="" width="28" height="28" style={{borderRadius:5}} /><span style={{fontSize:22,fontWeight:400,color:'var(--text)'}}>comet<strong>chat</strong></span></span>
+          <img src={`${import.meta.env.BASE_URL}cometchat-wordmark.png`} alt="CometChat" height="40" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /><span className="login-brand-fallback" style={{display:'none',alignItems:'center',gap:8}}><img src={`${import.meta.env.BASE_URL}favicon.png`} alt="" width="28" height="28" style={{borderRadius:5}} /><span style={{fontSize:22,fontWeight:400,color:'var(--text)'}}>comet<strong>chat</strong></span></span>
         </div>
         <div className="login-card">
           <h2 className="login-title">App Credentials</h2>
@@ -117,7 +117,7 @@ const LoginScreen = ({ onLogin }) => {
   return (
     <div className="login-screen">
       <div className="login-logo">
-        <img src="/cometchat-wordmark.png" alt="CometChat" height="40" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /><span className="login-brand-fallback" style={{display:'none',alignItems:'center',gap:8}}><img src="/favicon.png" alt="" width="28" height="28" style={{borderRadius:5}} /><span style={{fontSize:22,fontWeight:400,color:'var(--text)'}}>comet<strong>chat</strong></span></span>
+        <img src={`${import.meta.env.BASE_URL}cometchat-wordmark.png`} alt="CometChat" height="40" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /><span className="login-brand-fallback" style={{display:'none',alignItems:'center',gap:8}}><img src={`${import.meta.env.BASE_URL}favicon.png`} alt="" width="28" height="28" style={{borderRadius:5}} /><span style={{fontSize:22,fontWeight:400,color:'var(--text)'}}>comet<strong>chat</strong></span></span>
       </div>
       <div className="login-card">
         <h2 className="login-title">Sign in to CometChat</h2>
