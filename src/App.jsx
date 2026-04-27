@@ -425,16 +425,26 @@ const App = () => {
     });
   };
 
-  const handleCallStart = (type, user) => {
+  const handleCallStart = (type, user, groupInfo) => {
     callStartTimeRef.current = Date.now();
-    setActiveCall({ type, user, incoming: false });
+    setActiveCall({ type, user, incoming: false, ...groupInfo });
   };
   const handleCallEnd = () => {
     setActiveCall(currentCall => {
       if (currentCall) {
         const startTime = callStartTimeRef.current || Date.now();
         const durationSec = Math.round((Date.now() - startTime) / 1000);
-        const entry = {
+        const entry = currentCall.groupId ? {
+          id: 'c_' + Date.now(),
+          type: currentCall.type,
+          groupId: currentCall.groupId,
+          groupName: currentCall.groupName,
+          direction: 'outgoing',
+          status: durationSec > 3 ? 'completed' : 'missed',
+          duration: durationSec > 3 ? durationSec : 0,
+          members: 2,
+          ts: startTime,
+        } : {
           id: 'c_' + Date.now(),
           type: currentCall.type,
           withUserId: currentCall.user.id,

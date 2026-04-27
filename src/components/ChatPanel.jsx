@@ -976,7 +976,7 @@ const ChatPanel = ({
           </div>
           <button className="group-call-join-btn" onClick={() => {
             setActiveGroupCall(prev => prev ? { ...prev, members: (prev.members || 1) + 1 } : prev);
-            onCallStart(activeGroupCall.type, activeGroupCall.startedBy);
+            onCallStart(activeGroupCall.type, activeGroupCall.startedBy, { groupId: conv.id, groupName: convName });
           }}>Join</button>
           <button onClick={() => setActiveGroupCall(null)} style={{ padding: 4, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: 4, flexShrink: 0 }}>
             <CloseIcon size={14} />
