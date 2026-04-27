@@ -188,7 +188,6 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
 
   const handleSelect = (call) => {
     setSelectedCallId((prev) => (prev === call.id ? null : call.id));
-    onCallSelect?.(call);
   };
 
   return (
