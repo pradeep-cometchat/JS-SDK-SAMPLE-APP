@@ -176,7 +176,7 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
    CallHistoryList — Shown when "Calls" tab is active
    ═══════════════════════════════════════════════════════════ */
 const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }) => {
-  const [selectedCallId, setSelectedCallId] = useState(null);
+  const [expandedIdx, setExpandedIdx] = useState(-1);
 
   const filtered = callHistory.filter((c) => {
     if (c.groupId) {
@@ -186,8 +186,8 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
     return !search || (u && u.name.toLowerCase().includes(search.toLowerCase()));
   });
 
-  const handleSelect = (call) => {
-    setSelectedCallId((prev) => (prev === call.id ? null : call.id));
+  const handleToggle = (idx) => {
+    setExpandedIdx(prev => prev === idx ? -1 : idx);
   };
 
   return (
@@ -195,20 +195,20 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
       {filtered.length === 0 && (
         <div className="conv-empty">No calls found</div>
       )}
-      {filtered.map((call) => {
+      {filtered.map((call, idx) => {
         const isGroupCall = !!call.groupId;
         const user = !isGroupCall ? getUserById(call.withUserId) : null;
         if (!isGroupCall && !user) return null;
         const meta = CALL_STATUS_META[call.status] || CALL_STATUS_META.completed;
-        const isSelected = selectedCallId === call.id;
+        const isExpanded = expandedIdx === idx;
         const displayName = isGroupCall ? call.groupName : user.name;
 
         return (
-          <div key={call.id}>
+          <div key={`call-${idx}`}>
             {/* Call row */}
             <div
-              className={`call-hist-item${isSelected ? ' selected' : ''}`}
-              onClick={() => handleSelect(call)}
+              className={`call-hist-item${isExpanded ? ' selected' : ''}`}
+              onClick={() => handleToggle(idx)}
             >
               {isGroupCall ? (
                 <div className="group-avatar" style={{ width: 36, height: 36, background: 'var(--accent)22', color: 'var(--accent)', fontSize: 13 }}>
@@ -305,7 +305,7 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
             </div>
 
             {/* Expandable detail */}
-            {isSelected && (
+            {isExpanded && (
               <div className="call-detail">
                 <div className="call-detail-row">
                   <span className="call-detail-label">Type</span>

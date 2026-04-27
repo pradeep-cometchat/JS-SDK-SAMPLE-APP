@@ -868,14 +868,18 @@ const ChatPanel = ({
           {conv.type === 'group' && (
             <>
               <button className="header-btn" onClick={() => {
-                setActiveGroupCall({ type: 'audio', startedBy: currentUser, ts: Date.now() });
                 onSend(conv.id, '', { name: 'Voice call', type: 'group-call', callType: 'audio', callTs: Date.now() });
+                onCallStart('audio', currentUser, { groupId: conv.id, groupName: convName, onGroupCallEnd: () => {
+                  setActiveGroupCall({ type: 'audio', startedBy: currentUser, ts: Date.now(), members: 1 });
+                }});
               }} title="Voice call">
                 <PhoneIcon size={16} />
               </button>
               <button className="header-btn" onClick={() => {
-                setActiveGroupCall({ type: 'video', startedBy: currentUser, ts: Date.now() });
                 onSend(conv.id, '', { name: 'Video call', type: 'group-call', callType: 'video', callTs: Date.now() });
+                onCallStart('video', currentUser, { groupId: conv.id, groupName: convName, onGroupCallEnd: () => {
+                  setActiveGroupCall({ type: 'video', startedBy: currentUser, ts: Date.now(), members: 1 });
+                }});
               }} title="Video call">
                 <VideoIcon size={16} />
               </button>

@@ -455,6 +455,10 @@ const App = () => {
         };
         setCallHistory(prev => [entry, ...prev]);
         callStartTimeRef.current = null;
+        // Show group call banner after call ends
+        if (currentCall.onGroupCallEnd) {
+          setTimeout(() => currentCall.onGroupCallEnd(), 100);
+        }
       }
       return null;
     });
