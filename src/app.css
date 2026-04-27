@@ -398,20 +398,18 @@
 .poll-vote-chip{display:flex;align-items:center;gap:4px;padding:2px 7px 2px 2px;background:rgba(255,255,255,0.1);border-radius:99px;font-size:11px;font-weight:500;color:rgba(255,255,255,0.8)}
 .msg-bubble:not(.own) .poll-vote-chip{background:var(--bg);color:var(--text)}
 
-/* ── COLLABORATIVE CARDS ── */
-.collab-card{border-radius:12px;overflow:hidden;min-width:240px;max-width:300px;border:1px solid var(--border)}
-.msg-bubble.own .collab-card{border-color:rgba(255,255,255,0.2)}
-.collab-card-preview{height:140px;display:flex;align-items:center;justify-content:center;background:var(--bg)}
-.msg-bubble.own .collab-card-preview{background:rgba(255,255,255,0.1)}
-.collab-card-preview.whiteboard{background:linear-gradient(135deg,#f8f9fa,#e9ecef)}
-.collab-card-preview.document{background:linear-gradient(135deg,#f1f3f5,#dee2e6)}
-.msg-bubble.own .collab-card-preview.whiteboard,.msg-bubble.own .collab-card-preview.document{background:rgba(255,255,255,0.15)}
-.collab-card-info{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--accent);color:#fff}
-.collab-card-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.collab-card-title{font-size:13px;font-weight:700}
-.collab-card-sub{font-size:11px;opacity:0.8;margin-top:1px}
-.collab-card-btn{width:100%;padding:10px;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--accent-dark);border:none;cursor:pointer;font-family:var(--font);transition:background 0.15s;border-top:1px solid rgba(255,255,255,0.15)}
-.collab-card-btn:hover{background:var(--accent)}
+/* ── COLLAB CARD (Whiteboard/Document) ── */
+.collab-card{border-radius:12px;overflow:hidden;min-width:240px;max-width:300px;margin-top:4px}
+.collab-card-preview{width:100%;height:160px;background:var(--bg);overflow:hidden;border-radius:8px;margin-bottom:8px}
+.collab-card-info{display:flex;align-items:flex-start;gap:10px;padding:0 2px 8px}
+.collab-card-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:inherit}
+.msg-bubble:not(.own) .collab-card-icon{background:var(--accent-light);color:var(--accent)}
+.collab-card-title{font-size:14px;font-weight:600;color:inherit}
+.collab-card-sub{font-size:11.5px;opacity:0.7;margin-top:1px}
+.collab-card-btn{width:100%;padding:10px;text-align:center;font-size:14px;font-weight:700;color:#fff;background:rgba(255,255,255,0.15);border:none;border-top:1px solid rgba(255,255,255,0.15);cursor:pointer;font-family:var(--font);transition:background 0.15s;border-radius:0 0 8px 8px;margin-top:4px}
+.msg-bubble:not(.own) .collab-card-btn{background:var(--accent);color:#fff;border-top-color:var(--accent)}
+.collab-card-btn:hover{background:rgba(255,255,255,0.25)}
+.msg-bubble:not(.own) .collab-card-btn:hover{background:var(--accent-dark)}
 
 /* ── ATTACH MENU ── */
 .attach-menu{position:absolute;bottom:calc(100% + 8px);left:0;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;width:300px;box-shadow:var(--shadow-lg);animation:scaleIn 0.15s ease;transform-origin:bottom left}
@@ -496,10 +494,10 @@
 .mention-item-name{font-size:13px;font-weight:600;color:var(--text)}
 .mention-item-role{font-size:11px;color:var(--text-muted)}
 
-/* ── MENTION TAGS ── */
-.mention-tag{color:var(--accent);font-weight:600;background:rgba(104,81,214,0.1);padding:1px 4px;border-radius:4px;cursor:default;user-select:all}
-.msg-bubble.own .mention-tag{color:#fff;background:rgba(255,255,255,0.2)}
-.chat-input-editable .mention-tag{color:var(--accent);background:rgba(104,81,214,0.1);padding:1px 4px;border-radius:4px}
+/* ── MENTION TAG (in composer) ── */
+.mention-tag{color:var(--accent);font-weight:600;background:var(--accent-light);padding:1px 4px;border-radius:4px;cursor:default;user-select:all}
+.msg-text .mention-tag{color:var(--accent);font-weight:600;background:rgba(104,81,214,0.1);padding:1px 4px;border-radius:4px}
+.msg-bubble.own .msg-text .mention-tag{color:#fff;background:rgba(255,255,255,0.2)}
 
 /* ── POLL VOTES MODAL ── */
 .poll-votes-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);animation:fadeIn 0.15s ease}

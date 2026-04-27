@@ -379,56 +379,29 @@ export const MessageBubble = ({
                 </div>
               ) : msg.file.type === 'audio' && msg.file.previewUrl ? (
                 <VoiceNotePlayer file={msg.file} isOwn={isOwn} />
-              ) : msg.file.type === 'whiteboard' ? (
+              ) : (msg.file.type === 'whiteboard' || msg.file.type === 'collab-doc') ? (
                 <div className="collab-card" style={{ marginTop: msg.text ? 8 : 0 }}>
-                  <div className="collab-card-preview whiteboard">
-                    <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
-                      <rect x="8" y="12" width="24" height="14" rx="2" fill="#e5e7eb" stroke="#9ca3af" strokeWidth="1.5"/>
-                      <rect x="32" y="22" width="24" height="14" rx="2" fill="#e5e7eb" stroke="#9ca3af" strokeWidth="1.5"/>
-                      <text x="14" y="22" fontSize="8" fill="#6b7280" fontWeight="600">Collaborative</text>
-                      <text x="38" y="32" fontSize="8" fill="#6b7280" fontWeight="600">Whiteboard</text>
-                      <circle cx="48" cy="14" r="4" fill="#fca5a5"/><text x="46" y="16" fontSize="4" fill="#991b1b">S</text>
-                      <circle cx="12" cy="28" r="4" fill="#86efac"/><text x="10" y="30" fontSize="4" fill="#166534">J</text>
-                      <circle cx="52" cy="38" r="4" fill="#c4b5fd"/><text x="50" y="40" fontSize="4" fill="#5b21b6">S</text>
-                    </svg>
-                  </div>
+                  {msg.file.previewUrl && (
+                    <div className="collab-card-preview">
+                      <img src={msg.file.previewUrl} alt={msg.file.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
                   <div className="collab-card-info">
                     <div className="collab-card-icon">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                      {msg.file.type === 'whiteboard' ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                      ) : (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                      )}
                     </div>
                     <div>
-                      <div className="collab-card-title">Collaborative Whiteboard</div>
-                      <div className="collab-card-sub">Open whiteboard to draw together</div>
+                      <div className="collab-card-title">{msg.file.name}</div>
+                      <div className="collab-card-sub">{msg.file.type === 'whiteboard' ? 'Open whiteboard to draw together' : 'Open document to edit content together'}</div>
                     </div>
                   </div>
-                  <button className="collab-card-btn" onClick={() => window.open(msg.file.openUrl, '_blank')}>Open Whiteboard</button>
-                </div>
-              ) : msg.file.type === 'collab-doc' ? (
-                <div className="collab-card" style={{ marginTop: msg.text ? 8 : 0 }}>
-                  <div className="collab-card-preview document">
-                    <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
-                      <rect x="14" y="8" width="36" height="48" rx="3" fill="#d1d5db" stroke="#9ca3af" strokeWidth="1.5"/>
-                      <rect x="18" y="14" width="12" height="14" rx="2" fill="#6b7280"/><text x="21" y="24" fontSize="10" fill="#fff" fontWeight="700">T</text>
-                      <rect x="34" y="14" width="12" height="8" rx="1" fill="#4b5563"/>
-                      <rect x="18" y="32" width="28" height="2" rx="1" fill="#9ca3af"/>
-                      <rect x="18" y="37" width="28" height="2" rx="1" fill="#9ca3af"/>
-                      <rect x="18" y="42" width="20" height="2" rx="1" fill="#9ca3af"/>
-                      <rect x="18" y="47" width="28" height="2" rx="1" fill="#9ca3af"/>
-                      <circle cx="48" cy="12" r="4" fill="#fca5a5"/><text x="46" y="14" fontSize="4" fill="#991b1b">S</text>
-                      <circle cx="12" cy="34" r="4" fill="#86efac"/><text x="10" y="36" fontSize="4" fill="#166534">J</text>
-                      <circle cx="52" cy="44" r="4" fill="#c4b5fd"/><text x="50" y="46" fontSize="4" fill="#5b21b6">S</text>
-                    </svg>
-                  </div>
-                  <div className="collab-card-info">
-                    <div className="collab-card-icon">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    </div>
-                    <div>
-                      <div className="collab-card-title">Collaborative Document</div>
-                      <div className="collab-card-sub">Open document to edit content together</div>
-                    </div>
-                  </div>
-                  <button className="collab-card-btn" onClick={() => window.open(msg.file.openUrl, '_blank')}>Open Document</button>
+                  <button className="collab-card-btn" onClick={() => window.open(msg.file.linkUrl, '_blank')}>
+                    Open {msg.file.type === 'whiteboard' ? 'Whiteboard' : 'Document'}
+                  </button>
                 </div>
               ) : (
                 <div className="msg-file" style={{ marginTop: msg.text ? 8 : 0 }}>

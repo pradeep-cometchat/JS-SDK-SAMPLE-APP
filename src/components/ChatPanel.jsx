@@ -305,11 +305,21 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
       };
       inp.click();
     } else if (item.id === 'whiteboard') {
-      onAttach({ name: 'Collaborative Whiteboard', size: '', type: 'whiteboard', 
-        openUrl: 'https://whiteboard-embed-in.cc-cluster-2.io/?whiteboardid=eyJhcHBJZCI6IjI2Nzg3OWE3N2Y0YjI5Y2QiLCJyZWNlaXZlciI6ImRlbW9fMTc3NTg5MDkwNTM5OF84NS1ndWlkLTQiLCJyZWNlaXZlclR5cGUiOiJncm91cCIsInRpbWVzdGFtcCI6MTc3NzI4NjMxNCwiaWF0IjoxNzc3Mjg2MzE0fQ~wTCkmHQs8CXP0hY3K8-LKBnFTKCnp0KPFBHAvoKZoM4&accesstoken=board&username=Demo%20User' });
+      onAttach({
+        name: 'Collaborative Whiteboard',
+        size: '',
+        type: 'whiteboard',
+        previewUrl: `${import.meta.env.BASE_URL}whiteboard preview.png`,
+        linkUrl: 'https://whiteboard-embed-in.cc-cluster-2.io/?whiteboardid=eyJhcHBJZCI6IjI2Nzg3OWE3N2Y0YjI5Y2QiLCJyZWNlaXZlciI6ImRlbW9fMTc3NTg5MDkwNTM5OF84NS1ndWlkLTQiLCJyZWNlaXZlclR5cGUiOiJncm91cCIsInRpbWVzdGFtcCI6MTc3NzI4NjMxNCwiaWF0IjoxNzc3Mjg2MzE0fQ~wTCkmHQs8CXP0hY3K8-LKBnFTKCnp0KPFBHAvoKZoM4&accesstoken=board&username=Jeffrey%20Torp',
+      });
     } else if (item.id === 'collab-doc') {
-      onAttach({ name: 'Collaborative Document', size: '', type: 'collab-doc',
-        openUrl: 'https://document-embed-in.cc-cluster-2.io/p/eyJhcHBJZCI6IjI2Nzg3OWE3N2Y0YjI5Y2QiLCJyZWNlaXZlciI6ImRlbW9fMTc3NTg5MDkwNTM5OF84NS1ndWlkLTQiLCJyZWNlaXZlclR5cGUiOiJncm91cCIsInRpbWVzdGFtcCI6MTc3NzI4NjM1NywiaWF0IjoxNzc3Mjg2MzU3fQ~XBjJtyZrQggYEHXrl1hNf3l8F9SWCwW345N7JfgwUQg' });
+      onAttach({
+        name: 'Collaborative Document',
+        size: '',
+        type: 'collab-doc',
+        previewUrl: `${import.meta.env.BASE_URL}doc preview.png`,
+        linkUrl: 'https://document-embed-in.cc-cluster-2.io/p/eyJhcHBJZCI6IjI2Nzg3OWE3N2Y0YjI5Y2QiLCJyZWNlaXZlciI6ImRlbW9fMTc3NTg5MDkwNTM5OF84NS1ndWlkLTQiLCJyZWNlaXZlclR5cGUiOiJncm91cCIsInRpbWVzdGFtcCI6MTc3NzI4NjM1NywiaWF0IjoxNzc3Mjg2MzU3fQ~XBjJtyZrQggYEHXrl1hNf3l8F9SWCwW345N7JfgwUQg',
+      });
     } else {
       onAttach({ name: item.label + ' Session', size: '', type: 'doc', demo: true });
     }
@@ -440,20 +450,26 @@ const ChatPanel = ({
         const before = text.slice(0, atIdx);
         const after = text.slice(offset);
         textNode.textContent = before;
-        // Create mention span
+        // Create styled mention span
         const mention = document.createElement('span');
         mention.className = 'mention-tag';
         mention.contentEditable = 'false';
         mention.dataset.userId = user.id;
-        mention.textContent = `@${user.name}`;
+        mention.textContent = `@${user.username}`;
         // Insert mention + space after
-        const space = document.createTextNode('\u00A0' + after);
+        const space = document.createTextNode('\u00A0');
         const parent = textNode.parentNode;
-        parent.insertBefore(mention, textNode.nextSibling);
+        const nextSibling = textNode.nextSibling;
+        parent.insertBefore(mention, nextSibling);
         parent.insertBefore(space, mention.nextSibling);
-        // Move cursor after the space
+        // Add remaining text
+        if (after) {
+          const afterNode = document.createTextNode(after);
+          parent.insertBefore(afterNode, space.nextSibling);
+        }
+        // Set cursor after space
         const newRange = document.createRange();
-        newRange.setStart(space, 1);
+        newRange.setStartAfter(space);
         newRange.collapse(true);
         sel.removeAllRanges();
         sel.addRange(newRange);
@@ -1153,16 +1169,20 @@ const ChatPanel = ({
             {/* Mention dropdown */}
             {showMentions && filteredMentionUsers.length > 0 && (
               <div className="mention-dropdown">
+                <div style={{ padding: '6px 12px 4px', fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Members</div>
                 {filteredMentionUsers.map(user => (
                   <button
                     key={user.id}
                     className="mention-item"
-                    onClick={() => handleMentionSelect(user)}
+                    onMouseDown={(e) => { e.preventDefault(); handleMentionSelect(user); }}
                   >
-                    <Avatar user={user} size={28} />
-                    <div>
+                    <div className="avatar-wrap" style={{ flexShrink: 0 }}>
+                      <Avatar user={user} size={28} />
+                      <StatusDot status={user.status} size={8} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <div className="mention-item-name">{user.name}</div>
-                      <div className="mention-item-role">{user.role}</div>
+                      <div className="mention-item-role">@{user.username}</div>
                     </div>
                   </button>
                 ))}
