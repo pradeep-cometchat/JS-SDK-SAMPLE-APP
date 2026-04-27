@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { getUserById, formatTime, formatFullTime, EMOJIS, STATUS_COLORS } from '../data';
 import { Avatar } from './Avatar';
 import { FileIcon } from './FileIcon';
-import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, DownloadIcon, CloseIcon, InfoIcon } from './Icons';
+import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon } from './Icons';
 
 // Detect mobile for bottom sheet rendering
 const useIsMobile = () => {
@@ -188,7 +188,7 @@ const VoiceNotePlayer = ({ file, isOwn }) => {
 export const MessageBubble = ({
   msg, prevMsg, isOwn, allUsers, currentUser,
   onReact, onDelete, onEditRequest, onThreadOpen,
-  onReply, density, onVote
+  onReply, density, onVote, onMarkUnread, onPin, pinnedMsgId
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -196,7 +196,6 @@ export const MessageBubble = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [justReacted, setJustReacted] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const [pinned, setPinned] = useState(false);
   const [copiedToast, setCopiedToast] = useState(false);
   const [showAllReactions, setShowAllReactions] = useState(false);
   const [showMobileActions, setShowMobileActions] = useState(false);
@@ -418,8 +417,11 @@ export const MessageBubble = ({
                 navigator.clipboard?.writeText(plain).then(() => { setCopiedToast(true); setTimeout(() => setCopiedToast(false), 1500); });
                 setShowMoreMenu(false);
               }}><CopyIcon /> Copy text</button>
-              <button className="more-menu-item" onClick={() => { setPinned(p => !p); setShowMoreMenu(false); }}>
-                <PinIcon /> {pinned ? 'Unpin message' : 'Pin message'}
+              <button className="more-menu-item" onClick={() => { onPin?.(msg); setShowMoreMenu(false); }}>
+                <PinIcon /> {pinnedMsgId === msg.id ? 'Unpin message' : 'Pin message'}
+              </button>
+              <button className="more-menu-item" onClick={() => { onMarkUnread?.(msg); setShowMoreMenu(false); }}>
+                <BellIcon /> Mark unread
               </button>
               {isOwn && (
                 <button className="more-menu-item" onClick={() => { setShowInfoModal(true); setShowMoreMenu(false); }}>
@@ -437,7 +439,7 @@ export const MessageBubble = ({
             }}>Copied!</div>
           )}
           {/* Pin indicator */}
-          {pinned && !hovered && (
+          {pinnedMsgId === msg.id && !hovered && (
             <div style={{ position: 'absolute', bottom: -6, right: isOwn ? 'auto' : -6, left: isOwn ? -6 : 'auto', zIndex: 5 }}>
               <PinIcon size={12} />
             </div>
@@ -485,8 +487,11 @@ export const MessageBubble = ({
                 }}>
                   <CopyIcon size={16} /> Copy text
                 </button>
-                <button className="bottomsheet-action" onClick={() => { setPinned(p => !p); setShowMobileActions(false); }}>
-                  <PinIcon size={16} /> {pinned ? 'Unpin message' : 'Pin message'}
+                <button className="bottomsheet-action" onClick={() => { onPin?.(msg); setShowMobileActions(false); }}>
+                  <PinIcon size={16} /> {pinnedMsgId === msg.id ? 'Unpin message' : 'Pin message'}
+                </button>
+                <button className="bottomsheet-action" onClick={() => { onMarkUnread?.(msg); setShowMobileActions(false); }}>
+                  <BellIcon size={16} /> Mark unread
                 </button>
                 {isOwn && (
                   <button className="bottomsheet-action" onClick={() => { onEditRequest(msg); setShowMobileActions(false); }}>

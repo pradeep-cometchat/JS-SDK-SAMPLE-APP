@@ -24,6 +24,7 @@ import {
   PhoneIcon,
   VideoIcon,
   ChevronRightIcon,
+  BellIcon,
 } from './Icons';
 
 // Detect mobile for bottom sheet rendering
@@ -390,6 +391,8 @@ const Sidebar = ({
 }) => {
   const [search, setSearch]         = useState('');
   const [section, setSection]       = useState('all');
+  const [searchFilter, setSearchFilter] = useState(null);
+  const [searchFocused, setSearchFocused] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const logoutRef = useRef(null);
   const isMobile = useIsMobile();
@@ -414,6 +417,9 @@ const Sidebar = ({
     if (section === 'users')  return c.type === 'dm' && matchSearch;
     if (section === 'groups') return c.type === 'group' && matchSearch;
     if (section === 'calls')  return false;
+    // Global search filters
+    if (searchFilter === 'unread') return c.unread > 0 && matchSearch;
+    if (searchFilter === 'groups') return c.type === 'group' && matchSearch;
     return matchSearch;
   });
 
@@ -456,6 +462,7 @@ const Sidebar = ({
             onClick={() => {
               setSection(t.id);
               setSearch('');
+              setSearchFilter(null);
             }}
           >
             {t.label}
@@ -470,19 +477,45 @@ const Sidebar = ({
           placeholder={section === 'calls' ? 'Search calls…' : 'Search…'}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
           className="sb-search-input"
           aria-label="Search conversations"
         />
         {search && (
           <button
             className="sb-clear-btn"
-            onClick={() => setSearch('')}
+            onClick={() => { setSearch(''); setSearchFilter(null); }}
             aria-label="Clear search"
           >
             <CloseIcon size={13} />
           </button>
         )}
       </div>
+
+      {/* ── Search filter chips ────────────────────────── */}
+      {section === 'all' && (searchFocused || search || searchFilter) && (
+        <div className="sb-filter-chips">
+          {[
+            { id: 'unread', label: 'Unread', icon: <BellIcon size={11} /> },
+            { id: 'groups', label: 'Groups', icon: <NewGroupIcon /> },
+            { id: 'photos', label: 'Photos', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> },
+            { id: 'videos', label: 'Videos', icon: <VideoIcon size={12} /> },
+            { id: 'links', label: 'Links', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> },
+            { id: 'docs', label: 'Docs', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+            { id: 'audio', label: 'Audio', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> },
+          ].map(f => (
+            <button
+              key={f.id}
+              className={`sb-filter-chip${searchFilter === f.id ? ' active' : ''}`}
+              onClick={() => setSearchFilter(prev => prev === f.id ? null : f.id)}
+            >
+              {f.icon}
+              {f.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── Conversation / Call list ───────────────────── */}
       <div className="conv-list">

@@ -7,7 +7,7 @@ import { MessageBubble } from './MessageBubble';
 import {
   SearchIcon, CloseIcon, PhoneIcon, VideoIcon, UserIcon, UsersIcon,
   PlusIcon, EmojiIcon, SendIcon, CheckIcon, EditIcon, PollIcon,
-  ChevronUpIcon, ChevronDownIcon, MicIcon, StopIcon,
+  ChevronUpIcon, ChevronDownIcon, MicIcon, StopIcon, TrashIcon, PinIcon,
 } from './Icons';
 
 // Detect mobile for bottom sheet rendering
@@ -357,6 +357,7 @@ const ChatPanel = ({
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkText, setLinkText] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
+  const [pinnedMsgId, setPinnedMsgId] = useState(null);
   const savedSelectionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordingTimerRef = useRef(null);
@@ -659,6 +660,7 @@ const ChatPanel = ({
     setSearchIdx(0);
     if (inputRef.current) { inputRef.current.innerHTML = ''; inputRef.current.focus(); }
     setActiveFormats({});
+    setPinnedMsgId(null);
     // Clean up any active voice recording
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       try {
@@ -800,7 +802,7 @@ const ChatPanel = ({
               </div>
             </button>
           ) : (
-            <div className="header-identity" style={{ cursor: 'default' }}>
+            <button className="header-identity" onClick={() => onViewMembers(conv)}>
               <div className="group-avatar-sm" style={{ background: conv.color + '22', color: conv.color }}>
                 {conv.initials}
               </div>
@@ -810,7 +812,7 @@ const ChatPanel = ({
                 </div>
                 <div className="header-sub">{conv.memberIds?.length} members · {conv.groupType}</div>
               </div>
-            </div>
+            </button>
           )}
         </div>
         <div className="chat-header-right">
@@ -831,16 +833,6 @@ const ChatPanel = ({
           >
             <SearchIcon size={15} />
           </button>
-          {conv.type === 'dm' && (
-            <button className="header-btn" onClick={() => onViewProfile(otherUser)} title="Profile">
-              <UserIcon size={15} />
-            </button>
-          )}
-          {conv.type === 'group' && (
-            <button className="header-btn" onClick={() => onViewMembers(conv)} title="Members">
-              <UsersIcon size={15} />
-            </button>
-          )}
         </div>
       </div>
 
@@ -890,6 +882,29 @@ const ChatPanel = ({
         </div>
       )}
 
+      {/* Pinned message banner */}
+      {pinnedMsgId && (() => {
+        const pinnedMsg = messages.find(m => m.id === pinnedMsgId);
+        if (!pinnedMsg) return null;
+        const pinnedSender = getUserById(pinnedMsg.senderId);
+        return (
+          <div className="pinned-banner" onClick={() => {
+            const el = listRef.current?.querySelector(`[data-msg-id="${pinnedMsgId}"]`);
+            if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          }}>
+            <PinIcon size={13} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>Pinned by {pinnedSender?.name}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                dangerouslySetInnerHTML={{ __html: pinnedMsg.text?.slice(0, 80) || 'Attachment' }} />
+            </div>
+            <button onClick={(e) => { e.stopPropagation(); setPinnedMsgId(null); }} style={{ padding: 4, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: 4, flexShrink: 0 }}>
+              <CloseIcon size={14} />
+            </button>
+          </div>
+        );
+      })()}
+
       {/* Messages */}
       <div className="msg-list" ref={listRef}>
         {groupedMessages.map((item, idx) =>
@@ -918,6 +933,17 @@ const ChatPanel = ({
                 onReply={setReplyTo}
                 onVote={onVote}
                 density={density}
+                onMarkUnread={(msg) => {
+                  const idx = messages.findIndex(m => m.id === msg.id);
+                  if (idx >= 0) {
+                    const el = listRef.current?.querySelector(`[data-msg-id="${msg.id}"]`);
+                    if (el) el.scrollIntoView({ block: 'center' });
+                  }
+                }}
+                onPin={(msg) => {
+                  setPinnedMsgId(prev => prev === msg.id ? null : msg.id);
+                }}
+                pinnedMsgId={pinnedMsgId}
               />
             </div>
           )
@@ -1019,7 +1045,7 @@ const ChatPanel = ({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
           </button>
           <button className={`fmt-btn${activeFormats.strike ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('strike')} title="Strikethrough">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4H9a3 3 0 00-3 3v0a3 3 0 003 3h6"/><line x1="4" y1="12" x2="20" y2="12"/><path d="M8 20h7a3 3 0 003-3v0a3 3 0 00-3-3H8"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><text x="7" y="9" fontSize="10" fill="currentColor" stroke="none" fontWeight="700" fontFamily="sans-serif">S</text></svg>
           </button>
           <div className="fmt-divider" />
           <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('link')} title="Insert Link">
@@ -1036,13 +1062,64 @@ const ChatPanel = ({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('code')} title="Inline Code">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
           </button>
           <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('codeblock')} title="Code Block">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="15 14 19 10 15 6"/><polyline points="9 6 5 10 9 14"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/><line x1="13" y1="7" x2="11" y2="17"/></svg>
           </button>
         </div>
 
+        {/* Inline voice recorder (WhatsApp style) */}
+        {showVoiceRecorder ? (
+          <div className="input-row voice-rec-inline">
+            {/* Delete / Cancel */}
+            <button className="input-btn" onClick={cancelRecording} title="Cancel" style={{ color: '#ef4444' }}>
+              <TrashIcon size={17} />
+            </button>
+
+            {/* Recording indicator + timer */}
+            {isRecording && !audioBlob && (
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                <div className={`voice-rec-dot${!isPaused ? ' active' : ''}`} />
+                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', fontVariantNumeric: 'tabular-nums' }}>{fmtRecTime(recordingTime)}</span>
+                <div className="voice-rec-wave-inline">
+                  {Array.from({ length: 20 }, (_, i) => (
+                    <div key={i} className={`voice-wave-bar-inline${!isPaused ? ' active' : ''}`} style={{ animationDelay: `${i * 0.06}s`, height: `${Math.random() * 60 + 40}%` }} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Preview state */}
+            {audioBlob && !isRecording && (
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{fmtRecTime(recordingTime)}</span>
+                <audio src={URL.createObjectURL(audioBlob)} controls style={{ flex: 1, height: 32, minWidth: 0 }} />
+              </div>
+            )}
+
+            {/* Pause/Resume */}
+            {isRecording && !audioBlob && (
+              <button className="input-btn" onClick={isPaused ? resumeRecording : pauseRecording} title={isPaused ? 'Resume' : 'Pause'}>
+                {isPaused ? <MicIcon size={17} /> : <StopIcon size={15} />}
+              </button>
+            )}
+
+            {/* Stop (when recording) */}
+            {isRecording && !audioBlob && (
+              <button className="input-btn" onClick={stopRecording} title="Stop" style={{ color: 'var(--accent)' }}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+              </button>
+            )}
+
+            {/* Send (when preview) */}
+            {audioBlob && !isRecording && (
+              <button className="send-btn active" onClick={sendVoiceNote} title="Send">
+                <SendIcon />
+              </button>
+            )}
+          </div>
+        ) : (
         <div className="input-row">
           {/* Attach */}
           <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -1124,82 +1201,11 @@ const ChatPanel = ({
           </div>
 
           {/* Voice note button */}
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <button className={`input-btn${showVoiceRecorder ? ' active' : ''}`} onClick={() => setShowVoiceRecorder(v => !v)} title="Record voice note">
+          {!showVoiceRecorder && (
+            <button className="input-btn" onClick={() => { setShowVoiceRecorder(true); startRecording(); }} title="Record voice note">
               <MicIcon size={17} />
             </button>
-            {showVoiceRecorder && isMobileScreen && createPortal(
-              <div className="bottomsheet-backdrop" onClick={() => setShowVoiceRecorder(false)} />,
-              document.body
-            )}
-            {showVoiceRecorder && (
-              <div className="voice-recorder-popup">
-                {/* Idle / Recording state */}
-                {!audioBlob && (
-                  <>
-                    {/* Large mic icon */}
-                    <div className={`voice-rec-hero-mic${isRecording && !isPaused ? ' recording' : ''}`}>
-                      <MicIcon size={32} />
-                    </div>
-
-                    {/* Timer */}
-                    {isRecording && (
-                      <div className="voice-rec-timer">{fmtRecTime(recordingTime)}</div>
-                    )}
-                    {!isRecording && (
-                      <div style={{ fontSize: 13, color: 'var(--text-muted)', textAlign: 'center' }}>Tap the mic to start recording</div>
-                    )}
-
-                    {/* Controls */}
-                    <div className="voice-rec-controls">
-                      {isRecording ? (
-                        <>
-                          <button className="voice-rec-circle-btn delete" onClick={cancelRecording} title="Delete">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                          </button>
-                          <button className="voice-rec-circle-btn record active" onClick={isPaused ? resumeRecording : pauseRecording} title={isPaused ? 'Resume' : 'Pause'}>
-                            {isPaused ? (
-                              <MicIcon size={20} />
-                            ) : (
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                            )}
-                          </button>
-                          <button className="voice-rec-circle-btn stop" onClick={stopRecording} title="Stop">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
-                          </button>
-                        </>
-                      ) : (
-                        <button className="voice-rec-circle-btn record" onClick={startRecording} title="Start recording">
-                          <MicIcon size={20} />
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
-
-                {/* Preview state (after stop) */}
-                {audioBlob && !isRecording && (
-                  <>
-                    <div className="voice-rec-hero-mic">
-                      <MicIcon size={32} />
-                    </div>
-                    <div className="voice-rec-timer">{fmtRecTime(recordingTime)}</div>
-                    <div style={{ width: '100%' }}>
-                      <audio id="voice-preview-audio" src={URL.createObjectURL(audioBlob)} controls style={{ width: '100%', height: 32, borderRadius: 8 }} />
-                    </div>
-                    <div className="voice-rec-controls">
-                      <button className="voice-rec-circle-btn delete" onClick={() => { setAudioBlob(null); setRecordingTime(0); }} title="Discard">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                      </button>
-                      <button className="voice-rec-circle-btn send" onClick={sendVoiceNote} title="Send">
-                        <SendIcon />
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Send */}
           <button
@@ -1211,6 +1217,7 @@ const ChatPanel = ({
             {editingMsg ? <CheckIcon size={15} /> : <SendIcon />}
           </button>
         </div>
+        )}
       </div>
       )}
 
