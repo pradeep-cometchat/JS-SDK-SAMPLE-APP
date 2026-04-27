@@ -929,7 +929,7 @@ const ChatPanel = ({
             const el = listRef.current?.querySelector(`[data-msg-id="${pinnedMsgId}"]`);
             if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
           }}>
-            <PinIcon size={13} />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>Pinned by {pinnedSender?.name}</div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
