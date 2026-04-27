@@ -338,7 +338,8 @@ export const MessageBubble = ({
               <>
                 {msg.text && (() => {
                   const plainText = new DOMParser().parseFromString(msg.text, 'text/html').body.textContent || '';
-                  const isLong = plainText.length > 300;
+                  const lineCount = (plainText.match(/\n/g) || []).length + 1;
+                  const isLong = plainText.length > 300 || lineCount > 8;
                   return (
                     <>
                       <div className={`msg-text${isLong && !expanded ? ' clamped' : ''}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
@@ -391,8 +392,11 @@ export const MessageBubble = ({
                 </div>
               )
             )}
-            {/* Inline timestamp + read receipt */}
+            {/* Inline timestamp + read receipt + pin */}
             <div className="msg-bubble-footer">
+              {pinnedMsgId === msg.id && (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--accent)" stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+              )}
               <span className="msg-bubble-time">{formatTime(msg.ts)}</span>
               {msg.edited && <span className="msg-bubble-edited">(edited)</span>}
               {isOwn && (
@@ -449,13 +453,6 @@ export const MessageBubble = ({
               background: 'var(--text)', color: 'var(--surface)', padding: '4px 12px', borderRadius: 6,
               fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', zIndex: 40, animation: 'fadeIn 0.15s ease',
             }}>Copied!</div>
-          )}
-          {/* Pin indicator */}
-          {pinnedMsgId === msg.id && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, justifyContent: isOwn ? 'flex-end' : 'flex-start' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
-              <span style={{ fontSize: 10, color: 'var(--accent)', fontWeight: 600 }}>Pinned</span>
-            </div>
           )}
           {/* Delete confirm */}
           {showDeleteConfirm && !isMobile && (
@@ -646,7 +643,6 @@ export const MessageBubble = ({
                   )}
                 </div>
               )}
-              <button ref={addBtnRef} className="reaction-add-btn" onClick={() => setShowEmojiPicker(v => !v)}>+</button>
             </div>
           );
         })()}
