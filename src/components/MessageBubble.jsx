@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { getUserById, formatTime, formatFullTime, EMOJIS, STATUS_COLORS } from '../data';
 import { Avatar } from './Avatar';
 import { FileIcon } from './FileIcon';
-import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon } from './Icons';
+import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon, PhoneIcon, VideoIcon } from './Icons';
 
 // Detect mobile for bottom sheet rendering
 const useIsMobile = () => {
