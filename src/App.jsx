@@ -518,6 +518,7 @@ const App = () => {
           currentUser={loggedInUser} onNewGroup={() => setShowGroupModal(true)} onNewDM={() => setShowNewDM(true)}
           onDeleteConv={handleDeleteConv} onPinConv={handlePinConv}
           onLogout={handleLogout} callHistory={callHistory} onCallStart={handleCallStart}
+          allMessages={messages}
           onCallSelect={(call) => {
             const dmId = 'dm_' + call.withUserId;
             const ex = conversations.find(c => c.id === dmId || (c.type === 'dm' && c.userId === call.withUserId));

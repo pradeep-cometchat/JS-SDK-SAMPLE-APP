@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import {
   getUserById,
@@ -119,14 +119,12 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
         </div>
       </div>
 
-      {/* Right side: badge (default) / more-btn (on hover) */}
+      {/* Right side: badge (default) / more-btn (on hover) — same position */}
       <div className="conv-right-actions">
-        {conv.pinned && (
-          <span className="conv-pin-icon"><StarIcon size={10} /></span>
-        )}
-        {conv.unread > 0 && (
-          <span className="unread-badge conv-unread-badge">{conv.unread}</span>
-        )}
+        <span className="conv-badge-area">
+          {conv.pinned && <span className="conv-pin-icon"><StarIcon size={10} /></span>}
+          {conv.unread > 0 && <span className="unread-badge">{conv.unread}</span>}
+        </span>
         <button
           className="conv-more-btn"
           onClick={(e) => {
@@ -372,6 +370,7 @@ const Sidebar = ({
   onCallSelect,
   onCallStart,
   onLogout,
+  allMessages,
 }) => {
   const [search, setSearch]         = useState('');
   const [section, setSection]       = useState('all');
@@ -401,11 +400,28 @@ const Sidebar = ({
     if (section === 'users')  return c.type === 'dm' && matchSearch;
     if (section === 'groups') return c.type === 'group' && matchSearch;
     if (section === 'calls')  return false;
-    // Global search filters
     if (searchFilter === 'unread') return c.unread > 0 && matchSearch;
     if (searchFilter === 'groups') return c.type === 'group' && matchSearch;
     return matchSearch;
   });
+
+  /* Deep search inside messages when searching on All tab */
+  const messageSearchResults = useMemo(() => {
+    if (!search.trim() || section !== 'all') return [];
+    const q = search.toLowerCase();
+    const results = [];
+    conversations.forEach(conv => {
+      const msgs = allMessages?.[conv.id] || [];
+      msgs.forEach(msg => {
+        if (msg.deleted) return;
+        const plainText = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent || '' : '';
+        if (plainText.toLowerCase().includes(q)) {
+          results.push({ conv, msg, text: plainText });
+        }
+      });
+    });
+    return results.slice(0, 20);
+  }, [search, section, conversations, allMessages]);
 
   const pinned = filtered.filter((c) => c.pinned);
   const rest   = filtered.filter((c) => !c.pinned);
@@ -546,8 +562,40 @@ const Sidebar = ({
             ))}
 
             {/* Empty state */}
-            {filtered.length === 0 && (
+            {filtered.length === 0 && messageSearchResults.length === 0 && (
               <div className="conv-empty">No conversations found</div>
+            )}
+
+            {/* Message search results */}
+            {search && section === 'all' && messageSearchResults.length > 0 && (
+              <>
+                <div className="conv-section-label">Messages</div>
+                {messageSearchResults.map((r, i) => {
+                  const convName = getConvName(r.conv);
+                  const sender = getUserById(r.msg.senderId);
+                  const user = r.conv.type === 'dm' ? getUserById(r.conv.userId) : null;
+                  return (
+                    <div key={`sr-${i}`} className="conv-item" onClick={() => onSelect(r.conv.id)}>
+                      <div className="conv-item-inner">
+                        <div className="avatar-wrap" style={{ flexShrink: 0 }}>
+                          {user ? <Avatar user={user} size={36} /> : (
+                            <div className="group-avatar" style={{ background: `${getConvColor(r.conv)}22`, color: getConvColor(r.conv) }}>
+                              {getConvInitials(r.conv)}
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className="conv-name">{convName}</div>
+                          <div className="conv-preview" style={{ display: 'flex', gap: 4 }}>
+                            {sender && <span style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>{sender.name.split(' ')[0]}:</span>}
+                            <span>{r.text.slice(0, 50)}{r.text.length > 50 ? '…' : ''}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
             )}
           </>
         )}

@@ -265,8 +265,8 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
     { id: 'audio',      label: 'Attach Audio',  color: '#ec4899', icon: <FileIcon type="audio" size={20} color="#ec4899" /> },
     { id: 'doc',        label: 'Document',       color: '#f59e0b', icon: <FileIcon type="doc" size={20} color="#f59e0b" /> },
     { id: 'poll',       label: 'Create Poll',    color: '#10b981', icon: <PollIcon size={20} /> },
-    { id: 'whiteboard', label: 'Whiteboard',     color: '#f97316', icon: <EditIcon size={20} /> },
-    { id: 'collab-doc', label: 'Collab Doc',     color: '#6851D6', icon: <FileIcon type="doc" size={20} color="#6851D6" /> },
+    { id: 'whiteboard', label: 'Collaborative Whiteboard', color: '#f97316', icon: <EditIcon size={20} /> },
+    { id: 'collab-doc', label: 'Collaborative Document', color: '#6851D6', icon: <FileIcon type="doc" size={20} color="#6851D6" /> },
   ];
 
   const handleClick = (item) => {
@@ -1034,45 +1034,9 @@ const ChatPanel = ({
           </div>
         )}
 
-        {/* Formatting toolbar — always visible */}
-        <div className="format-toolbar">
-          <button className={`fmt-btn${activeFormats.bold ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('bold')} title="Bold (Ctrl+B)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"/><path d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg>
-          </button>
-          <button className={`fmt-btn${activeFormats.italic ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('italic')} title="Italic (Ctrl+I)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
-          </button>
-          <button className={`fmt-btn${activeFormats.underline ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('underline')} title="Underline (Ctrl+U)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
-          </button>
-          <button className={`fmt-btn${activeFormats.strike ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('strike')} title="Strikethrough">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.3 4.9c-1.2-.8-2.8-1.4-4.8-1.4-3.2 0-5.2 1.6-5.2 4 0 1.2.5 2.2 1.5 2.9"/><line x1="4" y1="12" x2="20" y2="12"/><path d="M15.6 13.4c.4.6.6 1.4.6 2.1 0 2.8-2.2 4.5-5.6 4.5-2 0-3.8-.6-5-1.6"/></svg>
-          </button>
-          <div className="fmt-divider" />
-          <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('link')} title="Insert Link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-          </button>
-          <button className={`fmt-btn${activeFormats.ol ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ol')} title="Ordered List">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
-          </button>
-          <button className={`fmt-btn${activeFormats.ul ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ul')} title="Unordered List">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>
-          </button>
-          <div className="fmt-divider" />
-          <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('quote')} title="Block Quote">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('code')} title="Inline Code">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
-          </button>
-          <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('codeblock')} title="Code Block">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M10 8l-3 4 3 4"/><path d="M14 8l3 4-3 4"/></svg>
-          </button>
-        </div>
-
-        {/* Inline voice recorder (WhatsApp style) */}
+        {/* Merged composer: voice recorder OR format toolbar + input */}
         {showVoiceRecorder ? (
-          <div className="input-row voice-rec-inline">
+          <div className="input-row voice-rec-inline" style={{ flexDirection: 'row', padding: '6px 10px' }}>
             {/* Delete / Cancel */}
             <button className="input-btn" onClick={cancelRecording} title="Cancel" style={{ color: '#ef4444' }}>
               <TrashIcon size={17} />
@@ -1124,6 +1088,23 @@ const ChatPanel = ({
           </div>
         ) : (
         <div className="input-row">
+          {/* Formatting toolbar */}
+          <div className="format-toolbar">
+            <button className={`fmt-btn${activeFormats.bold ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('bold')} title="Bold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"/><path d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg></button>
+            <button className={`fmt-btn${activeFormats.italic ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('italic')} title="Italic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
+            <button className={`fmt-btn${activeFormats.underline ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('underline')} title="Underline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg></button>
+            <button className={`fmt-btn${activeFormats.strike ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('strike')} title="Strikethrough"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.3 4.9c-1.2-.8-2.8-1.4-4.8-1.4-3.2 0-5.2 1.6-5.2 4 0 1.2.5 2.2 1.5 2.9"/><line x1="4" y1="12" x2="20" y2="12"/><path d="M15.6 13.4c.4.6.6 1.4.6 2.1 0 2.8-2.2 4.5-5.6 4.5-2 0-3.8-.6-5-1.6"/></svg></button>
+            <div className="fmt-divider" />
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('link')} title="Link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
+            <button className={`fmt-btn${activeFormats.ol ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ol')} title="Ordered List"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
+            <button className={`fmt-btn${activeFormats.ul ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ul')} title="Unordered List"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg></button>
+            <div className="fmt-divider" />
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('quote')} title="Quote"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('code')} title="Inline Code"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('codeblock')} title="Code Block"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M9 8l-3 4 3 4"/><path d="M15 8l3 4-3 4"/></svg></button>
+          </div>
+          {/* Input row inner */}
+          <div className="input-row-inner">
           {/* Attach */}
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <button
@@ -1219,6 +1200,7 @@ const ChatPanel = ({
           >
             {editingMsg ? <CheckIcon size={15} /> : <SendIcon />}
           </button>
+          </div>
         </div>
         )}
       </div>
