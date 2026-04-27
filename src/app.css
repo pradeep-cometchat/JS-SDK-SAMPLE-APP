@@ -110,7 +110,7 @@
 .date-label{font-size:11px;font-weight:600;color:var(--text-muted);white-space:nowrap;letter-spacing:0.3px}
 
 /* ── MESSAGE TOOLBAR ── */
-.msg-toolbar{position:absolute;bottom:0;left:calc(100% + 6px);display:flex;align-items:center;gap:1px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px 4px;box-shadow:var(--shadow-md);z-index:20;white-space:nowrap}
+.msg-toolbar{position:absolute;top:50%;transform:translateY(-50%);left:calc(100% + 6px);display:flex;align-items:center;gap:1px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px 4px;box-shadow:var(--shadow-md);z-index:20;white-space:nowrap}
 .msg-toolbar.own{left:auto;right:calc(100% + 6px)}
 .tb-emoji-btn{font-size:14px;padding:4px 5px;border-radius:6px;border:none;background:none;cursor:pointer;transition:all 0.12s;opacity:0.7;line-height:1}
 .tb-emoji-btn:hover,.tb-emoji-btn.active{opacity:1;background:var(--accent-light);transform:scale(1.15)}
@@ -118,12 +118,12 @@
 .tb-btn{padding:5px 6px;border-radius:6px;color:var(--text-muted);border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
 .tb-btn:hover{background:var(--accent-light);color:var(--accent)}
 .tb-btn.danger:hover{background:#fee2e2;color:var(--danger)}
-.mini-emoji-picker{position:absolute;top:100%;left:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg);margin-top:4px}
+.mini-emoji-picker{position:absolute;top:50%;left:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg);margin-top:18px}
 .mini-emoji-picker.own{left:auto;right:calc(100% + 6px)}
-.mini-emoji-picker.flip-up{top:auto;bottom:100%;margin-top:0;margin-bottom:4px}
-.bubble-menu{position:absolute;top:100%;left:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-width:160px;box-shadow:var(--shadow-lg);overflow:hidden;margin-top:4px}
+.mini-emoji-picker.flip-up{margin-top:0;transform:translateY(calc(-100% - 36px))}
+.bubble-menu{position:absolute;top:50%;left:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-width:160px;box-shadow:var(--shadow-lg);overflow:hidden;margin-top:18px}
 .bubble-menu.own{left:auto;right:calc(100% + 6px)}
-.bubble-menu.flip-up{top:auto;bottom:100%;margin-top:0;margin-bottom:4px}
+.bubble-menu.flip-up{top:50%;bottom:auto;margin-top:0;transform:translateY(calc(-100% - 36px))}
 
 /* ── MESSAGE BUBBLES ── */
 .msg-row{display:flex;align-items:flex-start;gap:10px;position:relative;padding:2px 0}
