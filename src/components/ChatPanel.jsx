@@ -304,6 +304,12 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
         onAttach({ name: file.name, size, type: 'image', previewUrl: URL.createObjectURL(file) });
       };
       inp.click();
+    } else if (item.id === 'whiteboard') {
+      onAttach({ name: 'Collaborative Whiteboard', size: '', type: 'whiteboard', 
+        openUrl: 'https://whiteboard-embed-in.cc-cluster-2.io/?whiteboardid=eyJhcHBJZCI6IjI2Nzg3OWE3N2Y0YjI5Y2QiLCJyZWNlaXZlciI6ImRlbW9fMTc3NTg5MDkwNTM5OF84NS1ndWlkLTQiLCJyZWNlaXZlclR5cGUiOiJncm91cCIsInRpbWVzdGFtcCI6MTc3NzI4NjMxNCwiaWF0IjoxNzc3Mjg2MzE0fQ~wTCkmHQs8CXP0hY3K8-LKBnFTKCnp0KPFBHAvoKZoM4&accesstoken=board&username=Demo%20User' });
+    } else if (item.id === 'collab-doc') {
+      onAttach({ name: 'Collaborative Document', size: '', type: 'collab-doc',
+        openUrl: 'https://document-embed-in.cc-cluster-2.io/p/eyJhcHBJZCI6IjI2Nzg3OWE3N2Y0YjI5Y2QiLCJyZWNlaXZlciI6ImRlbW9fMTc3NTg5MDkwNTM5OF84NS1ndWlkLTQiLCJyZWNlaXZlclR5cGUiOiJncm91cCIsInRpbWVzdGFtcCI6MTc3NzI4NjM1NywiaWF0IjoxNzc3Mjg2MzU3fQ~XBjJtyZrQggYEHXrl1hNf3l8F9SWCwW345N7JfgwUQg' });
     } else {
       onAttach({ name: item.label + ' Session', size: '', type: 'doc', demo: true });
     }
@@ -430,12 +436,27 @@ const ChatPanel = ({
       const offset = range.startOffset;
       const atIdx = text.lastIndexOf('@', offset - 1);
       if (atIdx >= 0) {
-        textNode.textContent = text.slice(0, atIdx) + `@${user.username} ` + text.slice(offset);
-        const newPos = atIdx + user.username.length + 2;
-        range.setStart(textNode, newPos);
-        range.setEnd(textNode, newPos);
+        // Remove the @query text
+        const before = text.slice(0, atIdx);
+        const after = text.slice(offset);
+        textNode.textContent = before;
+        // Create mention span
+        const mention = document.createElement('span');
+        mention.className = 'mention-tag';
+        mention.contentEditable = 'false';
+        mention.dataset.userId = user.id;
+        mention.textContent = `@${user.name}`;
+        // Insert mention + space after
+        const space = document.createTextNode('\u00A0' + after);
+        const parent = textNode.parentNode;
+        parent.insertBefore(mention, textNode.nextSibling);
+        parent.insertBefore(space, mention.nextSibling);
+        // Move cursor after the space
+        const newRange = document.createRange();
+        newRange.setStart(space, 1);
+        newRange.collapse(true);
         sel.removeAllRanges();
-        sel.addRange(range);
+        sel.addRange(newRange);
       }
     }
     setInput(el.innerHTML);
