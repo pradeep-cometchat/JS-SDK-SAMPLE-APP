@@ -108,14 +108,6 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="conv-row">
             <span className="conv-name">{name}</span>
-            <div className="conv-meta">
-              {conv.pinned && (
-                <span style={{color:'rgba(255,255,255,0.4)',display:'flex'}}><StarIcon size={10} /></span>
-              )}
-              {conv.unread > 0 && (
-                <span className="unread-badge">{conv.unread}</span>
-              )}
-            </div>
           </div>
           <div className="conv-preview">
             {conv.type === 'group'
@@ -127,8 +119,14 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
         </div>
       </div>
 
-      {/* Context menu trigger */}
-      <div style={{ position: 'relative', flexShrink: 0 }}>
+      {/* Right side: badge (default) / more-btn (on hover) */}
+      <div className="conv-right-actions">
+        {conv.pinned && (
+          <span className="conv-pin-icon"><StarIcon size={10} /></span>
+        )}
+        {conv.unread > 0 && (
+          <span className="unread-badge conv-unread-badge">{conv.unread}</span>
+        )}
         <button
           className="conv-more-btn"
           onClick={(e) => {
@@ -140,29 +138,16 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
         >
           <VerticalDotsIcon />
         </button>
+      </div>
 
         {showMenu && !isMobile && (
-          <div ref={menuRef} className="conv-context-menu">
-            <button
-              className="conv-ctx-item"
-              onClick={() => {
-                onPin?.(conv.id);
-                setShowMenu(false);
-              }}
-            >
-              <StarIcon />
-              {conv.pinned ? 'Unpin' : 'Pin'}
+          <div ref={menuRef} className="conv-context-menu" style={{ position: 'absolute', top: '100%', right: 0, zIndex: 60 }}>
+            <button className="conv-ctx-item" onClick={() => { onPin?.(conv.id); setShowMenu(false); }}>
+              <StarIcon /> {conv.pinned ? 'Unpin' : 'Pin'}
             </button>
             <div style={{ height: 1, background: 'var(--border)', margin: '3px 8px' }} />
-            <button
-              className="conv-ctx-item danger"
-              onClick={() => {
-                onDelete?.(conv.id);
-                setShowMenu(false);
-              }}
-            >
-              <TrashIcon />
-              {conv.type === 'dm' ? 'Delete conversation' : 'Delete group'}
+            <button className="conv-ctx-item danger" onClick={() => { onDelete?.(conv.id); setShowMenu(false); }}>
+              <TrashIcon /> {conv.type === 'dm' ? 'Delete conversation' : 'Delete group'}
             </button>
           </div>
         )}
@@ -185,7 +170,6 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
           </>,
           document.body
         )}
-      </div>
     </div>
   );
 };

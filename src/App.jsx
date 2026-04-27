@@ -501,19 +501,8 @@ const App = () => {
     setShowNewDM(false);
   };
 
-  // Simulate incoming call after 8s (demo) — only after login
-  useEffect(() => {
-    if (!loggedInUser) return;
-    const t = setTimeout(() => {
-      // Check activeCall via latest state using functional update pattern
-      setActiveCall(current => {
-        if (current) return current; // Don't override an active call
-        callStartTimeRef.current = Date.now();
-        return { type: 'video', user: USERS[0], incoming: true };
-      });
-    }, 8000);
-    return () => clearTimeout(t);
-  }, [loggedInUser]);
+  // Incoming call demo disabled — use Tweaks FAB to trigger manually
+  // useEffect(() => { ... }, [loggedInUser]);
 
   // Login guard — must be after all hooks
   if (!loggedInUser) return <LoginScreen onLogin={u => setLoggedInUser(u)} />;
