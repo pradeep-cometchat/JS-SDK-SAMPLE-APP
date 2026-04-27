@@ -179,6 +179,9 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
   const [selectedCallId, setSelectedCallId] = useState(null);
 
   const filtered = callHistory.filter((c) => {
+    if (c.groupId) {
+      return !search || c.groupName.toLowerCase().includes(search.toLowerCase());
+    }
     const u = getUserById(c.withUserId);
     return !search || (u && u.name.toLowerCase().includes(search.toLowerCase()));
   });
@@ -194,10 +197,12 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
         <div className="conv-empty">No calls found</div>
       )}
       {filtered.map((call) => {
-        const user = getUserById(call.withUserId);
-        if (!user) return null;
+        const isGroupCall = !!call.groupId;
+        const user = !isGroupCall ? getUserById(call.withUserId) : null;
+        if (!isGroupCall && !user) return null;
         const meta = CALL_STATUS_META[call.status] || CALL_STATUS_META.completed;
         const isSelected = selectedCallId === call.id;
+        const displayName = isGroupCall ? call.groupName : user.name;
 
         return (
           <div key={call.id}>
@@ -206,10 +211,16 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
               className={`call-hist-item${isSelected ? ' selected' : ''}`}
               onClick={() => handleSelect(call)}
             >
+              {isGroupCall ? (
+                <div className="group-avatar" style={{ width: 36, height: 36, background: 'var(--accent)22', color: 'var(--accent)', fontSize: 13 }}>
+                  {call.groupName.slice(0, 2).toUpperCase()}
+                </div>
+              ) : (
               <div className="avatar-wrap" style={{ flexShrink: 0 }}>
                 <Avatar user={user} size={36} />
                 <StatusDot status={user.status} size={9} />
               </div>
+              )}
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div
@@ -220,7 +231,7 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
                     gap: 4,
                   }}
                 >
-                  <span className="conv-name">{user.name}</span>
+                  <span className="conv-name">{displayName}{isGroupCall ? ' (Group)' : ''}</span>
                   <span
                     style={{
                       fontSize: 10,
@@ -329,12 +340,21 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
                     </span>
                   </div>
                 )}
+                {call.members && (
+                  <div className="call-detail-row">
+                    <span className="call-detail-label">Members</span>
+                    <span className="call-detail-val">
+                      {call.members} participant{call.members !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                )}
                 <div className="call-detail-row">
                   <span className="call-detail-label">Time</span>
                   <span className="call-detail-val">
                     {formatFullTime(call.ts)}
                   </span>
                 </div>
+                {!isGroupCall && (
                 <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
                   <button className="call-detail-btn audio" onClick={() => onCallStart?.('audio', user)}>
                     <PhoneIcon size={13} />
@@ -345,6 +365,7 @@ const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }
                     Video
                   </button>
                 </div>
+                )}
               </div>
             )}
           </div>

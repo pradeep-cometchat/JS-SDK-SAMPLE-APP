@@ -606,7 +606,8 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
 
 /* ── CALL MESSAGE CARD ── */
 .call-msg-card{display:flex;align-items:center;gap:10px;padding:4px 0;min-width:200px}
-.call-msg-icon{width:36px;height:36px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.call-msg-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.msg-bubble:not(.own) .call-msg-icon{background:var(--accent-light);color:var(--accent)}
 
 /* ── PINNED MESSAGE BANNER ── */
 .pinned-banner{display:flex;align-items:center;gap:10px;padding:8px 20px;border-bottom:1px solid var(--border);background:var(--accent-light);cursor:pointer;flex-shrink:0;transition:background 0.15s}

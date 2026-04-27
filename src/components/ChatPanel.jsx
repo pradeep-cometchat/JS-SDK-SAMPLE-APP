@@ -971,10 +971,11 @@ const ChatPanel = ({
               Group {activeGroupCall.type === 'video' ? 'video' : 'voice'} call
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-              Started by {activeGroupCall.startedBy.name}
+              {activeGroupCall.members || 1} member{(activeGroupCall.members || 1) !== 1 ? 's' : ''} · Started by {activeGroupCall.startedBy.name}
             </div>
           </div>
           <button className="group-call-join-btn" onClick={() => {
+            setActiveGroupCall(prev => prev ? { ...prev, members: (prev.members || 1) + 1 } : prev);
             onCallStart(activeGroupCall.type, activeGroupCall.startedBy);
           }}>Join</button>
           <button onClick={() => setActiveGroupCall(null)} style={{ padding: 4, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: 4, flexShrink: 0 }}>

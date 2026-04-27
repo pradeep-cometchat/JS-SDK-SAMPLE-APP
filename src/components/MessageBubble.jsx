@@ -357,7 +357,7 @@ export const MessageBubble = ({
             {msg.file && (
               msg.file.type === 'group-call' ? (
                 <div className="call-msg-card">
-                  <div className="call-msg-icon" style={{ background: msg.file.callType === 'video' ? 'var(--accent)' : '#22c55e' }}>
+                  <div className="call-msg-icon">
                     {msg.file.callType === 'video' ? <VideoIcon size={18} /> : <PhoneIcon size={18} />}
                   </div>
                   <div>
