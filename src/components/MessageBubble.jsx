@@ -439,9 +439,10 @@ export const MessageBubble = ({
             }}>Copied!</div>
           )}
           {/* Pin indicator */}
-          {pinnedMsgId === msg.id && !hovered && (
-            <div style={{ position: 'absolute', bottom: -6, right: isOwn ? 'auto' : -6, left: isOwn ? -6 : 'auto', zIndex: 5 }}>
-              <PinIcon size={12} />
+          {pinnedMsgId === msg.id && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, justifyContent: isOwn ? 'flex-end' : 'flex-start' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+              <span style={{ fontSize: 10, color: 'var(--accent)', fontWeight: 600 }}>Pinned</span>
             </div>
           )}
           {/* Delete confirm */}

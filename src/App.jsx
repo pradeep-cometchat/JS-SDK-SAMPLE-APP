@@ -551,6 +551,9 @@ const App = () => {
               blockedUsers={blockedUsers}
               isMobile={isMobile}
               onBack={handleBackToSidebar}
+              onMarkUnread={(convId, count) => {
+                setConversations(prev => prev.map(c => c.id === convId ? { ...c, unread: count } : c));
+              }}
             />
           ) : (
             <div className="empty-state">

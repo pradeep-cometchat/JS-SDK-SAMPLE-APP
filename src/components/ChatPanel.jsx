@@ -333,7 +333,7 @@ const ChatPanel = ({
   onSend, onReact, onDelete, onEdit, onVote,
   onThreadOpen, onCallStart, onViewProfile, onViewMembers,
   typingUsers, density, blockedUsers,
-  isMobile, onBack,
+  isMobile, onBack, onMarkUnread: onMarkUnreadProp,
 }) => {
   const [input, setInput] = useState('');
   const [attachedFile, setAttachedFile] = useState(null);
@@ -936,8 +936,8 @@ const ChatPanel = ({
                 onMarkUnread={(msg) => {
                   const idx = messages.findIndex(m => m.id === msg.id);
                   if (idx >= 0) {
-                    const el = listRef.current?.querySelector(`[data-msg-id="${msg.id}"]`);
-                    if (el) el.scrollIntoView({ block: 'center' });
+                    const unreadCount = messages.length - idx;
+                    onMarkUnreadProp?.(conv.id, unreadCount);
                   }
                 }}
                 onPin={(msg) => {
@@ -1045,7 +1045,7 @@ const ChatPanel = ({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
           </button>
           <button className={`fmt-btn${activeFormats.strike ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('strike')} title="Strikethrough">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><text x="7" y="9" fontSize="10" fill="currentColor" stroke="none" fontWeight="700" fontFamily="sans-serif">S</text></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.3 4.9c-1.2-.8-2.8-1.4-4.8-1.4-3.2 0-5.2 1.6-5.2 4 0 1.2.5 2.2 1.5 2.9"/><line x1="4" y1="12" x2="20" y2="12"/><path d="M15.6 13.4c.4.6.6 1.4.6 2.1 0 2.8-2.2 4.5-5.6 4.5-2 0-3.8-.6-5-1.6"/></svg>
           </button>
           <div className="fmt-divider" />
           <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('link')} title="Insert Link">
@@ -1065,7 +1065,7 @@ const ChatPanel = ({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
           </button>
           <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('codeblock')} title="Code Block">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/><line x1="13" y1="7" x2="11" y2="17"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M10 8l-3 4 3 4"/><path d="M14 8l3 4-3 4"/></svg>
           </button>
         </div>
 
@@ -1101,7 +1101,9 @@ const ChatPanel = ({
             {/* Pause/Resume */}
             {isRecording && !audioBlob && (
               <button className="input-btn" onClick={isPaused ? resumeRecording : pauseRecording} title={isPaused ? 'Resume' : 'Pause'}>
-                {isPaused ? <MicIcon size={17} /> : <StopIcon size={15} />}
+                {isPaused ? <MicIcon size={17} /> : (
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                )}
               </button>
             )}
 
