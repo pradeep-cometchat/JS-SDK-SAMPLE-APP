@@ -374,6 +374,7 @@ const ChatPanel = ({
   const [linkText, setLinkText] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [pinnedMsgId, setPinnedMsgId] = useState(null);
+  const [activeGroupCall, setActiveGroupCall] = useState(null);
   const savedSelectionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordingTimerRef = useRef(null);
@@ -698,6 +699,7 @@ const ChatPanel = ({
     if (inputRef.current) { inputRef.current.innerHTML = ''; inputRef.current.focus(); }
     setActiveFormats({});
     setPinnedMsgId(null);
+    setActiveGroupCall(null);
     // Clean up any active voice recording
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       try {
@@ -863,6 +865,22 @@ const ChatPanel = ({
               </button>
             </>
           )}
+          {conv.type === 'group' && (
+            <>
+              <button className="header-btn" onClick={() => {
+                setActiveGroupCall({ type: 'audio', startedBy: currentUser, ts: Date.now() });
+                onSend(conv.id, '', { name: 'Voice call', type: 'group-call', callType: 'audio', callTs: Date.now() });
+              }} title="Voice call">
+                <PhoneIcon size={16} />
+              </button>
+              <button className="header-btn" onClick={() => {
+                setActiveGroupCall({ type: 'video', startedBy: currentUser, ts: Date.now() });
+                onSend(conv.id, '', { name: 'Video call', type: 'group-call', callType: 'video', callTs: Date.now() });
+              }} title="Video call">
+                <VideoIcon size={16} />
+              </button>
+            </>
+          )}
           <button
             className={`header-btn${searchOpen ? ' active' : ''}`}
             onClick={() => setSearchOpen(v => !v)}
@@ -941,6 +959,29 @@ const ChatPanel = ({
           </div>
         );
       })()}
+
+      {/* Active group call banner */}
+      {activeGroupCall && conv.type === 'group' && (
+        <div className="group-call-banner">
+          <div className="group-call-banner-icon">
+            {activeGroupCall.type === 'video' ? <VideoIcon size={16} /> : <PhoneIcon size={16} />}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+              Group {activeGroupCall.type === 'video' ? 'video' : 'voice'} call
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+              Started by {activeGroupCall.startedBy.name}
+            </div>
+          </div>
+          <button className="group-call-join-btn" onClick={() => {
+            onCallStart(activeGroupCall.type, activeGroupCall.startedBy);
+          }}>Join</button>
+          <button onClick={() => setActiveGroupCall(null)} style={{ padding: 4, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: 4, flexShrink: 0 }}>
+            <CloseIcon size={14} />
+          </button>
+        </div>
+      )}
 
       {/* Messages */}
       <div className="msg-list" ref={listRef}>

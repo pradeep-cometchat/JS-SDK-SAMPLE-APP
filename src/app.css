@@ -598,6 +598,16 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
 .blocked-banner{display:flex;align-items:center;gap:10px;padding:16px 20px;border-top:1px solid var(--border);background:var(--bg);color:var(--text-muted);font-size:13px;flex-shrink:0}
 .blocked-banner strong{color:var(--text);font-weight:600}
 
+/* ── GROUP CALL BANNER ── */
+.group-call-banner{display:flex;align-items:center;gap:10px;padding:8px 20px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.group-call-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.group-call-join-btn{padding:6px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:var(--font);transition:background 0.15s}
+.group-call-join-btn:hover{background:var(--accent-dark)}
+
+/* ── CALL MESSAGE CARD ── */
+.call-msg-card{display:flex;align-items:center;gap:10px;padding:4px 0;min-width:200px}
+.call-msg-icon{width:36px;height:36px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
 /* ── PINNED MESSAGE BANNER ── */
 .pinned-banner{display:flex;align-items:center;gap:10px;padding:8px 20px;border-bottom:1px solid var(--border);background:var(--accent-light);cursor:pointer;flex-shrink:0;transition:background 0.15s}
 .pinned-banner:hover{background:rgba(104,81,214,0.12)}

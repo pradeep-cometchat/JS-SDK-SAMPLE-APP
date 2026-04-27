@@ -355,7 +355,17 @@ export const MessageBubble = ({
               </>
             )}
             {msg.file && (
-              msg.file.type === 'image' ? (
+              msg.file.type === 'group-call' ? (
+                <div className="call-msg-card">
+                  <div className="call-msg-icon" style={{ background: msg.file.callType === 'video' ? 'var(--accent)' : '#22c55e' }}>
+                    {msg.file.callType === 'video' ? <VideoIcon size={18} /> : <PhoneIcon size={18} />}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600 }}>{msg.file.callType === 'video' ? 'Video call' : 'Voice call'}</div>
+                    <div style={{ fontSize: 11, opacity: 0.65, marginTop: 1 }}>{formatFullTime(msg.file.callTs || msg.ts)}</div>
+                  </div>
+                </div>
+              ) : msg.file.type === 'image' ? (
                 <div style={{ marginTop: msg.text ? 8 : 0 }}>
                   {msg.file.previewUrl ? (
                     <img src={msg.file.previewUrl} alt={msg.file.name} style={{ maxWidth: 260, maxHeight: 180, borderRadius: 8, objectFit: 'cover', display: 'block', cursor: 'pointer' }} onClick={() => window.open(msg.file.previewUrl, '_blank')} />
