@@ -120,8 +120,10 @@
 .tb-btn.danger:hover{background:#fee2e2;color:var(--danger)}
 .mini-emoji-picker{position:absolute;top:100%;left:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg);margin-top:4px}
 .mini-emoji-picker.own{left:auto;right:calc(100% + 6px)}
+.mini-emoji-picker.flip-up{top:auto;bottom:100%;margin-top:0;margin-bottom:4px}
 .bubble-menu{position:absolute;top:100%;left:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-width:160px;box-shadow:var(--shadow-lg);overflow:hidden;margin-top:4px}
 .bubble-menu.own{left:auto;right:calc(100% + 6px)}
+.bubble-menu.flip-up{top:auto;bottom:100%;margin-top:0;margin-bottom:4px}
 
 /* ── MESSAGE BUBBLES ── */
 .msg-row{display:flex;align-items:flex-start;gap:10px;position:relative;padding:2px 0}

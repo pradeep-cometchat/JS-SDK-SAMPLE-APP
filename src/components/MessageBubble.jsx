@@ -308,7 +308,7 @@ export const MessageBubble = ({
                 <ThreadIcon />
               </button>
               <button className="tb-btn" title="Reply" onClick={() => { onReply(msg); }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
               </button>
               {isOwn && <button className="tb-btn" title="Edit message" onClick={() => onEditRequest(msg)}><EditIcon /></button>}
               {isOwn && <button className="tb-btn danger" title="Delete" onClick={() => { setShowDeleteConfirm(v => !v); setShowMoreMenu(false); setShowEmojiPicker(false); }}><TrashIcon /></button>}
@@ -434,13 +434,10 @@ export const MessageBubble = ({
           </div>
           {/* Emoji picker */}
           {showEmojiPicker && !isMobile && (() => {
-            const rect = addBtnRef.current?.getBoundingClientRect();
-            const showAbove = rect && rect.bottom > window.innerHeight * 0.6;
-            const posStyle = showAbove
-              ? { bottom: 'calc(100% + 4px)', top: 'auto' }
-              : { top: 'calc(100% + 4px)', bottom: 'auto' };
+            const rect = anchorRef.current?.getBoundingClientRect();
+            const nearBottom = rect && rect.bottom > window.innerHeight - 280;
             return (
-              <div className={`mini-emoji-picker${isOwn ? ' own' : ''}`} style={posStyle}>
+              <div className={`mini-emoji-picker${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 4 }}>
                   {EMOJIS.map(e => (
                     <button key={e} className="emoji-btn" onClick={() => handleReact(e)}>{e}</button>
@@ -450,8 +447,11 @@ export const MessageBubble = ({
             );
           })()}
           {/* More menu */}
-          {showMoreMenu && !isMobile && (
-            <div className={`bubble-menu${isOwn ? ' own' : ''}`}>
+          {showMoreMenu && !isMobile && (() => {
+            const rect = anchorRef.current?.getBoundingClientRect();
+            const nearBottom = rect && rect.bottom > window.innerHeight - 200;
+            return (
+            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`}>
               <button className="more-menu-item" onClick={() => {
                 const plain = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent : '';
                 navigator.clipboard?.writeText(plain).then(() => { setCopiedToast(true); setTimeout(() => setCopiedToast(false), 1500); });
@@ -469,7 +469,8 @@ export const MessageBubble = ({
                 </button>
               )}
             </div>
-          )}
+            );
+          })()}
           {/* Copied toast */}
           {copiedToast && (
             <div style={{
@@ -479,13 +480,17 @@ export const MessageBubble = ({
             }}>Copied!</div>
           )}
           {/* Delete confirm */}
-          {showDeleteConfirm && !isMobile && (
-            <div className={`bubble-menu${isOwn ? ' own' : ''}`} style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap', minWidth: 240 }}>
+          {showDeleteConfirm && !isMobile && (() => {
+            const rect = anchorRef.current?.getBoundingClientRect();
+            const nearBottom = rect && rect.bottom > window.innerHeight - 200;
+            return (
+            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`} style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap', minWidth: 240 }}>
               <span style={{ fontSize: 13, flex: 1 }}>Delete this message?</span>
               <button className="btn-ghost-sm" onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
               <button className="btn-danger-sm" onClick={() => { onDelete(msg.id); setShowDeleteConfirm(false); }}>Delete</button>
             </div>
-          )}
+            );
+          })()}
         </div>
         {/* Mobile action bottom sheet */}
         {isMobile && showMobileActions && createPortal(
