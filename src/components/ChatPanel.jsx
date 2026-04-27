@@ -265,8 +265,8 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
     { id: 'audio',      label: 'Attach Audio',  color: '#ec4899', icon: <FileIcon type="audio" size={20} color="#ec4899" /> },
     { id: 'doc',        label: 'Document',       color: '#f59e0b', icon: <FileIcon type="doc" size={20} color="#f59e0b" /> },
     { id: 'poll',       label: 'Create Poll',    color: '#10b981', icon: <PollIcon size={20} /> },
-    { id: 'whiteboard', label: 'Collaborative Whiteboard', color: '#f97316', icon: <EditIcon size={20} /> },
-    { id: 'collab-doc', label: 'Collaborative Document', color: '#6851D6', icon: <FileIcon type="doc" size={20} color="#6851D6" /> },
+    { id: 'whiteboard', label: 'Collab Whiteboard', color: '#f97316', icon: <EditIcon size={20} /> },
+    { id: 'collab-doc', label: 'Collab Document',  color: '#6851D6', icon: <FileIcon type="doc" size={20} color="#6851D6" /> },
   ];
 
   const handleClick = (item) => {

@@ -407,7 +407,13 @@ const Sidebar = ({
 
   /* Deep search inside messages when searching on All tab */
   const messageSearchResults = useMemo(() => {
-    if (!search.trim() || section !== 'all') return [];
+    if (section !== 'all') return [];
+    // If a media filter is active, search for that media type across all messages
+    const mediaFilters = { photos: 'image', videos: 'video', audio: 'audio', docs: 'doc', links: null };
+    const isMediaFilter = searchFilter && mediaFilters[searchFilter] !== undefined;
+    
+    if (!search.trim() && !isMediaFilter) return [];
+    
     const q = search.toLowerCase();
     const results = [];
     conversations.forEach(conv => {
@@ -415,13 +421,28 @@ const Sidebar = ({
       msgs.forEach(msg => {
         if (msg.deleted) return;
         const plainText = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent || '' : '';
-        if (plainText.toLowerCase().includes(q)) {
+        
+        // Apply media filter
+        if (searchFilter === 'photos' && (!msg.file || msg.file.type !== 'image')) return;
+        if (searchFilter === 'videos' && (!msg.file || msg.file.type !== 'video')) return;
+        if (searchFilter === 'audio' && (!msg.file || msg.file.type !== 'audio')) return;
+        if (searchFilter === 'docs' && (!msg.file || (msg.file.type !== 'doc' && msg.file.type !== 'pdf'))) return;
+        if (searchFilter === 'links' && !plainText.match(/https?:\/\//i)) return;
+        
+        // Text search (skip if media filter is active and no search query)
+        if (q && !plainText.toLowerCase().includes(q)) return;
+        if (!q && isMediaFilter) {
+          // Show all matching media type
+          results.push({ conv, msg, text: msg.file ? msg.file.name : plainText });
+          return;
+        }
+        if (q) {
           results.push({ conv, msg, text: plainText });
         }
       });
     });
     return results.slice(0, 20);
-  }, [search, section, conversations, allMessages]);
+  }, [search, section, searchFilter, conversations, allMessages]);
 
   const pinned = filtered.filter((c) => c.pinned);
   const rest   = filtered.filter((c) => !c.pinned);
@@ -567,13 +588,30 @@ const Sidebar = ({
             )}
 
             {/* Message search results */}
-            {search && section === 'all' && messageSearchResults.length > 0 && (
+            {section === 'all' && messageSearchResults.length > 0 && (
               <>
                 <div className="conv-section-label">Messages</div>
                 {messageSearchResults.map((r, i) => {
                   const convName = getConvName(r.conv);
                   const sender = getUserById(r.msg.senderId);
                   const user = r.conv.type === 'dm' ? getUserById(r.conv.userId) : null;
+                  // Highlight search term in preview
+                  const previewText = r.text.slice(0, 60);
+                  const q = search.toLowerCase();
+                  let previewEl;
+                  if (q && previewText.toLowerCase().includes(q)) {
+                    const idx = previewText.toLowerCase().indexOf(q);
+                    previewEl = (
+                      <span>
+                        {previewText.slice(0, idx)}
+                        <span style={{ color: '#fff', fontWeight: 600, background: 'var(--accent)', borderRadius: 2, padding: '0 2px' }}>{previewText.slice(idx, idx + q.length)}</span>
+                        {previewText.slice(idx + q.length)}
+                        {r.text.length > 60 ? '…' : ''}
+                      </span>
+                    );
+                  } else {
+                    previewEl = <span>{previewText}{r.text.length > 60 ? '…' : ''}</span>;
+                  }
                   return (
                     <div key={`sr-${i}`} className="conv-item" onClick={() => onSelect(r.conv.id)}>
                       <div className="conv-item-inner">
@@ -588,7 +626,7 @@ const Sidebar = ({
                           <div className="conv-name">{convName}</div>
                           <div className="conv-preview" style={{ display: 'flex', gap: 4 }}>
                             {sender && <span style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>{sender.name.split(' ')[0]}:</span>}
-                            <span>{r.text.slice(0, 50)}{r.text.length > 50 ? '…' : ''}</span>
+                            {previewEl}
                           </div>
                         </div>
                       </div>
