@@ -134,14 +134,25 @@
 .own-meta{font-size:11px;color:var(--text-light);padding-top:2px;padding-right:2px;align-self:flex-end;flex-shrink:0}
 .own-ts{font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;display:block;text-align:right}
 
+/* ── BUBBLE FOOTER (timestamp + read receipt inside bubble) ── */
+.msg-bubble-footer{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:4px;opacity:0.6}
+.msg-bubble.own .msg-bubble-footer{opacity:0.55}
+.msg-bubble-time{font-size:10.5px;color:inherit}
+.msg-bubble-edited{font-size:10px;font-style:italic;color:inherit}
+
+/* ── READ MORE ── */
+.msg-text.clamped{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.read-more-btn{background:none;border:none;color:var(--accent);font-size:12.5px;font-weight:600;cursor:pointer;padding:2px 0;font-family:var(--font)}
+.msg-bubble.own .read-more-btn{color:rgba(255,255,255,0.85)}
+
 /* ── REACTIONS ── */
-.reaction-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
-.reaction-chip{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:99px;background:var(--surface);border:1.5px solid var(--border);font-size:14px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow-sm)}
+.reaction-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:-8px;position:relative;z-index:2}
+.reaction-chip{display:flex;align-items:center;gap:3px;padding:2px 6px;border-radius:99px;background:var(--surface);border:1px solid var(--border);font-size:12px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow-sm)}
 .reaction-chip:hover{border-color:var(--accent);background:var(--accent-light);box-shadow:none}
 .reaction-chip.mine{background:var(--accent-light);border-color:var(--accent)}
-.reaction-count{font-size:12px;font-weight:700;color:var(--text);line-height:1}
+.reaction-count{font-size:10px;font-weight:700;color:var(--text);line-height:1}
 .reaction-chip.mine .reaction-count{color:var(--accent)}
-.reaction-add-btn{padding:4px 9px;border-radius:99px;background:var(--surface);border:1.5px dashed var(--border);font-size:14px;color:var(--text-muted);cursor:pointer;transition:all 0.15s;font-weight:600;box-shadow:var(--shadow-sm)}
+.reaction-add-btn{padding:2px 6px;border-radius:99px;background:var(--surface);border:1px dashed var(--border);font-size:12px;color:var(--text-muted);cursor:pointer;transition:all 0.15s;font-weight:600;box-shadow:var(--shadow-sm)}
 .reaction-add-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);box-shadow:none}
 @keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
 .reaction-emoji.pop{animation:pop 0.3s ease}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { getUserById, ALL_USERS, STATUS_COLORS, EMOJIS, formatTime, formatFullTime } from '../data';
 import { Avatar, StatusDot } from './Avatar';
@@ -542,11 +542,13 @@ export const GroupModal = ({ allUsers, currentUser, onClose, onCreate }) => {
         </div>
         <div className="modal-steps">
           {[1, 2, 3].map(s => (
-            <div key={s} className={`step-item${step === s ? ' current' : step > s ? ' done' : ''}`}>
-              <div className="step-dot">{step > s ? '✓' : s}</div>
-              <span>{s === 1 ? 'Details' : s === 2 ? 'Type' : 'Members'}</span>
+            <React.Fragment key={s}>
+              <div className={`step-item${step === s ? ' current' : step > s ? ' done' : ''}`}>
+                <div className="step-dot">{step > s ? '✓' : s}</div>
+                <span>{s === 1 ? 'Details' : s === 2 ? 'Type' : 'Members'}</span>
+              </div>
               {s < 3 && <div className="step-line" />}
-            </div>
+            </React.Fragment>
           ))}
         </div>
         <div className="modal-body">

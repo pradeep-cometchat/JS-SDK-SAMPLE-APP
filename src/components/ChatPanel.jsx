@@ -924,6 +924,7 @@ const ChatPanel = ({
                 msg={item.msg}
                 prevMsg={item.prev}
                 isOwn={item.msg.senderId === currentUser.id}
+                isGroup={conv.type === 'group'}
                 allUsers={allUsers}
                 currentUser={currentUser}
                 onReact={onReact}

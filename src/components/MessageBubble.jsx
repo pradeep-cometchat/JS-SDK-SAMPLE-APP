@@ -188,7 +188,7 @@ const VoiceNotePlayer = ({ file, isOwn }) => {
 export const MessageBubble = ({
   msg, prevMsg, isOwn, allUsers, currentUser,
   onReact, onDelete, onEditRequest, onThreadOpen,
-  onReply, density, onVote, onMarkUnread, onPin, pinnedMsgId
+  onReply, density, onVote, onMarkUnread, onPin, pinnedMsgId, isGroup
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -199,6 +199,7 @@ export const MessageBubble = ({
   const [copiedToast, setCopiedToast] = useState(false);
   const [showAllReactions, setShowAllReactions] = useState(false);
   const [showMobileActions, setShowMobileActions] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const anchorRef = useRef(null);
   const addBtnRef = useRef(null);
   const overflowRef = useRef(null);
@@ -227,7 +228,8 @@ export const MessageBubble = ({
   };
 
   const sender = getUserById(msg.senderId);
-  const showName = !prevMsg || prevMsg.senderId !== msg.senderId;
+  const showName = isGroup && (!prevMsg || prevMsg.senderId !== msg.senderId);
+  const showAvatar = isGroup && !isOwn;
   const gap = density === 'compact' ? 2 : 4;
 
   useEffect(() => {
@@ -280,23 +282,15 @@ export const MessageBubble = ({
       style={{ marginBottom: showName ? (density === 'compact' ? 8 : 12) : gap }}
       onMouseEnter={() => !isMobile && setHovered(true)}
       onMouseLeave={() => { if (!isMobile) { setHovered(false); if (!showEmojiPicker && !showMoreMenu) setShowDeleteConfirm(false); } }}>
-      {!isOwn && (
-        <div style={{ width: 36, flexShrink: 0, display: 'flex', justifyContent: 'center', paddingTop: 2 }}>
-          {showName ? <Avatar user={sender} size={32} /> : null}
+      {showAvatar && (
+        <div style={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', paddingTop: 2 }}>
+          {showName ? <Avatar user={sender} size={28} /> : null}
         </div>
       )}
       <div className="msg-content-col" style={{ flex: 1, minWidth: 0 }}>
         {showName && !isOwn && (
           <div className="msg-meta">
             <span className="msg-sender-name" style={{ color: sender?.color }}>{sender?.name}</span>
-            <span className="msg-timestamp">{formatFullTime(msg.ts)}</span>
-            {msg.edited && <span className="msg-edited">(edited)</span>}
-          </div>
-        )}
-        {showName && isOwn && (
-          <div className="msg-meta" style={{ justifyContent: 'flex-end' }}>
-            <span className="msg-timestamp">{formatFullTime(msg.ts)}</span>
-            {msg.edited && <span className="msg-edited">(edited)</span>}
           </div>
         )}
         <div ref={anchorRef} style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
@@ -342,8 +336,18 @@ export const MessageBubble = ({
               <PollMessage poll={msg.poll} msgId={msg.id} currentUserId={currentUser.id} onVote={onVote} isOwn={isOwn} />
             ) : (
               <>
-                {msg.text && <div className="msg-text" dangerouslySetInnerHTML={{ __html: msg.text }} />}
-                {isOwn && !showName && !msg.file && <span className="own-ts">{formatTime(msg.ts)}</span>}
+                {msg.text && (() => {
+                  const plainText = new DOMParser().parseFromString(msg.text, 'text/html').body.textContent || '';
+                  const isLong = plainText.length > 300;
+                  return (
+                    <>
+                      <div className={`msg-text${isLong && !expanded ? ' clamped' : ''}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
+                      {isLong && !expanded && (
+                        <button className="read-more-btn" onClick={(e) => { e.stopPropagation(); setExpanded(true); }}>Read more</button>
+                      )}
+                    </>
+                  );
+                })()}
               </>
             )}
             {msg.file && (
@@ -387,11 +391,19 @@ export const MessageBubble = ({
                 </div>
               )
             )}
+            {/* Inline timestamp + read receipt */}
+            <div className="msg-bubble-footer">
+              <span className="msg-bubble-time">{formatTime(msg.ts)}</span>
+              {msg.edited && <span className="msg-bubble-edited">(edited)</span>}
+              {isOwn && (
+                msg.readBy && msg.readBy.length > 0 ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /><polyline points="15 6 9 12" /></svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ opacity: 0.4 }}><polyline points="20 6 9 17 4 12" /></svg>
+                )
+              )}
+            </div>
           </div>
-          {/* Timestamp outside bubble for file messages */}
-          {msg.file && isOwn && !showName && (
-            <span className="own-ts" style={{ marginTop: 2 }}>{formatTime(msg.ts)}</span>
-          )}
           {/* Emoji picker */}
           {showEmojiPicker && !isMobile && (() => {
             const rect = addBtnRef.current?.getBoundingClientRect();
@@ -550,19 +562,6 @@ export const MessageBubble = ({
           </>,
           document.body
         )}
-        {/* Read receipts */}
-        {isOwn && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 3 }}>
-            {msg.readBy && msg.readBy.length > 0 ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 2 }} title={`Read by ${msg.readBy.map(id => getUserById(id)?.name).filter(Boolean).join(', ')}`}>
-                {msg.readBy.slice(0, 3).map(id => { const u = getUserById(id); return u ? <div key={id} style={{ width: 14, height: 14, borderRadius: '50%', background: u.color + '22', color: u.color, fontSize: 7, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{u.initials}</div> : null; })}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /><polyline points="15 6 9 12" /></svg>
-              </div>
-            ) : (
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ opacity: 0.4 }}><polyline points="20 6 9 17 4 12" /></svg>
-            )}
-          </div>
-        )}
         {/* Reactions */}
         {Object.keys(reactionGroups).length > 0 && (() => {
           const allReactions = Object.entries(reactionGroups);
@@ -654,11 +653,6 @@ export const MessageBubble = ({
         {/* Thread link */}
         {msg.threadCount > 0 && (
           <button className="thread-link" onClick={() => onThreadOpen(msg)}>
-            <div className="thread-avatars">
-              {[currentUser, ...(allUsers || [])].slice(0, 3).map((u, i) => (
-                <div key={i} className="thread-avatar-mini" style={{ background: u.color + '22', color: u.color, marginLeft: i > 0 ? -6 : 0 }}>{u.initials}</div>
-              ))}
-            </div>
             <span>{msg.threadCount} {msg.threadCount === 1 ? 'reply' : 'replies'}</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}><polyline points="9 18 15 12 9 6" /></svg>
           </button>
