@@ -746,8 +746,10 @@
 
   /* Call overlay — full width on mobile */
   .call-modal{width:calc(100vw - 24px);max-width:380px;border-radius:20px}
-  .call-ctrl-btn{width:52px;height:52px}
-  .call-ctrl-sm{padding:8px 10px;min-width:50px}
+  .call-ctrl-btn{width:56px;height:56px}
+  .call-ctrl-sm{padding:10px 12px;min-width:54px}
+  .call-ctrl-sm span{font-size:10px}
+  .call-ctrl-sm .material-symbols-rounded{font-size:20px!important}
   .in-call-controls{gap:6px;flex-wrap:wrap;justify-content:center}
   .audio-call-area{padding:32px 24px 20px}
   .video-call-area{height:200px}
@@ -834,11 +836,11 @@
 
   /* Input row on mobile — flatten to single row */
   .input-row{flex-direction:column;padding:0;gap:0;border-radius:var(--radius-md)}
-  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:center;width:100%;box-sizing:border-box}
+  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:flex-end;width:100%;box-sizing:border-box}
   .input-row-inner .input-wrap{flex:1;min-width:0}
   .chat-input-editable{font-size:14px;min-height:20px}
   .send-btn{width:30px;height:30px;flex-shrink:0}
-  .input-btn{padding:5px;flex-shrink:0}
+  .input-btn{padding:5px;flex-shrink:0;align-self:flex-end}
 
   /* Group call banner mobile */
   .group-call-banner{padding:8px 12px;gap:8px}
@@ -899,8 +901,10 @@
   .step-item span{font-size:10px}
 
   .call-modal{width:calc(100vw - 16px)}
-  .call-ctrl-sm{padding:6px 8px;min-width:44px}
+  .call-ctrl-sm{padding:8px 10px;min-width:48px}
   .call-ctrl-sm span{font-size:9px}
+  .call-ctrl-sm .material-symbols-rounded{font-size:18px!important}
+  .call-ctrl-btn{width:52px;height:52px}
   .video-call-area{height:160px}
   .video-self-pip{width:60px;height:44px}
   .call-avatar-ring{width:100px;height:100px}
