@@ -841,7 +841,7 @@
   .input-row-inner>*{flex-shrink:0}
   .input-row-inner .input-wrap{flex:1 1 0;min-width:0;flex-shrink:1}
   .chat-input-editable{font-size:14px;min-height:32px;max-height:80px;line-height:32px}
-  .chat-input-editable:empty::before{line-height:32px}
+  .chat-input-editable:not(:empty){line-height:1.5}
   .send-btn{width:32px;height:32px}
   .input-btn{padding:5px;height:32px;display:flex;align-items:center;justify-content:center}
 
