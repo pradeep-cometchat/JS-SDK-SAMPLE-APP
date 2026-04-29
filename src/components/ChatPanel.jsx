@@ -259,14 +259,14 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
   }, [onClose]);
 
   const items = [
-    { id: 'camera',     label: 'Camera',       color: '#6851D6', icon: <VideoIcon size={20} /> },
+    { id: 'camera',     label: 'Camera',       color: '#6852D6', icon: <VideoIcon size={20} /> },
     { id: 'image',      label: 'Attach Image',  color: '#0ea5e9', icon: <FileIcon type="image" size={20} color="#0ea5e9" /> },
     { id: 'video',      label: 'Attach Video',  color: '#8b5cf6', icon: <VideoIcon size={20} /> },
     { id: 'audio',      label: 'Attach Audio',  color: '#ec4899', icon: <FileIcon type="audio" size={20} color="#ec4899" /> },
     { id: 'doc',        label: 'Document',       color: '#f59e0b', icon: <FileIcon type="doc" size={20} color="#f59e0b" /> },
     { id: 'poll',       label: 'Create Poll',    color: '#10b981', icon: <PollIcon size={20} /> },
     { id: 'whiteboard', label: 'Collab Whiteboard', color: '#f97316', icon: <EditIcon size={20} /> },
-    { id: 'collab-doc', label: 'Collab Document',  color: '#6851D6', icon: <FileIcon type="doc" size={20} color="#6851D6" /> },
+    { id: 'collab-doc', label: 'Collab Document',  color: '#6852D6', icon: <FileIcon type="doc" size={20} color="#6852D6" /> },
   ];
 
   const handleClick = (item) => {

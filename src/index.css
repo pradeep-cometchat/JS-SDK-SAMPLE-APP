@@ -1,8 +1,8 @@
 /* ── TOKENS ── */
 :root {
-  --accent:       #6851D6;
+  --accent:       #6852D6;
   --accent-dark:  #5540b8;
-  --accent-glow:  #6851D622;
+  --accent-glow:  #6852D622;
   --accent-light: #ede9fb;
   --bg:           #f4f2fa;
   --surface:      #ffffff;
@@ -10,7 +10,7 @@
   --text:         #1a1528;
   --text-muted:   #6b677e;
   --text-light:   #a49fc0;
-  --bubble-own:   #6851D6;
+  --bubble-own:   #6852D6;
   --bubble-other: #ede9fb;
   --danger:       #ef4444;
   --success:      #22c55e;

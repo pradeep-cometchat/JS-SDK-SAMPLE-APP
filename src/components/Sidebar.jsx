@@ -65,6 +65,7 @@ const TABS = [
 const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
+  const longPressTimer = useRef(null);
   const isMobile = useIsMobile();
 
   const name     = getConvName(conv);
@@ -85,7 +86,14 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
 
   return (
     <div className={`conv-item${active ? ' active' : ''}`}>
-      <div className="conv-item-inner" onClick={() => onSelect(conv.id)}>
+      <div className="conv-item-inner" onClick={() => onSelect(conv.id)}
+        onTouchStart={() => {
+          if (!isMobile) return;
+          longPressTimer.current = setTimeout(() => setShowMenu(true), 500);
+        }}
+        onTouchEnd={() => { if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; } }}
+        onTouchMove={() => { if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; } }}
+      >
         {/* Avatar */}
         <div className="avatar-wrap" style={{ flexShrink: 0 }}>
           {conv.type === 'dm' && user ? (

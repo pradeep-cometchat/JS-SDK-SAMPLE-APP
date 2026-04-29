@@ -354,7 +354,7 @@ export const MessageBubble = ({
                       ) : (
                         <>
                           <div className="msg-text" dangerouslySetInnerHTML={{ __html: msg.text }} />
-                          {isLong && expanded && (
+                          {isLong && (
                             <button className="read-more-btn" onClick={(e) => { e.stopPropagation(); setExpanded(false); }}>Show less</button>
                           )}
                         </>

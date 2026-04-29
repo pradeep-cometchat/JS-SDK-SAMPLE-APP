@@ -33,7 +33,7 @@ class ErrorBoundary extends Component {
           <pre style={{ fontSize: 12, textAlign: 'left', maxWidth: 600, margin: '20px auto', background: '#fee2e2', padding: 16, borderRadius: 8, overflow: 'auto' }}>
             {this.state.error?.toString()}
           </pre>
-          <button onClick={() => this.setState({ hasError: false, error: null })} style={{ padding: '8px 20px', background: '#6851D6', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', marginTop: 12 }}>
+          <button onClick={() => this.setState({ hasError: false, error: null })} style={{ padding: '8px 20px', background: '#6852D6', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', marginTop: 12 }}>
             Try Again
           </button>
         </div>
@@ -156,7 +156,7 @@ const LoginScreen = ({ onLogin }) => {
 };
 
 /* ─── TWEAKS DEFAULTS ─────────────────────────────────── */
-const TWEAK_DEFAULTS = { theme: 'light', density: 'comfortable', accentColor: '#6851D6' };
+const TWEAK_DEFAULTS = { theme: 'light', density: 'comfortable', accentColor: '#6852D6' };
 
 /* ─── DRAGGABLE FAB ────────────────────────────────────── */
 const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActiveCall, callStartTimeRef, setShowGroupModal, setShowNewDM, users }) => {

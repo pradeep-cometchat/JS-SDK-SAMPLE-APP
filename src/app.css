@@ -315,8 +315,8 @@
 .call-modal{position:relative;background:linear-gradient(160deg,#1c1628 0%,#0f0c1a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:24px;width:380px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.6);animation:scaleIn 0.25s ease}
 .call-bg-shimmer{position:absolute;inset:0;pointer-events:none;opacity:0.15}
 .call-bg-shimmer.ringing{background:radial-gradient(circle at 50% 40%,#22c55e 0%,transparent 60%);animation:shimmerPulse 1.5s ease-in-out infinite}
-.call-bg-shimmer.calling{background:radial-gradient(circle at 50% 40%,#6851D6 0%,transparent 60%);animation:shimmerPulse 2s ease-in-out infinite}
-.call-bg-shimmer.in-call{background:radial-gradient(circle at 50% 40%,#6851D6 0%,transparent 60%)}
+.call-bg-shimmer.calling{background:radial-gradient(circle at 50% 40%,#6852D6 0%,transparent 60%);animation:shimmerPulse 2s ease-in-out infinite}
+.call-bg-shimmer.in-call{background:radial-gradient(circle at 50% 40%,#6852D6 0%,transparent 60%)}
 @keyframes shimmerPulse{0%,100%{opacity:0.1}50%{opacity:0.25}}
 .audio-call-area{display:flex;flex-direction:column;align-items:center;padding:40px 32px 24px;position:relative;z-index:1}
 .call-avatar-ring{position:relative;display:flex;align-items:center;justify-content:center;width:120px;height:120px}
@@ -760,12 +760,12 @@
   .modal-header{padding:14px 16px}
 
   /* Login screen */
-  .login-screen{padding:12px}
+  .login-screen{padding:16px}
   .login-logo{margin:16px 0 16px}
   .login-logo img{height:32px}
-  .login-card{padding:20px 16px;max-width:100%;border-radius:var(--radius-md);box-shadow:var(--shadow-md)}
-  .login-user-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
-  .login-user-card{padding:10px 4px;gap:4px;border-radius:8px}
+  .login-card{padding:20px 16px;max-width:100%;border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin:0 4px}
+  .login-user-grid{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+  .login-user-card{padding:10px 6px;gap:5px;border-radius:8px}
   .login-user-avatar{margin-bottom:0}
   .login-user-name{font-size:11px}
   .login-user-uid{font-size:9px}
@@ -833,8 +833,12 @@
   .format-toolbar{display:none}
 
   /* Input row on mobile — flatten to single row */
-  .input-row{flex-direction:column;padding:0;gap:0}
-  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:center;width:100%}
+  .input-row{flex-direction:column;padding:0;gap:0;border-radius:var(--radius-md)}
+  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:center;width:100%;box-sizing:border-box}
+  .input-row-inner .input-wrap{flex:1;min-width:0}
+  .chat-input-editable{font-size:14px;min-height:20px}
+  .send-btn{width:30px;height:30px;flex-shrink:0}
+  .input-btn{padding:5px;flex-shrink:0}
 
   /* Group call banner mobile */
   .group-call-banner{padding:8px 12px;gap:8px}
@@ -855,11 +859,10 @@
   /* Call message card mobile */
   .call-msg-card{min-width:160px}
 
-  /* Touch: show badge by default, hide more-btn */
+  /* Touch: hide more-btn completely on mobile, use long press */
   .conv-more-btn{display:none!important}
   .conv-badge-area{display:flex!important}
-  .conv-item:active .conv-badge-area{display:none!important}
-  .conv-item:active .conv-more-btn{display:flex!important}
+  .conv-right-actions{padding-right:2px}
 
   /* Reactions on mobile */
   .reaction-row{margin-top:-6px}
@@ -870,12 +873,12 @@
    RESPONSIVE — SMALL MOBILE (≤480px)
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .login-screen{padding:8px}
+  .login-screen{padding:12px}
   .login-logo{margin:12px 0 12px}
   .login-logo img{height:28px}
-  .login-card{padding:16px 12px;border-radius:var(--radius-sm)}
-  .login-user-grid{grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px}
-  .login-user-card{padding:8px 2px;gap:3px;border-width:1.5px}
+  .login-card{padding:16px 14px;border-radius:var(--radius-sm);margin:0 2px}
+  .login-user-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+  .login-user-card{padding:8px 4px;gap:4px;border-width:1.5px}
   .login-user-avatar{margin-bottom:0}
   .login-user-name{font-size:10px}
   .login-user-uid{font-size:8px}
@@ -1012,14 +1015,4 @@
   .profile-danger-btn{padding:11px 14px}
   .poll-option{min-height:42px}
   .emoji-btn{padding:8px;font-size:26px}
-
-  /* Touch: always show badge, show more-btn on active */
-  .conv-more-btn{display:none!important}
-  .conv-badge-area{display:flex!important}
-
-  /* Group call join button */
-  .group-call-join-btn{padding:8px 16px;min-height:36px}
-
-  /* Collab card button */
-  .collab-card-btn{padding:12px;min-height:44px}
 }

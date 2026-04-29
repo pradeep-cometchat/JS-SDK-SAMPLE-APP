@@ -2,7 +2,7 @@
 
 export const CURRENT_USER = {
   id: 'u1', name: 'Alex Chen', username: 'user-comet-chat-1',
-  initials: 'AC', color: '#6851D6', status: 'online', role: 'Frontend Developer'
+  initials: 'AC', color: '#6852D6', status: 'online', role: 'Frontend Developer'
 };
 
 export const USERS = [
@@ -23,7 +23,7 @@ export const CONVERSATIONS = [
   { id: 'dm_u6', type: 'dm',    userId: 'u6', unread: 1,  pinned: false },
   {
     id: 'grp_eng', type: 'group', name: 'engineering', initials: 'EN',
-    color: '#6851D6', icon: '⚙️', memberIds: ['u1','u2','u4','u5','u6','u7'],
+    color: '#6852D6', icon: '⚙️', memberIds: ['u1','u2','u4','u5','u6','u7'],
     description: 'Engineering team discussions, code reviews, architecture decisions.',
     groupType: 'private', unread: 5, pinned: true, ownerId: 'u4',
   },
