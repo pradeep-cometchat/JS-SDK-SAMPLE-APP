@@ -836,7 +836,7 @@
 
   /* Input row on mobile — flatten to single row */
   .input-row{flex-direction:column;padding:0;gap:0;border-radius:var(--radius-md)}
-  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:flex-end;width:100%;box-sizing:border-box}
+  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:center;width:100%;box-sizing:border-box}
   .input-row-inner .input-wrap{flex:1;min-width:0}
   .chat-input-editable{font-size:14px;min-height:20px}
   .send-btn{width:30px;height:30px;flex-shrink:0}
