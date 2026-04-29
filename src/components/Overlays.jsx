@@ -230,10 +230,12 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
   const [hovered, setHovered] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [showMobileActions, setShowMobileActions] = useState(false);
+  const [showAllReactions, setShowAllReactions] = useState(false);
   const rSender = getUserById(r.senderId);
   const isOwn = r.senderId === currentUser.id;
   const pickerRef = useRef(null);
   const bubbleRef = useRef(null);
+  const overflowRef = useRef(null);
   const longPressTimer = useRef(null);
   const isMobile = useIsMobile();
 
@@ -245,6 +247,13 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
   }, [showPicker]);
+
+  useEffect(() => {
+    if (!showAllReactions) return;
+    const h = (e) => { if (overflowRef.current && !overflowRef.current.contains(e.target)) setShowAllReactions(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, [showAllReactions]);
 
   const handleTouchStart = () => {
     if (!isMobile) return;
@@ -331,7 +340,28 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
                 </button>
               ))}
               {overflowCount > 0 && (
-                <span className="reaction-chip" style={{ fontSize: 11, fontWeight: 700 }}>+{overflowCount}</span>
+                <div style={{ position: 'relative', display: 'inline-flex' }} ref={overflowRef}>
+                  <button className="reaction-chip" onClick={() => setShowAllReactions(v => !v)}
+                    style={{ fontSize: 11, fontWeight: 700 }}>+{overflowCount}</button>
+                  {showAllReactions && (
+                    <div style={{
+                      position: 'absolute', bottom: 'calc(100% + 6px)', left: 0,
+                      background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12,
+                      padding: 10, boxShadow: 'var(--shadow-lg)', minWidth: 120, maxWidth: 240, zIndex: 30,
+                      animation: 'scaleIn 0.12s ease',
+                    }}>
+                      <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>All reactions</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                        {r.reactions.map(rx => (
+                          <button key={rx.emoji} className={`reaction-chip${rx.userIds.includes(currentUser.id) ? ' mine' : ''}`}
+                            onClick={() => { handleReact(rx.emoji); setShowAllReactions(false); }}>
+                            {rx.emoji} <span className="reaction-count">{rx.userIds.length}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           );
