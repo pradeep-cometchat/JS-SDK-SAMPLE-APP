@@ -340,14 +340,19 @@ export const MessageBubble = ({
             ) : (
               <>
                 {msg.text && (() => {
+                  // Count lines from HTML structure (divs and brs) + character length
+                  const htmlLineCount = (msg.text.match(/<div|<br|<p/gi) || []).length + 1;
                   const plainText = new DOMParser().parseFromString(msg.text, 'text/html').body.textContent || '';
-                  const lineCount = (plainText.match(/\n/g) || []).length + 1;
-                  const isLong = plainText.length > 200 || lineCount > 6;
+                  const isLong = plainText.length > 200 || htmlLineCount > 4;
                   return (
                     <>
-                      <div className={`msg-text${isLong && !expanded ? ' clamped' : ''}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
-                      {isLong && !expanded && (
-                        <button className="read-more-btn" onClick={(e) => { e.stopPropagation(); setExpanded(true); }}>Read more</button>
+                      {isLong && !expanded ? (
+                        <>
+                          <div className="msg-text" style={{ maxHeight: '4.5em', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: msg.text }} />
+                          <button className="read-more-btn" onClick={(e) => { e.stopPropagation(); setExpanded(true); }}>Read more</button>
+                        </>
+                      ) : (
+                        <div className="msg-text" dangerouslySetInnerHTML={{ __html: msg.text }} />
                       )}
                     </>
                   );

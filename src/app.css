@@ -148,9 +148,6 @@
 .msg-bubble-edited{font-size:10px;font-style:italic;color:inherit}
 
 /* ── READ MORE ── */
-.msg-text.clamped{max-height:10em;overflow:hidden;position:relative}
-.msg-text.clamped::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2em;background:linear-gradient(transparent,var(--bubble-other))}
-.msg-bubble.own .msg-text.clamped::after{background:linear-gradient(transparent,var(--bubble-own))}
 .read-more-btn{background:none;border:none;color:var(--accent);font-size:12.5px;font-weight:600;cursor:pointer;padding:4px 0 0;font-family:var(--font);display:block}
 .msg-bubble.own .read-more-btn{color:rgba(255,255,255,0.85)}
 
