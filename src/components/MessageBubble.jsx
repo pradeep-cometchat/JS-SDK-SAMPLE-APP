@@ -609,7 +609,13 @@ export const MessageBubble = ({
         {/* Reactions */}
         {Object.keys(reactionGroups).length > 0 && (() => {
           const allReactions = Object.entries(reactionGroups);
-          const maxVisible = isMobile ? 3 : 4;
+          const bubbleWidth = anchorRef.current?.offsetWidth || 200;
+          const chipWidth = 52;
+          const overflowChipWidth = 40;
+          let maxVisible = Math.max(1, Math.floor(bubbleWidth / chipWidth));
+          if (allReactions.length > maxVisible) {
+            maxVisible = Math.max(1, Math.floor((bubbleWidth - overflowChipWidth) / chipWidth));
+          }
           const visible = allReactions.slice(0, maxVisible);
           const overflow = allReactions.slice(maxVisible);
           return (
