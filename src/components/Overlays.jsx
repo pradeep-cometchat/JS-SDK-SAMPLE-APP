@@ -233,6 +233,7 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
   const rSender = getUserById(r.senderId);
   const isOwn = r.senderId === currentUser.id;
   const pickerRef = useRef(null);
+  const bubbleRef = useRef(null);
   const longPressTimer = useRef(null);
   const isMobile = useIsMobile();
 
@@ -275,7 +276,7 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
             <span className="msg-timestamp">{formatTime(r.ts)}</span>
           </div>
         )}
-        <div style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
+        <div ref={bubbleRef} style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
           {/* Desktop hover toolbar */}
           {hovered && !isMobile && (
             <div style={{
@@ -312,7 +313,13 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
           </div>
         </div>
         {r.reactions?.length > 0 && (() => {
-          const maxVisible = 3;
+          const bubbleWidth = bubbleRef.current?.offsetWidth || 200;
+          const chipWidth = 52;
+          const overflowChipWidth = 40;
+          let maxVisible = Math.max(1, Math.floor(bubbleWidth / chipWidth));
+          if (r.reactions.length > maxVisible) {
+            maxVisible = Math.max(1, Math.floor((bubbleWidth - overflowChipWidth) / chipWidth));
+          }
           const visible = r.reactions.slice(0, maxVisible);
           const overflowCount = r.reactions.length - maxVisible;
           return (

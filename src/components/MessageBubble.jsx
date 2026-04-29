@@ -609,7 +609,7 @@ export const MessageBubble = ({
         {/* Reactions */}
         {Object.keys(reactionGroups).length > 0 && (() => {
           const allReactions = Object.entries(reactionGroups);
-          const bubbleWidth = anchorRef.current?.offsetWidth || 200;
+          const bubbleWidth = anchorRef.current?.offsetWidth || 300;
           const chipWidth = 52;
           const overflowChipWidth = 40;
           let maxVisible = Math.max(1, Math.floor(bubbleWidth / chipWidth));
