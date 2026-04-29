@@ -343,23 +343,31 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
                 <div style={{ position: 'relative', display: 'inline-flex' }} ref={overflowRef}>
                   <button className="reaction-chip" onClick={() => setShowAllReactions(v => !v)}
                     style={{ fontSize: 11, fontWeight: 700 }}>+{overflowCount}</button>
-                  {showAllReactions && (
-                    <div style={{
-                      position: 'absolute', bottom: 'calc(100% + 6px)', left: 0,
-                      background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12,
-                      padding: 10, boxShadow: 'var(--shadow-lg)', minWidth: 120, maxWidth: 240, zIndex: 30,
-                      animation: 'scaleIn 0.12s ease',
-                    }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>All reactions</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                        {r.reactions.map(rx => (
-                          <button key={rx.emoji} className={`reaction-chip${rx.userIds.includes(currentUser.id) ? ' mine' : ''}`}
-                            onClick={() => { handleReact(rx.emoji); setShowAllReactions(false); }}>
-                            {rx.emoji} <span className="reaction-count">{rx.userIds.length}</span>
-                          </button>
-                        ))}
+                  {showAllReactions && createPortal(
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 200 }} onClick={() => setShowAllReactions(false)}>
+                      <div style={{
+                        position: 'absolute',
+                        ...((() => {
+                          const rect = overflowRef.current?.getBoundingClientRect();
+                          if (!rect) return { top: 100, left: 100 };
+                          return { bottom: window.innerHeight - rect.top + 6, left: Math.max(8, Math.min(rect.left, window.innerWidth - 220)) };
+                        })()),
+                        background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12,
+                        padding: 10, boxShadow: 'var(--shadow-lg)', minWidth: 120, maxWidth: 220, zIndex: 201,
+                        animation: 'scaleIn 0.12s ease',
+                      }} onClick={e => e.stopPropagation()}>
+                        <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>All reactions</div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                          {r.reactions.map(rx => (
+                            <button key={rx.emoji} className={`reaction-chip${rx.userIds.includes(currentUser.id) ? ' mine' : ''}`}
+                              onClick={() => { handleReact(rx.emoji); setShowAllReactions(false); }}>
+                              {rx.emoji} <span className="reaction-count">{rx.userIds.length}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    </div>,
+                    document.body
                   )}
                 </div>
               )}
