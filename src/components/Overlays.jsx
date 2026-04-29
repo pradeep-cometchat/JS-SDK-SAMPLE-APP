@@ -312,14 +312,13 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
           </div>
         </div>
         {r.reactions?.length > 0 && (
-          <div className="reaction-row" style={{ marginTop: 4 }}>
+          <div className="reaction-row">
             {r.reactions.map(rx => (
               <button key={rx.emoji} className={`reaction-chip${rx.userIds.includes(currentUser.id) ? ' mine' : ''}`}
                 onClick={() => handleReact(rx.emoji)}>
                 {rx.emoji} <span className="reaction-count">{rx.userIds.length}</span>
               </button>
             ))}
-            <button className="reaction-add-btn" onClick={() => isMobile ? setShowMobileActions(true) : setShowPicker(v => !v)}>+</button>
           </div>
         )}
       </div>
