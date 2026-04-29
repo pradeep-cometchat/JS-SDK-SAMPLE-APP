@@ -86,7 +86,7 @@
 .header-sub{font-size:12px;color:var(--text-muted)}
 .header-btn{padding:7px;border-radius:var(--radius-sm);color:var(--text-muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center}
 .header-btn:hover,.header-btn.active{background:var(--accent-light);color:var(--accent)}
-.group-avatar-sm{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.group-avatar-sm{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .group-avatar-lg{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto}
 .chat-search-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
 .chat-search-input{flex:1;background:none;border:none;font-size:13.5px;color:var(--text);font-family:var(--font)}
@@ -525,24 +525,6 @@
 .voice-wave-bar-inline{width:3px;border-radius:2px;background:var(--accent);opacity:0.4;transition:height 0.15s}
 .voice-wave-bar-inline.active{animation:waveAnim 1s ease-in-out infinite alternate;opacity:0.7}
 
-/* ── VOICE RECORDER POPUP ── */
-.voice-recorder-popup{position:absolute;bottom:calc(100% + 12px);right:-8px;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 24px 24px;width:300px;box-shadow:var(--shadow-lg);animation:scaleIn 0.15s ease;transform-origin:bottom right;display:flex;flex-direction:column;align-items:center;gap:20px}
-.voice-rec-hero-mic{width:96px;height:96px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;transition:all 0.3s}
-.voice-rec-hero-mic.recording{background:var(--accent);color:#fff;box-shadow:0 0 0 12px rgba(104,81,214,0.1),0 0 0 24px rgba(104,81,214,0.05);animation:micPulseHero 1.5s ease-in-out infinite}
-@keyframes micPulseHero{0%,100%{box-shadow:0 0 0 12px rgba(104,81,214,0.1),0 0 0 24px rgba(104,81,214,0.05)}50%{box-shadow:0 0 0 16px rgba(104,81,214,0.18),0 0 0 32px rgba(104,81,214,0.08)}}
-.voice-rec-timer{font-size:20px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:0.5px}
-.voice-rec-controls{display:flex;align-items:center;gap:16px;margin-top:4px}
-.voice-rec-circle-btn{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);cursor:pointer;transition:all 0.15s;background:var(--surface)}
-.voice-rec-circle-btn:hover{border-color:var(--text-muted)}
-.voice-rec-circle-btn.delete{color:#1a1528;border-color:var(--border)}
-html[data-theme="dark"] .voice-rec-circle-btn.delete{color:#e8e5f5}
-.voice-rec-circle-btn.record{color:#ef4444;border-color:var(--border)}
-.voice-rec-circle-btn.record.active{color:#ef4444;border-color:rgba(239,68,68,0.3)}
-.voice-rec-circle-btn.stop{color:#1a1528;border-color:var(--border)}
-html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
-.voice-rec-circle-btn.send{background:var(--accent);color:#fff;border-color:var(--accent)}
-.voice-rec-circle-btn.send:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
-
 /* ── VOICE NOTE PLAYER (WhatsApp style) ── */
 .voice-note-player{display:flex;align-items:center;gap:10px;padding:4px 0;min-width:200px}
 .voice-play-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:all 0.15s;flex-shrink:0}
@@ -765,12 +747,14 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
   .conv-list{padding:0 4px 8px}
   .sb-footer{padding:10px 12px}
 
-  /* Call overlay */
+  /* Call overlay — full width on mobile */
   .call-modal{width:calc(100vw - 24px);max-width:380px;border-radius:20px}
   .call-ctrl-btn{width:52px;height:52px}
   .call-ctrl-sm{padding:8px 10px;min-width:50px}
-  .in-call-controls{gap:6px}
+  .in-call-controls{gap:6px;flex-wrap:wrap;justify-content:center}
   .audio-call-area{padding:32px 24px 20px}
+  .video-call-area{height:200px}
+  .video-self-pip{width:70px;height:52px;bottom:8px;right:8px}
 
   /* Modals */
   .modal-card{max-width:calc(100vw - 24px);margin:12px;max-height:calc(100vh - 24px);overflow-y:auto}
@@ -815,15 +799,32 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
   /* Thread panel mobile */
   .thread-header{padding:0 12px;height:54px}
   .thread-body{padding:12px}
-  .thread-input{padding:10px 12px}
+  .thread-input{padding:8px 10px;gap:6px}
+  .thread-reply{gap:6px}
+  .thread-parent{padding:10px}
 
   /* Profile panel mobile */
-  .profile-hero{padding:20px 16px 16px}
+  .profile-hero{padding:16px 12px 12px}
   .profile-actions{padding:12px 16px}
   .profile-section{padding:12px 16px}
+  .profile-body{overflow-y:auto;-webkit-overflow-scrolling:touch}
 
   /* Group members panel */
-  .user-select-list{max-height:240px}
+  .user-select-list{max-height:calc(100vh - 320px);overflow-y:auto}
+
+  /* Search bar mobile */
+  .chat-search-bar{padding:6px 10px;gap:6px}
+  .chat-search-input{font-size:13px}
+  .search-count{font-size:11px}
+
+  /* Mention dropdown mobile */
+  .mention-dropdown{width:calc(100vw - 40px);max-width:300px;bottom:calc(100% + 4px)}
+
+  /* Pinned banner mobile */
+  .pinned-banner{padding:6px 12px;gap:8px}
+
+  /* Voice recorder inline mobile */
+  .voice-rec-inline{max-width:100%!important;margin-left:0!important}
 
   /* Context menu */
   .conv-context-menu{min-width:170px}
@@ -900,8 +901,14 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
   .call-modal{width:calc(100vw - 16px)}
   .call-ctrl-sm{padding:6px 8px;min-width:44px}
   .call-ctrl-sm span{font-size:9px}
+  .video-call-area{height:160px}
+  .video-self-pip{width:60px;height:44px}
+  .call-avatar-ring{width:100px;height:100px}
+  .ring1{width:72px;height:72px}
+  .ring2{width:88px;height:88px}
+  .ring3{width:104px;height:104px}
 
-  .ek-grid{grid-template-columns:repeat(7,1fr)}
+  .ek-grid{grid-template-columns:repeat(7,1fr);max-height:160px}
   .ek-emoji-btn{font-size:18px;padding:4px}
 
   .attach-grid{grid-template-columns:repeat(4,1fr)}
@@ -911,13 +918,34 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
   .format-toolbar{gap:0}
   .fmt-btn{padding:4px 5px}
 
-  .poll-bubble{min-width:160px}
+  .poll-bubble{min-width:160px;max-width:calc(100vw - 90px)}
 
   /* Collab cards small mobile */
-  .collab-card{max-width:calc(100vw - 80px)}
+  .collab-card{min-width:160px;max-width:calc(100vw - 80px)}
   .collab-card-preview{height:100px}
   .collab-card-title{font-size:13px}
   .collab-card-btn{padding:8px;font-size:13px}
+
+  /* Voice recorder small mobile */
+  .voice-rec-inline{padding:4px 8px!important}
+
+  /* Search bar small mobile */
+  .chat-search-bar{padding:4px 8px;gap:4px}
+  .search-count{font-size:10px;padding:0 2px}
+
+  /* Mention dropdown small mobile */
+  .mention-dropdown{width:calc(100vw - 30px);max-width:280px}
+
+  /* Pinned banner small mobile */
+  .pinned-banner{padding:5px 10px;gap:6px}
+
+  /* Call message card */
+  .call-msg-card{min-width:140px}
+
+  /* Group call banner */
+  .group-call-banner{padding:6px 10px;gap:6px}
+  .group-call-banner-icon{width:26px;height:26px}
+  .group-call-join-btn{padding:4px 10px;font-size:11px}
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -928,6 +956,36 @@ html[data-theme="dark"] .voice-rec-circle-btn.stop{color:#e8e5f5}
   .login-card{padding:14px 10px}
   .login-title{font-size:15px;margin-bottom:12px}
   .region-btn{padding:8px;font-size:11px}
+
+  /* Message bubble */
+  .msg-bubble{max-width:calc(100vw - 60px)}
+
+  /* Call overlay */
+  .call-modal{width:calc(100vw - 12px);border-radius:16px}
+  .call-ctrl-sm{min-width:40px;padding:5px 6px}
+  .call-ctrl-sm span{font-size:8px}
+
+  /* Emoji keyboard */
+  .ek-grid{grid-template-columns:repeat(6,1fr);max-height:140px}
+
+  /* Collab cards */
+  .collab-card{min-width:140px;max-width:calc(100vw - 70px)}
+  .collab-card-preview{height:80px}
+  .collab-card-title{font-size:12px}
+  .collab-card-sub{font-size:10px}
+
+  /* Poll bubble */
+  .poll-bubble{min-width:140px;max-width:calc(100vw - 70px)}
+
+  /* Modal steps */
+  .modal-steps{padding:10px 12px}
+  .step-dot{width:24px;height:24px;font-size:10px}
+  .step-item span{font-size:9px}
+  .step-line{min-width:12px}
+
+  /* Header */
+  .header-sub{max-width:100px}
+  .header-name{font-size:13px}
 }
 
 /* ── Touch-friendly improvements ── */

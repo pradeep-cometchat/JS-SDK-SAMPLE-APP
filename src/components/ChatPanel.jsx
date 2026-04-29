@@ -722,6 +722,21 @@ const ChatPanel = ({
     audioChunksRef.current = [];
   }, [conv.id]);
 
+  /* Cleanup voice recorder on unmount */
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        try {
+          mediaRecorderRef.current.stop();
+          if (mediaRecorderRef.current.stream) {
+            mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
+          }
+        } catch (e) { /* ignore */ }
+      }
+      clearInterval(recordingTimerRef.current);
+    };
+  }, []);
+
   /* Focus search input when opened */
   useEffect(() => {
     if (searchOpen && searchRef.current) searchRef.current.focus();
