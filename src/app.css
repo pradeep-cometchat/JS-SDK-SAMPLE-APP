@@ -834,13 +834,15 @@
   /* Hide format toolbar on mobile */
   .format-toolbar{display:none}
 
-  /* Input row on mobile — flatten to single row */
-  .input-row{flex-direction:column;padding:0;gap:0;border-radius:var(--radius-md)}
-  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:center;width:100%;box-sizing:border-box}
-  .input-row-inner .input-wrap{flex:1;min-width:0}
-  .chat-input-editable{font-size:14px;min-height:20px}
-  .send-btn{width:30px;height:30px;flex-shrink:0}
-  .input-btn{padding:5px;flex-shrink:0;align-self:flex-end}
+  /* Input row on mobile */
+  .input-row{padding:0;gap:0;border-radius:var(--radius-md)}
+  .format-toolbar{display:none}
+  .input-row-inner{padding:6px 8px;gap:6px;display:flex;align-items:center;width:100%;box-sizing:border-box;flex-direction:row!important}
+  .input-row-inner>*{flex-shrink:0}
+  .input-row-inner .input-wrap{flex:1 1 0;min-width:0;flex-shrink:1}
+  .chat-input-editable{font-size:14px;min-height:20px;max-height:80px}
+  .send-btn{width:32px;height:32px}
+  .input-btn{padding:5px}
 
   /* Group call banner mobile */
   .group-call-banner{padding:8px 12px;gap:8px}
