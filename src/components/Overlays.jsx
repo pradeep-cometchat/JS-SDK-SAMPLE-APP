@@ -311,16 +311,24 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
             <div className="msg-text">{r.text}</div>
           </div>
         </div>
-        {r.reactions?.length > 0 && (
-          <div className="reaction-row">
-            {r.reactions.map(rx => (
-              <button key={rx.emoji} className={`reaction-chip${rx.userIds.includes(currentUser.id) ? ' mine' : ''}`}
-                onClick={() => handleReact(rx.emoji)}>
-                {rx.emoji} <span className="reaction-count">{rx.userIds.length}</span>
-              </button>
-            ))}
-          </div>
-        )}
+        {r.reactions?.length > 0 && (() => {
+          const maxVisible = 3;
+          const visible = r.reactions.slice(0, maxVisible);
+          const overflowCount = r.reactions.length - maxVisible;
+          return (
+            <div className="reaction-row">
+              {visible.map(rx => (
+                <button key={rx.emoji} className={`reaction-chip${rx.userIds.includes(currentUser.id) ? ' mine' : ''}`}
+                  onClick={() => handleReact(rx.emoji)}>
+                  {rx.emoji} <span className="reaction-count">{rx.userIds.length}</span>
+                </button>
+              ))}
+              {overflowCount > 0 && (
+                <span className="reaction-chip" style={{ fontSize: 11, fontWeight: 700 }}>+{overflowCount}</span>
+              )}
+            </div>
+          );
+        })()}
       </div>
       {/* Mobile action bottom sheet */}
       {isMobile && showMobileActions && createPortal(

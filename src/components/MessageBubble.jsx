@@ -609,17 +609,7 @@ export const MessageBubble = ({
         {/* Reactions */}
         {Object.keys(reactionGroups).length > 0 && (() => {
           const allReactions = Object.entries(reactionGroups);
-          // Measure bubble width to determine how many chips fit
-          const bubbleWidth = anchorRef.current?.offsetWidth || 520;
-          const CHIP_WIDTH = 62; // avg chip width including gap
-          const ADD_BTN_WIDTH = 40;
-          const OVERFLOW_CHIP_WIDTH = 48;
-          const availableWidth = bubbleWidth - ADD_BTN_WIDTH;
-          let maxVisible = Math.max(1, Math.floor(availableWidth / CHIP_WIDTH));
-          // If we need overflow, reserve space for the "+N" chip
-          if (allReactions.length > maxVisible) {
-            maxVisible = Math.max(1, Math.floor((availableWidth - OVERFLOW_CHIP_WIDTH) / CHIP_WIDTH));
-          }
+          const maxVisible = isMobile ? 3 : 4;
           const visible = allReactions.slice(0, maxVisible);
           const overflow = allReactions.slice(maxVisible);
           return (
