@@ -352,7 +352,12 @@ export const MessageBubble = ({
                           <button className="read-more-btn" onClick={(e) => { e.stopPropagation(); setExpanded(true); }}>Read more</button>
                         </>
                       ) : (
-                        <div className="msg-text" dangerouslySetInnerHTML={{ __html: msg.text }} />
+                        <>
+                          <div className="msg-text" dangerouslySetInnerHTML={{ __html: msg.text }} />
+                          {isLong && expanded && (
+                            <button className="read-more-btn" onClick={(e) => { e.stopPropagation(); setExpanded(false); }}>Show less</button>
+                          )}
+                        </>
                       )}
                     </>
                   );

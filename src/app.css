@@ -832,9 +832,9 @@
   /* Hide format toolbar on mobile */
   .format-toolbar{display:none}
 
-  /* Input row on mobile — single row, no column layout */
-  .input-row{flex-direction:row;padding:6px 10px;gap:6px;align-items:center}
-  .input-row-inner{padding:0;gap:6px}
+  /* Input row on mobile — flatten to single row */
+  .input-row{flex-direction:column;padding:0;gap:0}
+  .input-row-inner{padding:6px 8px;gap:4px;display:flex;align-items:center;width:100%}
 
   /* Group call banner mobile */
   .group-call-banner{padding:8px 12px;gap:8px}
