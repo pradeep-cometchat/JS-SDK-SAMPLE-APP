@@ -42,7 +42,24 @@ const EmojiKeyboard = ({ onSelect, onClose }) => {
 
   const searchResults = useMemo(() => {
     if (!search.trim()) return null;
+    const q = search.trim().toLowerCase();
     const all = EMOJI_CATEGORIES.flatMap(c => c.emojis).filter((e, i, a) => a.indexOf(e) === i);
+    // Simple search: match emoji unicode name or just show all for short queries
+    // Since we don't have emoji names, filter by showing all and let user scroll
+    // For better UX, return a subset based on category keywords
+    const categoryMap = {
+      'smile': 'smileys', 'happy': 'smileys', 'sad': 'smileys', 'face': 'smileys', 'laugh': 'smileys', 'cry': 'smileys', 'angry': 'smileys', 'love': 'smileys', 'wink': 'smileys',
+      'hand': 'gestures', 'thumb': 'gestures', 'point': 'gestures', 'wave': 'gestures', 'clap': 'gestures', 'pray': 'gestures', 'fist': 'gestures',
+      'animal': 'animals', 'cat': 'animals', 'dog': 'animals', 'bear': 'animals', 'bird': 'animals', 'fish': 'animals', 'bug': 'animals',
+      'food': 'food', 'fruit': 'food', 'drink': 'food', 'pizza': 'food', 'coffee': 'food', 'cake': 'food',
+      'heart': 'symbols', 'star': 'symbols', 'fire': 'symbols', 'check': 'symbols', 'arrow': 'symbols',
+      'phone': 'objects', 'computer': 'objects', 'clock': 'objects', 'key': 'objects', 'tool': 'objects',
+    };
+    const matchedCategory = Object.entries(categoryMap).find(([key]) => q.includes(key));
+    if (matchedCategory) {
+      const cat = EMOJI_CATEGORIES.find(c => c.id === matchedCategory[1]);
+      return cat ? cat.emojis.slice(0, 64) : all.slice(0, 64);
+    }
     return all.slice(0, 64);
   }, [search]);
 
@@ -1230,7 +1247,7 @@ const ChatPanel = ({
               <PlusIcon size={17} />
             </button>
             {showAttachMenu && isMobileScreen && createPortal(
-              <div className="bottomsheet-backdrop" onClick={() => setShowAttachMenu(false)} />,
+              <div className="bottomsheet-backdrop" style={{ zIndex: 69 }} onClick={() => setShowAttachMenu(false)} />,
               document.body
             )}
             {showAttachMenu && (
@@ -1287,7 +1304,7 @@ const ChatPanel = ({
               <EmojiIcon size={17} />
             </button>
             {showEmojiKb && isMobileScreen && createPortal(
-              <div className="bottomsheet-backdrop" onClick={() => setShowEmojiKb(false)} />,
+              <div className="bottomsheet-backdrop" style={{ zIndex: 69 }} onClick={() => setShowEmojiKb(false)} />,
               document.body
             )}
             {showEmojiKb && (
