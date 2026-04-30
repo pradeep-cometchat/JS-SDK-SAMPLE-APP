@@ -96,14 +96,14 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
         <div className={`call-bg-shimmer ${callState}`} />
         {call.type === 'video' && callState === 'in-call' ? (
           <div className="video-call-area">
-            <div className="video-main" style={{ background: virtualBg === 'blur' ? '#1a1628' : virtualBg === 'office' ? '#2d3748' : virtualBg === 'mountains' ? '#1e3a5f' : virtualBg === 'gradient' ? 'linear-gradient(135deg,#6852D6,#0ea5e9)' : '#1a1628' }}>
+            <div className="video-main" style={{ background: virtualBg === 'blur' ? '#111827' : virtualBg === 'office' ? '#2d3748' : virtualBg === 'mountains' ? '#1e3a5f' : virtualBg === 'gradient' ? 'linear-gradient(135deg,#004EEB,#0ea5e9)' : '#111827' }}>
               <div className="video-user-label">{call.user.name}</div>
               {/* Remote user — show avatar (demo, no real remote stream) */}
               <div className="video-avatar-large"><Avatar user={call.user} size={80} /></div>
               {videoOff && <div className="video-off-badge">Camera off</div>}
             </div>
             {/* Self video PIP — show real camera feed */}
-            <div className="video-self-pip" style={{ background: videoOff ? '#2a2338' : 'transparent', overflow: 'hidden' }}>
+            <div className="video-self-pip" style={{ background: videoOff ? '#1f2937' : 'transparent', overflow: 'hidden' }}>
               {!videoOff && streamRef.current ? (
                 <video ref={selfVideoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }} />
               ) : (
@@ -140,7 +140,7 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
             <div className="vbg-options">
               {vBgOptions.map(bg => (
                 <button key={bg} className={`vbg-opt${virtualBg === bg ? ' selected' : ''}`} onClick={() => setVirtualBg(bg)}>
-                  <div className="vbg-preview" style={{ background: bg === 'none' ? '#2a2338' : bg === 'blur' ? '#1a1628' : bg === 'office' ? '#2d3748' : bg === 'mountains' ? '#1e3a5f' : 'linear-gradient(135deg,#6852D6,#0ea5e9)' }} />
+                  <div className="vbg-preview" style={{ background: bg === 'none' ? '#1f2937' : bg === 'blur' ? '#111827' : bg === 'office' ? '#2d3748' : bg === 'mountains' ? '#1e3a5f' : 'linear-gradient(135deg,#004EEB,#0ea5e9)' }} />
                   <span>{bg === 'none' ? 'None' : bg.charAt(0).toUpperCase() + bg.slice(1)}</span>
                 </button>
               ))}

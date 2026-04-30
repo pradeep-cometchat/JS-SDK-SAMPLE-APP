@@ -33,7 +33,7 @@ class ErrorBoundary extends Component {
           <pre style={{ fontSize: 12, textAlign: 'left', maxWidth: 600, margin: '20px auto', background: '#fee2e2', padding: 16, borderRadius: 8, overflow: 'auto' }}>
             {this.state.error?.toString()}
           </pre>
-          <button onClick={() => this.setState({ hasError: false, error: null })} style={{ padding: '8px 20px', background: '#6852D6', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', marginTop: 12 }}>
+          <button onClick={() => this.setState({ hasError: false, error: null })} style={{ padding: '8px 20px', background: '#004EEB', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', marginTop: 12 }}>
             Try Again
           </button>
         </div>
@@ -156,7 +156,7 @@ const LoginScreen = ({ onLogin }) => {
 };
 
 /* ─── TWEAKS DEFAULTS ─────────────────────────────────── */
-const TWEAK_DEFAULTS = { theme: 'light', density: 'comfortable', accentColor: '#6852D6' };
+const TWEAK_DEFAULTS = { theme: 'light', density: 'comfortable', accentColor: '#004EEB' };
 
 /* ─── DRAGGABLE FAB ────────────────────────────────────── */
 const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActiveCall, callStartTimeRef, setShowGroupModal, setShowNewDM, users }) => {
@@ -236,7 +236,7 @@ const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActive
           position: 'fixed', left: fabPos.x, top: fabPos.y, zIndex: 301,
           width: 40, height: 40, borderRadius: '50%', background: 'var(--accent)', color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 16px rgba(104,81,214,0.4)', border: 'none',
+          boxShadow: '0 4px 16px var(--accent-glow)', border: 'none',
           cursor: dragging ? 'grabbing' : 'grab', userSelect: 'none',
         }}
         title="Tweaks"
@@ -333,11 +333,13 @@ const App = () => {
     const hex = tweaks.accentColor;
     document.documentElement.style.setProperty('--accent', hex);
     const n = parseInt(hex.replace('#', ''), 16);
+    const r = n >> 16, g = (n >> 8) & 0xff, b = n & 0xff;
     const dk = (v) => Math.min(255, Math.max(0, v - 20));
-    const dr = dk(n >> 16), dg = dk((n >> 8) & 0xff), db = dk(n & 0xff);
+    const dr = dk(r), dg = dk(g), db = dk(b);
     document.documentElement.style.setProperty('--accent-dark', '#' + [dr, dg, db].map(x => x.toString(16).padStart(2, '0')).join(''));
-    document.documentElement.style.setProperty('--accent-glow', hex + '22');
-    document.documentElement.style.setProperty('--accent-light', hex + '12');
+    document.documentElement.style.setProperty('--accent-rgb', `${r},${g},${b}`);
+    document.documentElement.style.setProperty('--accent-glow', `rgba(${r},${g},${b},0.2)`);
+    document.documentElement.style.setProperty('--accent-light', `rgba(${r},${g},${b},0.08)`);
     document.documentElement.style.setProperty('--bubble-own', hex);
   }, [tweaks.accentColor]);
 

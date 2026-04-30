@@ -2,7 +2,7 @@
 
 export const CURRENT_USER = {
   id: 'u1', name: 'Alex Chen', username: 'user-comet-chat-1',
-  initials: 'AC', color: '#6852D6', status: 'online', role: 'Frontend Developer'
+  initials: 'AC', color: '#004EEB', status: 'online', role: 'Frontend Developer'
 };
 
 export const USERS = [
@@ -10,7 +10,7 @@ export const USERS = [
   { id: 'u3', name: 'Sam Rivera',   username: 'sam.rivera',  initials: 'SR', color: '#10b981', status: 'offline',    role: 'Product Manager',   avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' },
   { id: 'u4', name: 'Morgan Kim',   username: 'morgan.kim',  initials: 'MK', color: '#f59e0b', status: 'offline', role: 'Engineering Lead',  avatarUrl: null },
   { id: 'u5', name: 'Taylor Park',  username: 'taylor.park', initials: 'TP', color: '#ec4899', status: 'online',  role: 'Full-Stack Dev',    avatarUrl: 'https://randomuser.me/api/portraits/women/65.jpg' },
-  { id: 'u6', name: 'Casey Wong',   username: 'casey.wong',  initials: 'CW', color: '#8b5cf6', status: 'offline',     role: 'Backend Engineer',  avatarUrl: null },
+  { id: 'u6', name: 'Casey Wong',   username: 'casey.wong',  initials: 'CW', color: '#3b82f6', status: 'offline',     role: 'Backend Engineer',  avatarUrl: null },
   { id: 'u7', name: 'Riley Okafor', username: 'riley.okafor',initials: 'RO', color: '#f97316', status: 'online',  role: 'DevOps Engineer',   avatarUrl: 'https://randomuser.me/api/portraits/men/75.jpg' },
 ];
 
@@ -23,7 +23,7 @@ export const CONVERSATIONS = [
   { id: 'dm_u6', type: 'dm',    userId: 'u6', unread: 1,  pinned: false },
   {
     id: 'grp_eng', type: 'group', name: 'engineering', initials: 'EN',
-    color: '#6852D6', icon: '⚙️', memberIds: ['u1','u2','u4','u5','u6','u7'],
+    color: '#004EEB', icon: '⚙️', memberIds: ['u1','u2','u4','u5','u6','u7'],
     description: 'Engineering team discussions, code reviews, architecture decisions.',
     groupType: 'private', unread: 5, pinned: true, ownerId: 'u4',
   },

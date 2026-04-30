@@ -1,17 +1,19 @@
 /* ── TOKENS ── */
 :root {
-  --accent:       #6852D6;
-  --accent-dark:  #5540b8;
-  --accent-glow:  #6852D622;
-  --accent-light: #ede9fb;
-  --bg:           #f4f2fa;
+  color-scheme: light;
+  --accent:       #004EEB;
+  --accent-dark:  #003cc5;
+  --accent-rgb:   0,78,235;
+  --accent-glow:  rgba(0,78,235,0.2);
+  --accent-light: rgba(0,78,235,0.08);
+  --bg:           #f5f7fa;
   --surface:      #ffffff;
-  --border:       #e4e0f0;
-  --text:         #1a1528;
-  --text-muted:   #6b677e;
-  --text-light:   #a49fc0;
-  --bubble-own:   #6852D6;
-  --bubble-other: #ede9fb;
+  --border:       #e2e6ef;
+  --text:         #111827;
+  --text-muted:   #6b7280;
+  --text-light:   #9ca3af;
+  --bubble-own:   #004EEB;
+  --bubble-other: #e9eefb;
   --danger:       #ef4444;
   --success:      #22c55e;
   --shadow-sm:    0 1px 3px rgba(0,0,0,0.07);
@@ -19,23 +21,24 @@
   --shadow-lg:    0 12px 40px rgba(0,0,0,0.15);
   --radius-sm:    6px; --radius-md:10px; --radius-lg:16px;
   --font:         'DM Sans', sans-serif;
-  --sb-bg:        #1c1628;
-  --sb-border:    rgba(255,255,255,0.07);
-  --sb-hover:     #2a1e3f;
-  --sb-active-bg: rgba(104,81,214,0.2);
+  --sb-bg:        #111827;
+  --sb-border:    rgba(255,255,255,0.08);
+  --sb-hover:     #1f2937;
+  --sb-active-bg: var(--accent-glow);
   --sb-text:      rgba(255,255,255,0.85);
   --sb-muted:     rgba(255,255,255,0.4);
   --sb-icon:      rgba(255,255,255,0.45);
 }
 html[data-theme="dark"] {
-  --bg:           #13111e;
-  --surface:      #1c1a2e;
-  --border:       #2e2a45;
-  --text:         #e8e5f5;
-  --text-muted:   #8e8aa8;
-  --text-light:   #5e5a78;
-  --bubble-other: #252238;
-  --accent-light: #2a2345;
+  color-scheme: dark;
+  --bg:           #111318;
+  --surface:      #1a1d24;
+  --border:       #2a2e38;
+  --text:         #e5e7eb;
+  --text-muted:   #9ca3af;
+  --text-light:   #6b7280;
+  --bubble-other: #1f2229;
+  --accent-light: #1a2540;
   --shadow-sm:    0 1px 3px rgba(0,0,0,0.3);
   --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
 }
@@ -44,7 +47,7 @@ html[data-theme="dark"] {
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 html{overflow:auto}
-body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
 button{font-family:var(--font);border:none;background:none;cursor:pointer}
 input,textarea{font-family:var(--font);color:var(--text)}
 input:focus,textarea:focus{outline:none}
