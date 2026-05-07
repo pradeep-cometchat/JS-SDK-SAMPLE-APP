@@ -636,7 +636,7 @@ const ChatPanel = ({
       setShowLinkModal(true);
       return;
     }
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
     switch (tag) {
       case 'bold': document.execCommand('bold'); break;
       case 'italic': document.execCommand('italic'); break;
@@ -674,7 +674,7 @@ const ChatPanel = ({
 
   const handleInsertLink = () => {
     restoreSelection();
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
     if (linkText && linkUrl) {
       const sel = window.getSelection();
       if (sel.rangeCount) {
@@ -716,7 +716,7 @@ const ChatPanel = ({
     setSearchOpen(false);
     setSearchQuery('');
     setSearchIdx(0);
-    if (inputRef.current) { inputRef.current.innerHTML = ''; inputRef.current.focus(); }
+    if (inputRef.current) { inputRef.current.innerHTML = ''; inputRef.current.focus({ preventScroll: true }); }
     setActiveFormats({});
     setPinnedMsgIds([]);
     setPinnedViewIdx(0);
@@ -767,7 +767,7 @@ const ChatPanel = ({
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.innerHTML = msg.text || '';
-        inputRef.current.focus();
+        inputRef.current.focus({ preventScroll: true });
       }
     }, 50);
   };
@@ -1251,7 +1251,7 @@ const ChatPanel = ({
             )}
             {showAttachMenu && (
               <AttachMenu
-                onAttach={(file) => { setAttachedFile(file); inputRef.current?.focus(); }}
+                onAttach={(file) => { setAttachedFile(file); inputRef.current?.focus({ preventScroll: true }); }}
                 onClose={() => setShowAttachMenu(false)}
                 onPoll={() => { setShowPollModal(true); setShowAttachMenu(false); }}
               />
@@ -1309,7 +1309,7 @@ const ChatPanel = ({
             {showEmojiKb && (
               <EmojiKeyboard
                 onSelect={(e) => {
-                  inputRef.current?.focus();
+                  inputRef.current?.focus({ preventScroll: true });
                   document.execCommand('insertText', false, e);
                   setInput(inputRef.current?.innerHTML || '');
                   setShowEmojiKb(false);

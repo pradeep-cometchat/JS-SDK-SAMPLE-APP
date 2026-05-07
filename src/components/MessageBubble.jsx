@@ -462,9 +462,11 @@ export const MessageBubble = ({
           {/* Emoji picker */}
           {showEmojiPicker && !isMobile && (() => {
             const rect = anchorRef.current?.getBoundingClientRect();
-            const nearBottom = rect && rect.bottom > window.innerHeight - 280;
+            // Default: picker appears above the bubble. Flip down if the bubble is near
+            // the top of the viewport and the picker would overflow upward.
+            const nearTop = rect && rect.top < 300;
             return (
-              <div className={`mini-emoji-picker${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`}>
+              <div className={`mini-emoji-picker${isOwn ? ' own' : ''}${nearTop ? ' flip-up' : ''}`}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 4 }}>
                   {EMOJIS.map(e => (
                     <button key={e} className="emoji-btn" onClick={() => handleReact(e)}>{e}</button>
@@ -476,9 +478,9 @@ export const MessageBubble = ({
           {/* More menu */}
           {showMoreMenu && !isMobile && (() => {
             const rect = anchorRef.current?.getBoundingClientRect();
-            const nearBottom = rect && rect.bottom > window.innerHeight - 200;
+            const nearTop = rect && rect.top < 220;
             return (
-            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`}>
+            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearTop ? ' flip-up' : ''}`}>
               <button className="more-menu-item" onClick={() => {
                 const plain = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent : '';
                 navigator.clipboard?.writeText(plain).then(() => { setCopiedToast(true); setTimeout(() => setCopiedToast(false), 1500); });
@@ -509,9 +511,9 @@ export const MessageBubble = ({
           {/* Delete confirm */}
           {showDeleteConfirm && !isMobile && (() => {
             const rect = anchorRef.current?.getBoundingClientRect();
-            const nearBottom = rect && rect.bottom > window.innerHeight - 200;
+            const nearTop = rect && rect.top < 120;
             return (
-            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`} style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap', minWidth: 240 }}>
+            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearTop ? ' flip-up' : ''}`} style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap', minWidth: 240 }}>
               <span style={{ fontSize: 13, flex: 1 }}>Delete this message?</span>
               <button className="btn-ghost-sm" onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
               <button className="btn-danger-sm" onClick={() => { onDelete(msg.id); setShowDeleteConfirm(false); }}>Delete</button>

@@ -34,6 +34,8 @@ const preview = {
           'Overview',
           'Base Elements',
           ['Avatar', 'Button', 'File Icon', 'Icons', 'Input', 'Status Dot', '*'],
+          'App Screens',
+          ['Web', 'Mobile'],
           'Web',
           ['Conversations', 'Messages', 'Bubbles', 'Users', 'Groups', 'Calls', 'Misc'],
           'Mobile',
