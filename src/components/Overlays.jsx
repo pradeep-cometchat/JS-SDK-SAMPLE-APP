@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { getUserById, ALL_USERS, STATUS_COLORS, EMOJIS, formatTime, formatFullTime } from '../data';
 import { Avatar, StatusDot } from './Avatar';
-import { CloseIcon, SearchIcon, PhoneIcon, VideoIcon, ScreenShareIcon, RecordIcon, TrashIcon, LogoutIcon, ChevronRightIcon, EmojiIcon } from './Icons';
+import {
+  CloseIcon, SearchIcon, PhoneIcon, VideoIcon, ScreenShareIcon, RecordIcon,
+  TrashIcon, LogoutIcon, ChevronRightIcon, EmojiIcon, MicIcon, MuteIcon,
+  BlockIcon, ThreadIcon, SendIcon, CallAcceptIcon, CallDeclineIcon,
+  VirtualBgIcon, CameraOnIcon, CameraOffIcon, EndCallIcon,
+  ChatBubbleIcon, PublicGroupIcon, PrivateGroupIcon, PasswordGroupIcon,
+  EmojiSmileIcon, UsersIcon, PlusIcon,
+} from './Icons';
 
 /* ─── MOBILE DETECT HOOK ───────────────────────────────────── */
 const useIsMobile = () => {
@@ -152,13 +159,13 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
             <>
               <div style={{ textAlign: 'center' }}>
                 <button className="call-ctrl-btn decline" onClick={handleEnd} title="Decline">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9a11.1 11.1 0 00-3.37 2.46c-.18.18-.43.29-.7.29-.28 0-.53-.11-.71-.29L.29 14.46A.996.996 0 010 13.75c0-.28.11-.53.29-.71C3.34 9.78 7.46 8 12 8s8.66 1.78 11.71 5.04c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-1.77 1.77c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.29a11.1 11.1 0 00-3.37-2.46.981.981 0 01-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z" /></svg>
+                  <CallDeclineIcon size={24} />
                 </button>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>Decline</div>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <button className="call-ctrl-btn accept" onClick={handleAccept} title="Accept">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.29 21 3 13.71 3 4.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.26.2 2.47.57 3.58.11.35.03.74-.24 1.02L6.6 10.8z" /></svg>
+                  <CallAcceptIcon size={24} />
                 </button>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>Accept</div>
               </div>
@@ -179,9 +186,7 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
                   streamRef.current.getAudioTracks().forEach(t => { t.enabled = !newMuted; });
                 }
               }} title={muted ? 'Unmute' : 'Mute'}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  {muted ? <><line x1="1" y1="1" x2="23" y2="23" /><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6" /><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8" /></> : <><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" /><path d="M19 10v2a7 7 0 01-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></>}
-                </svg>
+                {muted ? <MuteIcon size={16} /> : <MicIcon size={16} />}
                 <span>{muted ? 'Unmute' : 'Mute'}</span>
               </button>
               {call.type === 'video' && (
@@ -192,9 +197,7 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
                     streamRef.current.getVideoTracks().forEach(t => { t.enabled = !newOff; });
                   }
                 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    {videoOff ? <><line x1="1" y1="1" x2="23" y2="23" /><path d="M21 21H3a2 2 0 01-2-2V8" /><path d="M16 16H3a2 2 0 01-2-2V6a2 2 0 012-2h8m7.5 5.5L23 7v10" /></> : <><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" /></>}
-                  </svg>
+                  {videoOff ? <CameraOffIcon size={16} /> : <CameraOnIcon size={16} />}
                   <span>{videoOff ? 'Start cam' : 'Stop cam'}</span>
                 </button>
               )}
@@ -208,12 +211,12 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
               </button>
               {call.type === 'video' && (
                 <button className={`call-ctrl-sm${showVBg ? ' active' : ''}`} onClick={() => setShowVBg(!showVBg)}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9l4-4 4 4 4-4 4 4" /><path d="M3 15l4 4 4-4 4 4 4-4" /></svg>
+                  <VirtualBgIcon size={16} />
                   <span>Bg</span>
                 </button>
               )}
               <button className="call-ctrl-sm end-call" onClick={handleEnd}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1"><line x1="18" y1="6" x2="6" y2="18" strokeWidth="2.5" strokeLinecap="round" /><line x1="6" y1="6" x2="18" y2="18" strokeWidth="2.5" strokeLinecap="round" /></svg>
+                <EndCallIcon size={16} />
                 <span>End</span>
               </button>
             </div>
@@ -226,7 +229,7 @@ export const CallOverlay = ({ call, onAccept, onEnd, currentUser }) => {
 
 
 /* ─── THREAD REPLY BUBBLE ──────────────────────────────────── */
-const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
+export const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
   const [hovered, setHovered] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [showMobileActions, setShowMobileActions] = useState(false);
@@ -298,7 +301,7 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
               ))}
               <div className="tb-divider" style={{ height: 14 }} />
               <button className="tb-btn" title="More reactions" onClick={() => setShowPicker(v => !v)} style={{ padding: '3px 4px' }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                <EmojiSmileIcon size={12} />
               </button>
             </div>
           )}
@@ -384,12 +387,15 @@ const ThreadReplyBubble = ({ r, currentUser, onReact }) => {
             <div className="bottomsheet-emoji-row">
               {['👍', '❤️', '😂', '😮', '🚀', '🙏'].map(e => (
                 <button key={e} className={`tb-emoji-btn${myReactions.has(e) ? ' active' : ''}`}
-                  onClick={() => handleReact(e)}
-                  style={{ fontSize: 22, padding: '8px 10px' }}>{e}</button>
+                  onClick={() => handleReact(e)}>{e}</button>
               ))}
-              <button className="tb-emoji-btn" onClick={() => { setShowMobileActions(false); setShowPicker(true); }}
-                style={{ fontSize: 16, padding: '8px 10px', color: 'var(--text-muted)' }}>
-                <EmojiIcon size={20} />
+              <button
+                className="bottomsheet-emoji-add"
+                title="More reactions"
+                aria-label="More reactions"
+                onClick={() => { setShowMobileActions(false); setShowPicker(true); }}
+              >
+                <PlusIcon size={18} />
               </button>
             </div>
           </div>
@@ -436,7 +442,7 @@ export const ThreadPanel = ({ parentMsg, replies, currentUser, onClose, onSend, 
     <div className="thread-panel">
       <div className="thread-header">
         <div className="thread-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>
+          <ChatBubbleIcon size={16} />
           Thread
         </div>
         <button className="icon-btn" onClick={onClose}><CloseIcon size={16} /></button>
@@ -468,7 +474,7 @@ export const ThreadPanel = ({ parentMsg, replies, currentUser, onClose, onSend, 
             rows={1} style={{ resize: 'none' }} />
         </div>
         <button className={`send-btn${input.trim() ? ' active' : ''}`} onClick={handleSend} disabled={!input.trim()}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+          <SendIcon />
         </button>
       </div>
     </div>
@@ -521,7 +527,7 @@ export const ProfilePanel = ({ user, onClose, onCall, onBlock, blockedUsers }) =
           <div className="profile-section-title">Actions</div>
           {!showBlockConfirm ? (
             <button className="profile-danger-btn" onClick={() => setShowBlockConfirm(true)}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" /></svg>
+              <BlockIcon size={14} />
               {isBlocked ? `Unblock ${user.name}` : `Block ${user.name}`}
             </button>
           ) : !isMobile ? (
@@ -623,11 +629,11 @@ export const GroupModal = ({ allUsers, currentUser, onClose, onCreate }) => {
                 <button key={type} className={`group-type-option${groupType === type ? ' selected' : ''}`} onClick={() => setGroupType(type)}>
                   <div className="gtype-icon" style={{ color: groupType === type ? 'var(--accent)' : 'var(--text-muted)' }}>
                     {type === 'public' ? (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                      <PublicGroupIcon size={20} />
                     ) : type === 'private' ? (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                      <PrivateGroupIcon size={20} />
                     ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                      <PasswordGroupIcon size={20} />
                     )}
                   </div>
                   <div style={{ flex: 1, textAlign: 'left' }}>
@@ -766,7 +772,7 @@ export const GroupMembersPanel = ({ conv, currentUser, onClose, onViewProfile, o
     <div className="profile-panel">
       <div className="thread-header">
         <div className="thread-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>
+          <UsersIcon size={16} />
           Members ({members.length})
         </div>
         <button className="icon-btn" onClick={onClose}><CloseIcon size={16} /></button>
@@ -789,7 +795,7 @@ export const GroupMembersPanel = ({ conv, currentUser, onClose, onViewProfile, o
           <button className="user-select-row" onClick={() => setShowAddMember(v => !v)}
             style={{ width: '100%', padding: 8, borderRadius: 8, cursor: 'pointer', marginBottom: 4 }}>
             <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--accent-light)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <PlusIcon size={16} />
             </div>
             <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
               <span className="user-select-name" style={{ color: 'var(--accent)' }}>Add Member</span>

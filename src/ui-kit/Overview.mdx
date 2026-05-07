@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview" />
+
+# CometChat Sample App — Component Library
+
+Every story is organized into two top-level groups.
+
+## Web
+
+Desktop/browser versions of each component. These assume a wide viewport and
+mouse-based interactions (hover toolbars, context menus, etc.).
+
+- **Screens** — Login, Full app shell
+- **Sidebar** — Sidebar, ConvItem, CallHistoryList, DraggableFab
+- **Chat Panel** — ChatPanel, AttachMenu, EmojiKeyboard, PollModal
+- **Messages** — MessageBubble, PollMessage, VoiceNotePlayer
+- **Overlays** — CallOverlay, ThreadPanel, ProfilePanel, GroupModal, GroupMembersPanel, NewDMModal, ErrorBoundary
+- **Primitives** — Avatar, StatusDot, FileIcon, Icons
+
+## Mobile
+
+The same components re-rendered inside a 390×740 phone-sized viewport with the
+`.app-shell.mobile` class applied, so the CSS media-query rules and bottom-sheet
+variants activate.
+
+- **Screens** — Login, Full app shell
+- **Sidebar** — Sidebar, ConvItem, CallHistoryList
+- **Chat Panel** — ChatPanel
+- **Messages** — MessageBubble (with long-press action sheet)
+- **Overlays** — CallOverlay, ThreadPanel, ProfilePanel, GroupModal, GroupMembersPanel, NewDMModal
+
+All previews are centered in the canvas instead of pinned to the left edge.

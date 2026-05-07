@@ -1,11 +1,29 @@
-// Shared SVG icon components
-// Material Symbol helper
+// Shared icon components — all use Material Symbols Rounded via the MIcon helper.
+// The font is loaded globally via index.html and .storybook/preview-head.html.
 const MIcon = ({ name, size = 20, fill = false, style }) => (
-  <span className="material-symbols-rounded" style={{ fontSize: size, fontVariationSettings: `'FILL' ${fill ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' ${size}`, lineHeight: 1, display: 'inline-flex', ...style }}>{name}</span>
+  <span
+    className="material-symbols-rounded"
+    aria-hidden="true"
+    style={{
+      fontSize: size,
+      width: size,
+      height: size,
+      fontVariationSettings: `'FILL' ${fill ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' ${size}`,
+      lineHeight: 1,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+      userSelect: 'none',
+      ...style,
+    }}
+  >
+    {name}
+  </span>
 );
 
 export const SearchIcon = ({ size = 14 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  <MIcon name="search" size={size} />
 );
 
 export const CloseIcon = ({ size = 16 }) => (
@@ -150,4 +168,142 @@ export const StopIcon = ({ size = 17 }) => (
 
 export const InfoIcon = ({ size = 13 }) => (
   <MIcon name="info" size={size} />
+);
+
+/* ── Additional Material Symbols used across the app (previously inline SVGs) ── */
+
+export const BackIcon = ({ size = 18 }) => (
+  <MIcon name="arrow_back_ios_new" size={size} />
+);
+
+export const ReplyIcon = ({ size = 15 }) => (
+  <MIcon name="reply" size={size} />
+);
+
+export const AlertIcon = ({ size = 14 }) => (
+  <MIcon name="error" size={size} />
+);
+
+export const LinkIcon = ({ size = 14 }) => (
+  <MIcon name="link" size={size} />
+);
+
+export const BoldIcon = ({ size = 14 }) => (
+  <MIcon name="format_bold" size={size} />
+);
+
+export const ItalicIcon = ({ size = 14 }) => (
+  <MIcon name="format_italic" size={size} />
+);
+
+export const UnderlineIcon = ({ size = 14 }) => (
+  <MIcon name="format_underlined" size={size} />
+);
+
+export const StrikeIcon = ({ size = 14 }) => (
+  <MIcon name="format_strikethrough" size={size} />
+);
+
+export const OrderedListIcon = ({ size = 14 }) => (
+  <MIcon name="format_list_numbered" size={size} />
+);
+
+export const UnorderedListIcon = ({ size = 14 }) => (
+  <MIcon name="format_list_bulleted" size={size} />
+);
+
+export const QuoteIcon = ({ size = 14 }) => (
+  <MIcon name="format_quote" size={size} />
+);
+
+export const CodeIcon = ({ size = 14 }) => (
+  <MIcon name="code" size={size} />
+);
+
+export const CodeBlockIcon = ({ size = 14 }) => (
+  <MIcon name="integration_instructions" size={size} />
+);
+
+export const PauseIcon = ({ size = 17 }) => (
+  <MIcon name="pause" size={size} fill />
+);
+
+export const ChevronLeftIcon = ({ size = 18 }) => (
+  <MIcon name="chevron_left" size={size} />
+);
+
+export const CallDirectionIcon = ({ direction = 'outgoing', size = 12, color }) => (
+  <MIcon
+    name={direction === 'outgoing' ? 'call_made' : 'call_received'}
+    size={size}
+    style={color ? { color } : undefined}
+  />
+);
+
+export const PlayIcon = ({ size = 16 }) => (
+  <MIcon name="play_arrow" size={size} fill />
+);
+
+export const DoubleCheckIcon = ({ size = 14, style }) => (
+  <MIcon name="done_all" size={size} style={style} />
+);
+
+export const WhiteboardIcon = ({ size = 20 }) => (
+  <MIcon name="draw" size={size} />
+);
+
+export const DocIcon = ({ size = 20 }) => (
+  <MIcon name="article" size={size} />
+);
+
+export const CallAcceptIcon = ({ size = 24 }) => (
+  <MIcon name="call" size={size} fill style={{ color: 'white' }} />
+);
+
+export const CallDeclineIcon = ({ size = 24 }) => (
+  <MIcon name="call_end" size={size} fill style={{ color: 'white' }} />
+);
+
+export const VirtualBgIcon = ({ size = 16 }) => (
+  <MIcon name="wallpaper" size={size} />
+);
+
+export const CameraOnIcon = ({ size = 16 }) => (
+  <MIcon name="videocam" size={size} />
+);
+
+export const CameraOffIcon = ({ size = 16 }) => (
+  <MIcon name="videocam_off" size={size} />
+);
+
+export const EndCallIcon = ({ size = 16 }) => (
+  <MIcon name="call_end" size={size} fill style={{ color: 'white' }} />
+);
+
+export const TweaksIcon = ({ size = 18 }) => (
+  <MIcon name="tune" size={size} />
+);
+
+export const ChatBubbleIcon = ({ size = 16 }) => (
+  <MIcon name="forum" size={size} />
+);
+
+export const PublicGroupIcon = ({ size = 20 }) => (
+  <MIcon name="public" size={size} />
+);
+
+export const PrivateGroupIcon = ({ size = 20 }) => (
+  <MIcon name="lock" size={size} />
+);
+
+export const PasswordGroupIcon = ({ size = 20 }) => (
+  <MIcon name="key" size={size} />
+);
+
+export const EmojiSmileIcon = ({ size = 12 }) => (
+  <MIcon name="add_reaction" size={size} />
+);
+
+export const CameraIcon = ({ size = 20 }) => (
+  <MIcon name="photo_camera" size={size} />
 );

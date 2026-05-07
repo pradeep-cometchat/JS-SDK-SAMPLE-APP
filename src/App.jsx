@@ -11,10 +11,11 @@ import {
   CallOverlay, ThreadPanel, ProfilePanel,
   GroupModal, NewDMModal, GroupMembersPanel,
 } from './components/Overlays';
+import { CheckIcon, BackIcon, TweaksIcon, ChatBubbleIcon } from './components/Icons';
 import './app.css';
 
 /* ─── ERROR BOUNDARY ──────────────────────────────────── */
-class ErrorBoundary extends Component {
+export class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -44,7 +45,7 @@ class ErrorBoundary extends Component {
 }
 
 /* ─── LOGIN SCREEN ────────────────────────────────────── */
-const LoginScreen = ({ onLogin }) => {
+export const LoginScreen = ({ onLogin }) => {
   const [selected, setSelected] = useState(CURRENT_USER.id);
   const [uid, setUid] = useState('');
   const [error, setError] = useState('');
@@ -129,7 +130,7 @@ const LoginScreen = ({ onLogin }) => {
               onClick={() => { setSelected(user.id); setUid(''); setError(''); }}>
               {selected === user.id && (
                 <div className="login-check">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  <CheckIcon size={10} />
                 </div>
               )}
               <div className="login-user-avatar"><Avatar user={user} size={avatarSize} /></div>
@@ -159,7 +160,7 @@ const LoginScreen = ({ onLogin }) => {
 const TWEAK_DEFAULTS = { theme: 'light', density: 'comfortable', accentColor: '#004EEB' };
 
 /* ─── DRAGGABLE FAB ────────────────────────────────────── */
-const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActiveCall, callStartTimeRef, setShowGroupModal, setShowNewDM, users }) => {
+export const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActiveCall, callStartTimeRef, setShowGroupModal, setShowNewDM, users }) => {
   const [fabPos, setFabPos] = useState({ x: window.innerWidth - 60, y: window.innerHeight - 120 });
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef(null);
@@ -241,12 +242,12 @@ const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActive
         }}
         title="Tweaks"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
+        <TweaksIcon size={18} />
       </button>
       {showTweaks && (
         <div className="tweaks-panel visible" style={panelStyle}>
           <div className="tweaks-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
+            <TweaksIcon size={14} />
             Tweaks
           </div>
           <div className="tweak-row">
@@ -565,11 +566,11 @@ const App = () => {
             <div className="empty-state">
               {isMobile && (
                 <button className="mobile-back-btn" onClick={handleBackToSidebar} style={{position:'absolute',top:16,left:16}}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                  <BackIcon size={20} />
                 </button>
               )}
               <div className="empty-state-icon">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <ChatBubbleIcon size={64} />
               </div>
               <h3 className="empty-state-title">Welcome to CometChat</h3>
               <p className="empty-state-text">Select a conversation from the sidebar to start chatting</p>

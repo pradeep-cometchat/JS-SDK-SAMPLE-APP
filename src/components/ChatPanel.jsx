@@ -8,6 +8,9 @@ import {
   SearchIcon, CloseIcon, PhoneIcon, VideoIcon, UserIcon, UsersIcon,
   PlusIcon, EmojiIcon, SendIcon, CheckIcon, EditIcon, PollIcon,
   ChevronUpIcon, ChevronDownIcon, MicIcon, StopIcon, TrashIcon, PinIcon,
+  BackIcon, AlertIcon, LinkIcon, BoldIcon, ItalicIcon, UnderlineIcon,
+  StrikeIcon, OrderedListIcon, UnorderedListIcon, QuoteIcon, CodeIcon,
+  CodeBlockIcon, PauseIcon, BlockIcon, CameraIcon,
 } from './Icons';
 
 // Detect mobile for bottom sheet rendering
@@ -22,7 +25,7 @@ const useIsMobile = () => {
 };
 
 /* ─── EMOJI KEYBOARD ─────────────────────────────────────── */
-const EmojiKeyboard = ({ onSelect, onClose }) => {
+export const EmojiKeyboard = ({ onSelect, onClose }) => {
   const [activeCategory, setActiveCategory] = useState('smileys');
   const [search, setSearch] = useState('');
   const searchRef = useRef(null);
@@ -121,7 +124,7 @@ const EmojiKeyboard = ({ onSelect, onClose }) => {
 
 
 /* ─── POLL MODAL ─────────────────────────────────────────── */
-const PollModal = ({ onClose, onSend }) => {
+export const PollModal = ({ onClose, onSend }) => {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
   const [error, setError] = useState('');
@@ -179,9 +182,7 @@ const PollModal = ({ onClose, onSend }) => {
               borderRadius: 8, marginBottom: 12, fontSize: 13,
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+              <AlertIcon size={14} />
               {error}
             </div>
           )}
@@ -264,7 +265,7 @@ const PollModal = ({ onClose, onSend }) => {
 
 
 /* ─── ATTACH MENU ────────────────────────────────────────── */
-const AttachMenu = ({ onAttach, onClose, onPoll }) => {
+export const AttachMenu = ({ onAttach, onClose, onPoll }) => {
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -276,7 +277,7 @@ const AttachMenu = ({ onAttach, onClose, onPoll }) => {
   }, [onClose]);
 
   const items = [
-    { id: 'camera',     label: 'Camera',       color: '#004EEB', icon: <VideoIcon size={20} /> },
+    { id: 'camera',     label: 'Camera',       color: '#004EEB', icon: <CameraIcon size={20} /> },
     { id: 'image',      label: 'Attach Image',  color: '#0ea5e9', icon: <FileIcon type="image" size={20} color="#0ea5e9" /> },
     { id: 'video',      label: 'Attach Video',  color: '#6366f1', icon: <VideoIcon size={20} /> },
     { id: 'audio',      label: 'Attach Audio',  color: '#ec4899', icon: <FileIcon type="audio" size={20} color="#ec4899" /> },
@@ -856,7 +857,7 @@ const ChatPanel = ({
         <div className="chat-header-left">
           {isMobile && onBack && (
             <button className="header-btn mobile-back-btn" onClick={onBack} title="Back" aria-label="Back to conversations">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              <BackIcon size={18} />
             </button>
           )}
           {conv.type === 'dm' && otherUser ? (
@@ -995,7 +996,7 @@ const ChatPanel = ({
               setPinnedViewIdx(i => i < pinnedMsgIds.length - 1 ? i + 1 : 0);
             }
           }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+            <PinIcon size={14} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>
                 {pinnedMsgIds.length > 1 ? `Pin ${safeIdx + 1} of ${pinnedMsgIds.length}` : 'Pinned message'} · {pinnedSender?.name}
@@ -1094,7 +1095,7 @@ const ChatPanel = ({
       {/* Input area */}
       {isBlocked ? (
         <div className="blocked-banner">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          <BlockIcon size={16} />
           <span>You've blocked <strong>{otherUser.name}</strong>. Unblock them to send messages.</span>
         </div>
       ) : (
@@ -1198,16 +1199,14 @@ const ChatPanel = ({
             {/* Pause/Resume */}
             {isRecording && !audioBlob && (
               <button className="input-btn" onClick={isPaused ? resumeRecording : pauseRecording} title={isPaused ? 'Resume' : 'Pause'}>
-                {isPaused ? <MicIcon size={17} /> : (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                )}
+                {isPaused ? <MicIcon size={17} /> : <PauseIcon size={17} />}
               </button>
             )}
 
             {/* Stop (when recording) */}
             {isRecording && !audioBlob && (
               <button className="input-btn" onClick={stopRecording} title="Stop" style={{ color: 'var(--accent)' }}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+                <StopIcon size={17} />
               </button>
             )}
 
@@ -1222,18 +1221,18 @@ const ChatPanel = ({
         <div className="input-row">
           {/* Formatting toolbar */}
           <div className="format-toolbar">
-            <button className={`fmt-btn${activeFormats.bold ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('bold')} title="Bold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"/><path d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg></button>
-            <button className={`fmt-btn${activeFormats.italic ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('italic')} title="Italic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
-            <button className={`fmt-btn${activeFormats.underline ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('underline')} title="Underline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg></button>
-            <button className={`fmt-btn${activeFormats.strike ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('strike')} title="Strikethrough"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.3 4.9c-1.2-.8-2.8-1.4-4.8-1.4-3.2 0-5.2 1.6-5.2 4 0 1.2.5 2.2 1.5 2.9"/><line x1="4" y1="12" x2="20" y2="12"/><path d="M15.6 13.4c.4.6.6 1.4.6 2.1 0 2.8-2.2 4.5-5.6 4.5-2 0-3.8-.6-5-1.6"/></svg></button>
+            <button className={`fmt-btn${activeFormats.bold ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('bold')} title="Bold"><BoldIcon size={18} /></button>
+            <button className={`fmt-btn${activeFormats.italic ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('italic')} title="Italic"><ItalicIcon size={18} /></button>
+            <button className={`fmt-btn${activeFormats.underline ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('underline')} title="Underline"><UnderlineIcon size={18} /></button>
+            <button className={`fmt-btn${activeFormats.strike ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('strike')} title="Strikethrough"><StrikeIcon size={18} /></button>
             <div className="fmt-divider" />
-            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('link')} title="Link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
-            <button className={`fmt-btn${activeFormats.ol ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ol')} title="Ordered List"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
-            <button className={`fmt-btn${activeFormats.ul ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ul')} title="Unordered List"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg></button>
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('link')} title="Link"><LinkIcon size={18} /></button>
+            <button className={`fmt-btn${activeFormats.ol ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ol')} title="Ordered List"><OrderedListIcon size={18} /></button>
+            <button className={`fmt-btn${activeFormats.ul ? ' active' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('ul')} title="Unordered List"><UnorderedListIcon size={18} /></button>
             <div className="fmt-divider" />
-            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('quote')} title="Quote"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('code')} title="Inline Code"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
-            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('codeblock')} title="Code Block"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M9 8l-3 4 3 4"/><path d="M15 8l3 4-3 4"/></svg></button>
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('quote')} title="Quote"><QuoteIcon size={18} /></button>
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('code')} title="Inline Code"><CodeIcon size={18} /></button>
+            <button className="fmt-btn" onMouseDown={e => e.preventDefault()} onClick={() => applyFormat('codeblock')} title="Code Block"><CodeBlockIcon size={18} /></button>
           </div>
           {/* Input row inner */}
           <div className="input-row-inner">
@@ -1353,7 +1352,7 @@ const ChatPanel = ({
           <div className="modal-card" style={{ maxWidth: 400 }}>
             <div className="modal-header">
               <div className="modal-title">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                <LinkIcon size={16} />
                 Insert Link
               </div>
               <button className="icon-btn" onClick={() => { setShowLinkModal(false); savedSelectionRef.current = null; }}>

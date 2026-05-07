@@ -3,7 +3,12 @@ import { createPortal } from 'react-dom';
 import { getUserById, formatTime, formatFullTime, EMOJIS, STATUS_COLORS } from '../data';
 import { Avatar } from './Avatar';
 import { FileIcon } from './FileIcon';
-import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon, PhoneIcon, VideoIcon } from './Icons';
+import {
+  ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon,
+  PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon, PhoneIcon, VideoIcon,
+  ReplyIcon, PollIcon, PlayIcon, PauseIcon, CheckIcon, DoubleCheckIcon,
+  WhiteboardIcon, DocIcon, ChevronRightIcon, PlusIcon,
+} from './Icons';
 
 // Detect mobile for bottom sheet rendering
 const useIsMobile = () => {
@@ -17,7 +22,7 @@ const useIsMobile = () => {
 };
 
 /* ─── POLL VOTES MODAL ────────────────────────────────── */
-const PollVotesModal = ({ poll, onClose }) => {
+export const PollVotesModal = ({ poll, onClose }) => {
   return createPortal(
     <div className="poll-votes-modal" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="poll-votes-card">
@@ -57,7 +62,7 @@ const PollVotesModal = ({ poll, onClose }) => {
 };
 
 /* ─── POLL MESSAGE ───────────────────────────────────────── */
-const PollMessage = ({ poll, msgId, currentUserId, onVote, isOwn }) => {
+export const PollMessage = ({ poll, msgId, currentUserId, onVote, isOwn }) => {
   const totalVotes = poll.options.reduce((s, o) => s + o.votes.length, 0);
   const userVoted = poll.options.findIndex(o => o.votes.includes(currentUserId));
   const [showVotes, setShowVotes] = useState(false);
@@ -65,9 +70,7 @@ const PollMessage = ({ poll, msgId, currentUserId, onVote, isOwn }) => {
   return (
     <div className="poll-bubble">
       <div className="poll-question">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
-        </svg>
+        <PollIcon size={14} />
         {poll.question}
       </div>
       <div className="poll-options">
@@ -83,7 +86,7 @@ const PollMessage = ({ poll, msgId, currentUserId, onVote, isOwn }) => {
                 <span className="poll-option-text" style={{ color: isOwn ? '#fff' : 'var(--text)' }}>{opt.text}</span>
                 <span className="poll-option-pct">
                   {hasVoted ? `${pct}%` : ''}
-                  {isMyVote && <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 4 }}><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>}
+                  {isMyVote && <CheckIcon size={12} style={{ marginLeft: 4 }} />}
                 </span>
               </div>
             </button>
@@ -108,7 +111,7 @@ const PollMessage = ({ poll, msgId, currentUserId, onVote, isOwn }) => {
 /* ─── VOICE NOTE PLAYER (WhatsApp style) ──────────────── */
 const WAVEFORM_BARS = Array.from({ length: 28 }, () => Math.random() * 0.7 + 0.3);
 
-const VoiceNotePlayer = ({ file, isOwn }) => {
+export const VoiceNotePlayer = ({ file, isOwn }) => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -163,11 +166,7 @@ const VoiceNotePlayer = ({ file, isOwn }) => {
   return (
     <div className="voice-note-player" style={{ marginTop: file.name && 0 }}>
       <button className="voice-play-btn" onClick={togglePlay}>
-        {playing ? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-        ) : (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        )}
+        {playing ? <PauseIcon size={16} /> : <PlayIcon size={16} />}
       </button>
       <div className="voice-waveform">
         {WAVEFORM_BARS.map((h, i) => (
@@ -311,7 +310,7 @@ export const MessageBubble = ({
                 <ThreadIcon />
               </button>
               <button className="tb-btn" title="Reply" onClick={() => { onReply(msg); }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+                <ReplyIcon size={15} />
               </button>
               {isOwn && <button className="tb-btn" title="Edit message" onClick={() => onEditRequest(msg)}><EditIcon /></button>}
               {isOwn && <button className="tb-btn danger" title="Delete" onClick={() => { setShowDeleteConfirm(v => !v); setShowMoreMenu(false); setShowEmojiPicker(false); }}><TrashIcon /></button>}
@@ -381,7 +380,7 @@ export const MessageBubble = ({
                     <img src={msg.file.previewUrl} alt={msg.file.name} style={{ maxWidth: '100%', width: '100%', maxHeight: 220, borderRadius: 8, objectFit: 'cover', display: 'block', cursor: 'pointer' }} onClick={() => window.open(msg.file.previewUrl, '_blank')} />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', background: isOwn ? 'rgba(255,255,255,0.1)' : 'var(--bg)', borderRadius: 8, marginTop: msg.text ? 4 : 0 }}>
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={isOwn ? 'rgba(255,255,255,0.6)' : 'var(--text-muted)'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      <FileIcon type="image" size={22} color={isOwn ? 'rgba(255,255,255,0.6)' : 'var(--text-muted)'} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{msg.file.name}</div>
                         {msg.file.size && <div style={{ fontSize: 11, opacity: 0.6, marginTop: 1 }}>{msg.file.size}</div>}
@@ -417,9 +416,9 @@ export const MessageBubble = ({
                   <div className="collab-card-info">
                     <div className="collab-card-icon">
                       {msg.file.type === 'whiteboard' ? (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                        <WhiteboardIcon size={20} />
                       ) : (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        <DocIcon size={20} />
                       )}
                     </div>
                     <div>
@@ -447,15 +446,15 @@ export const MessageBubble = ({
             {/* Inline timestamp + read receipt + pin */}
             <div className="msg-bubble-footer">
               {pinnedMsgIds?.includes(msg.id) && (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill={isOwn ? 'rgba(255,255,255,0.8)' : 'var(--accent)'} stroke="none" style={{ flexShrink: 0 }}><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+                <PinIcon size={10} />
               )}
               <span className="msg-bubble-time">{formatTime(msg.ts)}</span>
               {msg.edited && <span className="msg-bubble-edited">(edited)</span>}
               {isOwn && (
                 msg.readBy && msg.readBy.length > 0 ? (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /><polyline points="15 6 9 12" /></svg>
+                  <DoubleCheckIcon size={14} style={{ color: '#22c55e' }} />
                 ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ opacity: 0.4 }}><polyline points="20 6 9 17 4 12" /></svg>
+                  <CheckIcon size={14} style={{ opacity: 0.4 }} />
                 )
               )}
             </div>
@@ -530,18 +529,21 @@ export const MessageBubble = ({
               <div className="bottomsheet-emoji-row">
                 {['👍', '❤️', '😂', '😮', '🚀', '🙏'].map(e => (
                   <button key={e} className={`tb-emoji-btn${myReactions.has(e) ? ' active' : ''}`}
-                    onClick={() => { handleReact(e); setShowMobileActions(false); }}
-                    style={{ fontSize: 22, padding: '8px 10px' }}>{e}</button>
+                    onClick={() => { handleReact(e); setShowMobileActions(false); }}>{e}</button>
                 ))}
-                <button className="tb-emoji-btn" onClick={() => { setShowMobileActions(false); setShowEmojiPicker(true); }}
-                  style={{ fontSize: 16, padding: '8px 10px', color: 'var(--text-muted)' }}>
-                  <EmojiIcon size={20} />
+                <button
+                  className="bottomsheet-emoji-add"
+                  title="More reactions"
+                  aria-label="More reactions"
+                  onClick={() => { setShowMobileActions(false); setShowEmojiPicker(true); }}
+                >
+                  <PlusIcon size={18} />
                 </button>
               </div>
               <div className="bottomsheet-divider" />
               <div className="bottomsheet-actions">
                 <button className="bottomsheet-action" onClick={() => { onReply(msg); setShowMobileActions(false); }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+                  <ReplyIcon size={16} />
                   Reply
                 </button>
                 <button className="bottomsheet-action" onClick={() => { onThreadOpen(msg); setShowMobileActions(false); }}>
@@ -703,7 +705,7 @@ export const MessageBubble = ({
         {msg.threadCount > 0 && (
           <button className="thread-link" onClick={() => onThreadOpen(msg)}>
             <span>{msg.threadCount} {msg.threadCount === 1 ? 'reply' : 'replies'}</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}><polyline points="9 18 15 12 9 6" /></svg>
+            <ChevronRightIcon size={12} />
           </button>
         )}
       </div>
@@ -729,7 +731,7 @@ export const MessageBubble = ({
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <CheckIcon size={14} style={{ color: 'var(--accent)' }} />
                     <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>Sent</span>
                   </div>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{new Date(msg.ts).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
@@ -737,7 +739,7 @@ export const MessageBubble = ({
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/><polyline points="15 6 9 12"/></svg>
+                    <DoubleCheckIcon size={14} style={{ color: '#0ea5e9' }} />
                     <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>Delivered</span>
                   </div>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{new Date(msg.ts + 1200).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
@@ -745,7 +747,7 @@ export const MessageBubble = ({
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/><polyline points="15 6 9 12"/></svg>
+                    <DoubleCheckIcon size={14} style={{ color: '#22c55e' }} />
                     <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>Read</span>
                   </div>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>

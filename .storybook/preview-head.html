@@ -1,0 +1,27 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  rel="stylesheet"
+/>
+
+<!--
+  The real app sets `html,body{height:100%;overflow:hidden}` in index.css so the
+  chat scrolls inside its own container. That rule breaks scrolling inside the
+  Storybook preview iframe (stories that are taller than the viewport get clipped).
+  Restore normal document scrolling here.
+-->
+<style>
+  html, body {
+    height: auto !important;
+    min-height: 100%;
+    overflow: auto !important;
+  }
+  #storybook-root {
+    min-height: 100%;
+  }
+</style>
