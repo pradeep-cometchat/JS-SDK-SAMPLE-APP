@@ -10,6 +10,12 @@ const preview = {
         date: /Date$/i,
       },
     },
+    // Auto-expand the source-code block on the Docs tab so the JSX is visible
+    // without a click. On the Canvas tab, the `<>` Show code button still works.
+    docs: {
+      source: { state: 'open' },
+      toc: true,
+    },
     backgrounds: {
       default: 'app',
       values: [
