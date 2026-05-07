@@ -3,20 +3,20 @@ import { DraggableFab } from '../../App';
 import { USERS, Centered } from '../_helpers';
 
 export default {
-  title: 'Web/Sidebar/DraggableFab',
+  title: 'Web/Misc/Draggable FAB',
   component: DraggableFab,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Floating draggable Tweaks FAB. Click to toggle the Tweaks panel (theme, density, accent color, and demo actions). Drag it anywhere on the screen.',
+          'Floating, draggable Tweaks FAB. Click to toggle the Tweaks panel (theme, density, accent color, demo actions). Drag it anywhere on the screen.',
       },
     },
   },
 };
 
-export const Collapsed = {
+export const Default = {
   render: () => {
     const [tweaks, setTweaks] = useState({ theme: 'light', density: 'comfortable', accentColor: '#004EEB' });
     const [showTweaks, setShowTweaks] = useState(false);
@@ -30,10 +30,8 @@ export const Collapsed = {
           </p>
         </div>
         <DraggableFab
-          showTweaks={showTweaks}
-          setShowTweaks={setShowTweaks}
-          tweaks={tweaks}
-          saveTweaks={setTweaks}
+          showTweaks={showTweaks} setShowTweaks={setShowTweaks}
+          tweaks={tweaks} saveTweaks={setTweaks}
           setActiveCall={() => alert('ring triggered')}
           callStartTimeRef={callStartTimeRef}
           setShowGroupModal={() => alert('open group modal')}
@@ -54,21 +52,19 @@ export const TweaksPanelOpen = {
         <div style={{ background: 'var(--surface)', padding: 24, borderRadius: 12, border: '1px solid var(--border)' }}>
           <h3 style={{ marginTop: 0 }}>Tweaks panel</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
-            Toggle Dark mode, flip density to Compact, change the accent color, or fire demo actions.
+            Toggle Dark mode, change density, pick an accent color, or fire demo actions.
           </p>
         </div>
         <DraggableFab
-          showTweaks
-          setShowTweaks={() => {}}
-          tweaks={tweaks}
-          saveTweaks={setTweaks}
-          setActiveCall={() => {}}
-          callStartTimeRef={callStartTimeRef}
-          setShowGroupModal={() => {}}
-          setShowNewDM={() => {}}
+          showTweaks setShowTweaks={() => {}}
+          tweaks={tweaks} saveTweaks={setTweaks}
+          setActiveCall={() => {}} callStartTimeRef={callStartTimeRef}
+          setShowGroupModal={() => {}} setShowNewDM={() => {}}
           users={USERS}
         />
       </Centered>
     );
   },
 };
+
+export const AllVariantsShowcase = Default;

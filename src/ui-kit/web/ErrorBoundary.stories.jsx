@@ -4,15 +4,19 @@ import { Centered } from '../_helpers';
 const Boom = () => { throw new Error('Component exploded'); };
 
 export default {
-  title: 'Web/Overlays/ErrorBoundary',
+  title: 'Web/Misc/Error Boundary',
   component: ErrorBoundary,
   parameters: {
     layout: 'fullscreen',
-    docs: { description: { component: 'Top-level class-based error boundary. When a child throws, it shows the error message and a Try Again button.' } },
+    docs: {
+      description: {
+        component: 'Top-level React error boundary. When a child throws, shows the error message and a Try Again button.',
+      },
+    },
   },
 };
 
-export const CatchingAnError = {
+export const Default = {
   render: () => (
     <Centered maxWidth={720}>
       <div style={{ background: 'var(--surface)', padding: 20, borderRadius: 12, border: '1px solid var(--border)' }}>
@@ -21,6 +25,8 @@ export const CatchingAnError = {
     </Centered>
   ),
 };
+
+export const ErrorStateDisplay = Default;
 
 export const HealthyChild = {
   render: () => (
@@ -34,3 +40,5 @@ export const HealthyChild = {
     </Centered>
   ),
 };
+
+export const AllVariantsShowcase = Default;

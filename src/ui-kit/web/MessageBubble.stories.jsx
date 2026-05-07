@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { MessageBubble, PollVotesModal } from '../../components/MessageBubble';
 import { CURRENT_USER, ALL_USERS, makeMsg, noop, Centered } from '../_helpers';
 
-/** Small surface that mimics the real chat list background */
 const BubbleBoard = ({ children, maxWidth = 720 }) => (
   <Centered maxWidth={maxWidth}>
     <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
@@ -20,29 +19,34 @@ const baseProps = {
 };
 
 export default {
-  title: 'Web/Messages/MessageBubble',
+  title: 'Web/Bubbles/Message Bubble',
   component: MessageBubble,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'One message bubble. Supports text, rich HTML, file/image/video/audio, polls, reply previews, reactions, read receipts, pin, edit/delete, thread indicator, whiteboard/collab-doc cards, and call result cards. Hover on desktop for the action toolbar.',
+          'A single message bubble. Supports plain text, rich HTML, file/image/video/voice-note attachments, polls, reply previews, reactions, read receipts, pin, edit/delete, thread count, collaborative cards (whiteboard, doc), and call result cards. Hover on desktop for the action toolbar.',
       },
     },
   },
 };
 
-export const IncomingText = {
+// Tiny silent WAV so VoiceNotePlayer renders waveform + play button
+const SILENT_WAV = 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABmYWN0BAAAAAAAAABkYXRhAAAAAA==';
+
+/* ─── TEXT ─── */
+export const Default = {
   render: () => <BubbleBoard><MessageBubble {...baseProps} msg={makeMsg({ text: 'Hey! Quick question about the new design.' })} isOwn={false} /></BubbleBoard>,
 };
 
-export const OutgoingText = {
-  render: () => <BubbleBoard><MessageBubble {...baseProps} msg={makeMsg({ senderId: 'u1', text: "Sure, what's up?", readBy: ['u2'] })} isOwn /></BubbleBoard>,
-};
-
-export const UnreadOutgoing = {
-  render: () => <BubbleBoard><MessageBubble {...baseProps} msg={makeMsg({ senderId: 'u1', text: 'Still waiting on the mockups…', readBy: [] })} isOwn /></BubbleBoard>,
+export const Text = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble {...baseProps} msg={makeMsg({ text: 'Hey! Quick question about the new design.' })} isOwn={false} />
+      <MessageBubble {...baseProps} msg={makeMsg({ senderId: 'u1', text: "Sure, what's up?", readBy: ['u2'] })} isOwn />
+    </BubbleBoard>
+  ),
 };
 
 export const RichText = {
@@ -91,7 +95,7 @@ export const WithReactions = {
   ),
 };
 
-export const ReplyingToSomeone = {
+export const WithReply = {
   render: () => (
     <BubbleBoard>
       <MessageBubble
@@ -102,81 +106,6 @@ export const ReplyingToSomeone = {
           readBy: ['u2'],
           replyTo: { senderId: 'u2', id: 'prev', text: 'Can you review the auth flow before EOD?' },
         })}
-        isOwn
-      />
-    </BubbleBoard>
-  ),
-};
-
-export const ImageAttachment = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({
-          text: "Here's the hero shot",
-          file: { name: 'hero.png', size: '2.4 MB', type: 'image', previewUrl: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?w=600' },
-        })}
-        isOwn={false}
-      />
-    </BubbleBoard>
-  ),
-};
-
-export const VideoAttachment = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({ senderId: 'u1', readBy: ['u2'], file: { name: 'demo.mp4', size: '8.1 MB', type: 'video', previewUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' } })}
-        isOwn
-      />
-    </BubbleBoard>
-  ),
-};
-
-export const DocumentAttachment = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble {...baseProps} msg={makeMsg({ text: 'Migration plan attached', file: { name: 'cometchat-migration.md', size: '8.2 KB', type: 'doc' } })} isOwn={false} />
-    </BubbleBoard>
-  ),
-};
-
-export const CollabWhiteboard = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({
-          senderId: 'u1', readBy: ['u2'],
-          file: { name: 'Collaborative Whiteboard', size: '', type: 'whiteboard', previewUrl: '/whiteboard preview.png', linkUrl: 'https://example.com/whiteboard' },
-        })}
-        isOwn
-      />
-    </BubbleBoard>
-  ),
-};
-
-export const CollabDocument = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({ file: { name: 'Collaborative Document', size: '', type: 'collab-doc', previewUrl: '/doc preview.png', linkUrl: 'https://example.com/doc' } })}
-        isOwn={false}
-      />
-    </BubbleBoard>
-  ),
-};
-
-export const CallInBubble = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        isGroup
-        msg={makeMsg({ senderId: 'u1', readBy: ['u2'], file: { type: 'group-call', callType: 'video', callTs: Date.now() - 60000 } })}
         isOwn
       />
     </BubbleBoard>
@@ -196,7 +125,94 @@ export const WithThreadReplies = {
   ),
 };
 
-export const PollBubble = {
+/* ─── MEDIA ─── */
+export const Image = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble
+        {...baseProps}
+        msg={makeMsg({
+          text: "Here's the hero shot",
+          file: { name: 'hero.png', size: '2.4 MB', type: 'image', previewUrl: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?w=600' },
+        })}
+        isOwn={false}
+      />
+    </BubbleBoard>
+  ),
+};
+
+export const Video = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble
+        {...baseProps}
+        msg={makeMsg({ senderId: 'u1', readBy: ['u2'], file: { name: 'demo.mp4', size: '8.1 MB', type: 'video', previewUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' } })}
+        isOwn
+      />
+    </BubbleBoard>
+  ),
+};
+
+export const Audio = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble
+        {...baseProps}
+        msg={makeMsg({
+          senderId: 'u2',
+          file: { type: 'audio', previewUrl: SILENT_WAV, duration: 23, name: 'Voice note (00:00:23)', size: '184 KB' },
+        })}
+        isOwn={false}
+      />
+      <MessageBubble
+        {...baseProps}
+        msg={makeMsg({
+          senderId: 'u1', readBy: ['u2'],
+          file: { type: 'audio', previewUrl: SILENT_WAV, duration: 47, name: 'Voice note (00:00:47)', size: '312 KB' },
+        })}
+        isOwn
+      />
+    </BubbleBoard>
+  ),
+};
+
+export const File = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble {...baseProps} msg={makeMsg({ text: 'Migration plan attached', file: { name: 'cometchat-migration.md', size: '8.2 KB', type: 'doc' } })} isOwn={false} />
+    </BubbleBoard>
+  ),
+};
+
+export const CollaborativeWhiteboard = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble
+        {...baseProps}
+        msg={makeMsg({
+          senderId: 'u1', readBy: ['u2'],
+          file: { name: 'Collaborative Whiteboard', size: '', type: 'whiteboard', previewUrl: '/whiteboard preview.png', linkUrl: 'https://example.com/whiteboard' },
+        })}
+        isOwn
+      />
+    </BubbleBoard>
+  ),
+};
+
+export const CollaborativeDocument = {
+  render: () => (
+    <BubbleBoard>
+      <MessageBubble
+        {...baseProps}
+        msg={makeMsg({ file: { name: 'Collaborative Document', size: '', type: 'collab-doc', previewUrl: '/doc preview.png', linkUrl: 'https://example.com/doc' } })}
+        isOwn={false}
+      />
+    </BubbleBoard>
+  ),
+};
+
+/* ─── POLL ─── */
+export const Poll = {
   render: () => {
     const [poll, setPoll] = useState({
       question: 'Where should we get lunch?',
@@ -220,7 +236,11 @@ export const PollBubble = {
 };
 
 export const PollVotesModalStory = {
-  name: 'PollVotesModal',
+  name: 'Poll Votes Modal',
+  // Skip on the combined Docs page — the modal portals to document.body and
+  // would overlap every other story. View it on the Canvas tab only.
+  tags: ['!autodocs'],
+  parameters: { docs: { disable: true } },
   render: () => (
     <BubbleBoard>
       <PollVotesModal
@@ -238,82 +258,39 @@ export const PollVotesModalStory = {
   ),
 };
 
-// A tiny silent WAV data URL so VoiceNotePlayer renders its waveform & play button.
-// The audio element is display:none anyway, so the exact content doesn't matter.
-const SILENT_WAV = 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABmYWN0BAAAAAAAAABkYXRhAAAAAA==';
-
-export const VoiceNoteIncoming = {
+/* ─── CALL CARD ─── */
+export const CallEnded = {
   render: () => (
     <BubbleBoard>
       <MessageBubble
         {...baseProps}
-        msg={makeMsg({
-          senderId: 'u2',
-          text: undefined,
-          file: { type: 'audio', previewUrl: SILENT_WAV, duration: 23, name: 'Voice note (00:00:23)', size: '184 KB' },
-        })}
-        isOwn={false}
-      />
-    </BubbleBoard>
-  ),
-  parameters: { docs: { description: { story: 'Voice note received from another user. Rendered inside a real `.msg-bubble` so the play button (filled circle) and accent-colored waveform show correctly — exactly like the app.' } } },
-};
-
-export const VoiceNoteOutgoing = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({
-          senderId: 'u1',
-          readBy: ['u2'],
-          text: undefined,
-          file: { type: 'audio', previewUrl: SILENT_WAV, duration: 47, name: 'Voice note (00:00:47)', size: '312 KB' },
-        })}
+        isGroup
+        msg={makeMsg({ senderId: 'u1', readBy: ['u2'], file: { type: 'group-call', callType: 'video', callTs: Date.now() - 60000 } })}
         isOwn
       />
     </BubbleBoard>
   ),
-  parameters: { docs: { description: { story: 'Voice note you sent. The bubble uses the accent color, the play button turns white-on-tinted, and the waveform bars adapt to the own-bubble style.' } } },
 };
 
-export const VoiceNoteBothSides = {
-  render: () => (
-    <BubbleBoard>
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({
-          id: 'v1', senderId: 'u2',
-          file: { type: 'audio', previewUrl: SILENT_WAV, duration: 18, name: 'Voice note (00:00:18)', size: '140 KB' },
-        })}
-        isOwn={false}
-      />
-      <MessageBubble
-        {...baseProps}
-        msg={makeMsg({
-          id: 'v2', senderId: 'u1', readBy: ['u2'],
-          file: { type: 'audio', previewUrl: SILENT_WAV, duration: 62, name: 'Voice note (00:01:02)', size: '420 KB' },
-        })}
-        isOwn
-      />
-    </BubbleBoard>
-  ),
-  parameters: { docs: { description: { story: 'Incoming and outgoing voice notes stacked so you can compare the play-button and waveform styles side-by-side.' } } },
-};
-
-export const DeletedByYou = {
+/* ─── STATE ─── */
+export const Deleted = {
   render: () => <BubbleBoard><MessageBubble {...baseProps} msg={makeMsg({ senderId: 'u1', text: 'oops', deleted: true })} isOwn /></BubbleBoard>,
 };
 
-export const EditedMessage = {
+export const Edited = {
   render: () => <BubbleBoard><MessageBubble {...baseProps} msg={makeMsg({ senderId: 'u1', text: 'Meet at 4pm instead of 3pm.', edited: true, readBy: ['u2'] })} isOwn /></BubbleBoard>,
 };
 
-export const GroupConversationPreview = {
+export const UnreadOutgoing = {
+  render: () => <BubbleBoard><MessageBubble {...baseProps} msg={makeMsg({ senderId: 'u1', text: 'Still waiting on the mockups…', readBy: [] })} isOwn /></BubbleBoard>,
+};
+
+/* ─── SHOWCASE ─── */
+export const AllVariantsShowcase = {
   render: () => {
     const msgs = [
       makeMsg({ id: '1', senderId: 'u4', text: 'Sprint review Friday 3pm — please update your tickets.', reactions: [{ emoji: '👍', userIds: ['u1', 'u5'] }] }),
-      makeMsg({ id: '2', senderId: 'u7', text: 'Kubernetes upgrade is done. All pods healthy 🚀', reactions: [{ emoji: '🚀', userIds: ['u1'] }] }),
+      makeMsg({ id: '2', senderId: 'u7', text: 'Kubernetes upgrade is done. All pods healthy 🚀' }),
       makeMsg({ id: '3', senderId: 'u5', text: 'Anyone else seeing flaky CI tests?', threadCount: 4 }),
       makeMsg({ id: '4', senderId: 'u1', readBy: ['u4'], text: 'I opened a PR — review please!' }),
     ];

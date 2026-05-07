@@ -4,30 +4,68 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # CometChat Sample App — Component Library
 
-Every story is organized into two top-level groups.
+Storybook for the CometChat React sample app, modeled after the structure of
+the [CometChat Angular Storybook](https://storybook.cometchat.io/angular/).
+
+Every component page has a **Docs** tab at the top that lists:
+
+- A short description
+- A props / controls table (built from the component's interface)
+- Each story rendered with its **source code expanded** below
+- An **All Variants Showcase** at the bottom for a single-glance view
+
+---
+
+## Base Elements
+
+Shared primitives that are not tied to the chat domain. Used by nearly every
+component in the library.
+
+- **Avatar** — user image with initials fallback
+- **Status Dot** — green "online" indicator
+- **Button** — every button class used in the app (Primary, Ghost, Icon,
+  Header, Composer, Call controls, Region, Attach menu tile)
+- **Input** — every text input variant (form, login, sidebar search, chat
+  search, chat textarea, rich-text editor, emoji search, error)
+- **File Icon** — typed icons (image, pdf, video, audio, doc, default)
+- **Icons** — the full Material Symbols library (~70 icons)
+- **Emoji Keyboard** — categorized emoji picker
+- **Date** — timestamp helpers (formatTime, formatFullTime, fmtCallDuration)
+- **Bottom Sheet** — mobile action sheet patterns
 
 ## Web
 
-Desktop/browser versions of each component. These assume a wide viewport and
-mouse-based interactions (hover toolbars, context menus, etc.).
+Web-specific renderings of each domain component.
 
-- **Screens** — Login, Full app shell
-- **Sidebar** — Sidebar, ConvItem, CallHistoryList, DraggableFab
-- **Chat Panel** — ChatPanel, AttachMenu, EmojiKeyboard, PollModal
-- **Messages** — MessageBubble, PollMessage, VoiceNotePlayer
-- **Overlays** — CallOverlay, ThreadPanel, ProfilePanel, GroupModal, GroupMembersPanel, NewDMModal, ErrorBoundary
-- **Primitives** — Avatar, StatusDot, FileIcon, Icons
+- **Conversations** — Conversations (full sidebar) · Conversation Item
+- **Messages** — Message Header · Message List · Message Composer · Thread Header · Thread View
+- **Bubbles** — Message Bubble (text, rich text, image, video, audio/voice-note, file, poll, whiteboard, collab doc, call card, deleted, edited)
+- **Users** — Users · User Item
+- **Groups** — Groups · Group Item · Group Members · Group Member Item
+- **Calls** — Call Buttons · Call Logs · Incoming Call · Ongoing Call · Outgoing Call
+- **Misc** — Attach Menu · Create Poll · Draggable FAB · Error Boundary · Message Preview · Profile Panel · Reactions · Typing Indicator
 
 ## Mobile
 
-The same components re-rendered inside a 390×740 phone-sized viewport with the
-`.app-shell.mobile` class applied, so the CSS media-query rules and bottom-sheet
-variants activate.
+The same domain components rendered inside a 390×740 phone viewport iframe,
+where the `@media (max-width: 768px)` CSS activates (bottom sheets, stacked
+layout, full-screen overlays).
 
-- **Screens** — Login, Full app shell
-- **Sidebar** — Sidebar, ConvItem, CallHistoryList
-- **Chat Panel** — ChatPanel
-- **Messages** — MessageBubble (with long-press action sheet)
-- **Overlays** — CallOverlay, ThreadPanel, ProfilePanel, GroupModal, GroupMembersPanel, NewDMModal
+- **Conversations** — Conversations · Conversation Item
+- **Messages** — Message Composer · Thread View
+- **Bubbles** — Message Bubble
+- **Users** — Users
+- **Groups** — Groups · Group Members
+- **Calls** — Call Logs · Incoming Call · Outgoing Call
+- **Misc** — Profile Panel
 
-All previews are centered in the canvas instead of pinned to the left edge.
+---
+
+## Conventions
+
+Every component has a **Default** story and an **All Variants Showcase** story.
+Intermediate variant stories use descriptive names: `WithUnreadCount`,
+`Selected`, `EmptyState`, `LoadingState`, `ErrorState`.
+
+All story frames are centered in the canvas. Panel-like components are sized
+to their native width so there's no empty space on either side.

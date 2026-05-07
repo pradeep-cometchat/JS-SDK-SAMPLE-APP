@@ -3,24 +3,19 @@ import { AttachMenu } from '../../components/ChatPanel';
 import { Centered, noop } from '../_helpers';
 
 export default {
-  title: 'Web/Chat Panel/AttachMenu',
+  title: 'Web/Misc/Attach Menu',
   component: AttachMenu,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Attachment grid that pops above the composer — Camera, Image, Video, Audio, Document, Poll, Whiteboard, Collab Document. The real component is positioned absolutely and opens upward from its anchor. In these stories we stretch it across the full width of a centered container so it is easy to inspect.',
+          'Attachment grid that pops above the composer (Camera, Image, Video, Audio, Document, Poll, Whiteboard, Collab Document). Absolutely positioned — opens upward from its anchor.',
       },
     },
   },
 };
 
-/**
- * Stretch the attach menu to fill the container width. The component uses
- * `width: 300px` inline — we override that (and its `position: absolute`) via a
- * scoped style so it becomes a full-width card in the story canvas.
- */
 const Stretched = ({ children, maxWidth = 720 }) => (
   <Centered maxWidth={maxWidth} padding={32}>
     <style>{`
@@ -32,117 +27,69 @@ const Stretched = ({ children, maxWidth = 720 }) => (
         animation: none;
         box-shadow: var(--shadow-md);
       }
-      .attach-menu.stretched .attach-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 8px !important;
-      }
-      .attach-menu.stretched .attach-item {
-        padding: 16px 8px !important;
-      }
-      .attach-menu.stretched .attach-item-icon {
-        width: 56px !important;
-        height: 56px !important;
-        border-radius: 16px !important;
-      }
-      .attach-menu.stretched .attach-item-label {
-        font-size: 12px !important;
-      }
+      .attach-menu.stretched .attach-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
+      .attach-menu.stretched .attach-item { padding: 16px 8px !important; }
+      .attach-menu.stretched .attach-item-icon { width: 56px !important; height: 56px !important; border-radius: 16px !important; }
+      .attach-menu.stretched .attach-item-label { font-size: 12px !important; }
     `}</style>
-    <div className="attach-menu-host" style={{ position: 'relative' }}>
-      <div className="attach-menu-wrapper">
-        {children}
-      </div>
-    </div>
+    <div>{children}</div>
   </Centered>
 );
 
-/**
- * The underlying component hard-codes `className="attach-menu"`. We wrap it
- * in a div and tag that wrapper so our overrides apply without editing the
- * source component.
- */
 const AttachMenuStretched = (props) => (
-  <div
-    ref={(el) => {
-      // Add `stretched` to the rendered attach-menu so our overrides kick in.
-      if (!el) return;
-      const menu = el.querySelector('.attach-menu');
-      menu?.classList.add('stretched');
-    }}
-  >
+  <div ref={(el) => {
+    if (!el) return;
+    const menu = el.querySelector('.attach-menu');
+    menu?.classList.add('stretched');
+  }}>
     <AttachMenu {...props} />
   </div>
 );
 
+const Stage = ({ children, height = 380, width = 340 }) => (
+  <div style={{ position: 'relative', width, height, margin: '0 auto' }}>
+    <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 0 }}>{children}</div>
+  </div>
+);
+
 export const Default = {
-  render: () => {
-    const [picked, setPicked] = useState(null);
-    return (
-      <Stretched maxWidth={760}>
-        <AttachMenuStretched
-          onAttach={setPicked}
-          onClose={noop}
-          onPoll={() => setPicked({ type: 'poll' })}
-        />
-        <div
-          style={{
-            marginTop: 16,
-            padding: 14,
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 10,
-            fontSize: 12,
-            minWidth: 0,
-            width: '100%',
-            boxSizing: 'border-box',
-          }}
-        >
-          <div style={{ color: 'var(--text-muted)', marginBottom: 6 }}>Last chosen:</div>
-          <pre
-            style={{
-              margin: 0,
-              padding: 12,
-              background: 'var(--bg)',
-              borderRadius: 8,
-              fontSize: 11,
-              lineHeight: 1.5,
-              color: 'var(--text)',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              overflowWrap: 'anywhere',
-              maxHeight: 220,
-              overflowY: 'auto',
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-            }}
-          >
-            {picked ? JSON.stringify(picked, null, 2) : '–'}
-          </pre>
-        </div>
-      </Stretched>
-    );
-  },
-  parameters: { docs: { description: { story: 'Attach menu stretched to the full container width. Click any tile to fire the corresponding callback — the last chosen value is echoed below.' } } },
+  render: () => (
+    <Centered maxWidth={420} padding={24}>
+      <Stage height={360} width={320}>
+        <AttachMenu onAttach={noop} onClose={noop} onPoll={noop} />
+      </Stage>
+    </Centered>
+  ),
 };
 
-export const Wide = {
+export const JustTheMenu = Default;
+
+export const Stretched_ = {
+  name: 'Stretched',
   render: () => (
-    <Stretched maxWidth={1000}>
+    <Stretched maxWidth={760}>
       <AttachMenuStretched onAttach={noop} onClose={noop} onPoll={noop} />
     </Stretched>
   ),
-  parameters: { docs: { description: { story: 'Even wider container — the 4-column grid scales the tile size up rather than growing columns, matching the app where the menu is a fixed card.' } } },
 };
 
-/* ── Original popover shape (for reference) ────────────────── */
-export const PopoverShape = {
-  render: () => (
-    <Centered maxWidth={420} padding={32}>
-      <div style={{ position: 'relative', height: 360 }}>
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 0 }}>
-          <AttachMenu onAttach={noop} onClose={noop} onPoll={noop} />
+export const WithPickedState = {
+  render: () => {
+    const [picked, setPicked] = useState(null);
+    return (
+      <Centered maxWidth={760} padding={24}>
+        <Stretched maxWidth={760}>
+          <AttachMenuStretched onAttach={setPicked} onClose={noop} onPoll={() => setPicked({ type: 'poll' })} />
+        </Stretched>
+        <div style={{ marginTop: 16, padding: 14, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 12 }}>
+          <div style={{ color: 'var(--text-muted)', marginBottom: 6 }}>Last chosen:</div>
+          <pre style={{ margin: 0, padding: 12, background: 'var(--bg)', borderRadius: 8, fontSize: 11, lineHeight: 1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', maxHeight: 220, overflowY: 'auto', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+            {picked ? JSON.stringify(picked, null, 2) : '–'}
+          </pre>
         </div>
-      </div>
-    </Centered>
-  ),
-  parameters: { docs: { description: { story: 'The component at its native size — the same 300px-wide popover that opens above the composer in the real app.' } } },
+      </Centered>
+    );
+  },
 };
+
+export const AllVariantsShowcase = Default;

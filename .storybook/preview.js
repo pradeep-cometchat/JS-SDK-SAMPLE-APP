@@ -10,9 +10,9 @@ const preview = {
         date: /Date$/i,
       },
     },
-    // Auto-expand the source-code block on the Docs tab so the JSX is visible
-    // without a click. On the Canvas tab, the `<>` Show code button still works.
     docs: {
+      // Auto-expand the source block on the Docs page so the JSX shows without
+      // clicking 'Show code'. On the Canvas tab the '<>' toggle still works.
       source: { state: 'open' },
       toc: true,
     },
@@ -24,21 +24,26 @@ const preview = {
         { name: 'dark', value: '#0f172a' },
       ],
     },
-    // Centered layout by default — stories render in the middle of the preview canvas.
-    // Individual stories can still override with `parameters: { layout: 'fullscreen' }`.
+    // Stories render centered by default. Individual stories can still override
+    // with `parameters: { layout: 'fullscreen' }` (used by anything wrapped in
+    // Centered/DesktopSidebarFrame/DesktopChatFrame/MobileFrame helpers).
     layout: 'centered',
     options: {
       storySort: {
         order: [
           'Overview',
+          'Base Elements',
+          ['Avatar', 'Button', 'File Icon', 'Icons', 'Input', 'Status Dot', '*'],
           'Web',
-          ['Screens', 'Sidebar', 'Chat Panel', 'Messages', 'Overlays', 'Primitives'],
+          ['Conversations', 'Messages', 'Bubbles', 'Users', 'Groups', 'Calls', 'Misc'],
           'Mobile',
-          ['Screens', 'Sidebar', 'Chat Panel', 'Messages', 'Overlays'],
+          ['Conversations', 'Messages', 'Bubbles', 'Users', 'Groups', 'Calls', 'Misc'],
         ],
       },
     },
   },
+  // Global autodocs: every component title automatically gets a Docs page.
+  tags: ['autodocs'],
   globalTypes: {
     theme: {
       description: 'CometChat theme',

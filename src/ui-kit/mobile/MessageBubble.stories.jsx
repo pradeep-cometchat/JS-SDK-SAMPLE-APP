@@ -2,8 +2,7 @@ import { MessageBubble } from '../../components/MessageBubble';
 import { CURRENT_USER, ALL_USERS, makeMsg, MobileFrame, noop } from '../_helpers';
 
 const baseProps = {
-  allUsers: ALL_USERS,
-  currentUser: CURRENT_USER,
+  allUsers: ALL_USERS, currentUser: CURRENT_USER,
   onReact: noop, onDelete: noop, onEditRequest: noop, onThreadOpen: noop,
   onReply: noop, onVote: noop, onMarkUnread: noop, onPin: noop,
   pinnedMsgIds: [], density: 'comfortable', isGroup: false,
@@ -18,7 +17,7 @@ const Stage = ({ children }) => (
 );
 
 export default {
-  title: 'Mobile/Messages/MessageBubble',
+  title: 'Mobile/Bubbles/Message Bubble',
   component: MessageBubble,
   parameters: {
     layout: 'fullscreen',
@@ -30,7 +29,7 @@ export default {
   },
 };
 
-export const ConversationPreview = {
+export const Default = {
   render: () => {
     const msgs = [
       makeMsg({ id: '1', senderId: 'u4', text: 'Sprint review Friday 3pm — please update your tickets.', reactions: [{ emoji: '👍', userIds: ['u1', 'u5'] }] }),
@@ -48,7 +47,9 @@ export const ConversationPreview = {
   },
 };
 
-export const WithImage = {
+export const ConversationPreview = Default;
+
+export const Image = {
   render: () => (
     <Stage>
       <MessageBubble
@@ -67,10 +68,7 @@ export const WithReactions = {
         {...baseProps}
         msg={makeMsg({
           text: 'Nailed it — shipping today 🚀',
-          reactions: [
-            { emoji: '🚀', userIds: ['u1', 'u2'] },
-            { emoji: '🎉', userIds: ['u5'] },
-          ],
+          reactions: [{ emoji: '🚀', userIds: ['u1', 'u2'] }, { emoji: '🎉', userIds: ['u5'] }],
         })}
         isOwn={false}
       />
@@ -78,7 +76,7 @@ export const WithReactions = {
   ),
 };
 
-export const PollBubble = {
+export const Poll = {
   render: () => (
     <Stage>
       <MessageBubble
@@ -98,3 +96,5 @@ export const PollBubble = {
     </Stage>
   ),
 };
+
+export const AllVariantsShowcase = Default;
