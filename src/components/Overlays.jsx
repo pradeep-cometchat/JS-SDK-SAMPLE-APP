@@ -837,7 +837,9 @@ export const GroupMembersPanel = ({ conv, currentUser, onClose, onViewProfile, o
                 <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span className="user-select-name">{u.name}{isMe ? ' (you)' : ''}</span>
-                    <span style={{ fontSize: 10, fontWeight: 600, color: role.color, background: role.color + '18', padding: '1px 6px', borderRadius: 99 }}>{role.label}</span>
+                    {u.id === conv.ownerId && (
+                      <span style={{ fontSize: 10, fontWeight: 600, color: role.color, background: role.color + '18', padding: '1px 6px', borderRadius: 99 }}>{role.label}</span>
+                    )}
                   </div>
                   <div className="user-select-role">{u.role}</div>
                 </div>
