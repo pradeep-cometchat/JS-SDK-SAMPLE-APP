@@ -12,9 +12,9 @@ export default {
 };
 
 const Frame = ({ children }) => (
-  <Centered maxWidth={480} padding={24}>
-    <div style={{ width: 420, height: 720, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>{children}</div>
-  </Centered>
+  <div style={{ display: 'flex', justifyContent: 'center', padding: 24, background: 'var(--bg)', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ height: 720, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', display: 'flex' }}>{children}</div>
+  </div>
 );
 
 const eng = CONVERSATIONS.find(c => c.id === 'grp_eng');

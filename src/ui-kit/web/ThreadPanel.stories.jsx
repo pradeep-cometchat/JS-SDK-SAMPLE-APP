@@ -15,12 +15,12 @@ export default {
   },
 };
 
-const Frame = ({ children, width = 440 }) => (
-  <Centered maxWidth={width + 48} padding={24}>
-    <div style={{ width, height: 720, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+const Frame = ({ children }) => (
+  <div style={{ display: 'flex', justifyContent: 'center', padding: 24, background: 'var(--bg)', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ height: 720, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', display: 'flex' }}>
       {children}
     </div>
-  </Centered>
+  </div>
 );
 
 const parent = INITIAL_MESSAGES.dm_u2[1];
