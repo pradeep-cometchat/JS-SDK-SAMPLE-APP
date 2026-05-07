@@ -84,11 +84,39 @@ export const Default = {
           onClose={noop}
           onPoll={() => setPicked({ type: 'poll' })}
         />
-        <div style={{ marginTop: 16, padding: 12, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 12 }}>
-          <span style={{ color: 'var(--text-muted)', marginRight: 8 }}>Last chosen:</span>
-          <code style={{ color: 'var(--text)' }}>
-            {picked ? JSON.stringify(picked) : '–'}
-          </code>
+        <div
+          style={{
+            marginTop: 16,
+            padding: 14,
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 10,
+            fontSize: 12,
+            minWidth: 0,
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ color: 'var(--text-muted)', marginBottom: 6 }}>Last chosen:</div>
+          <pre
+            style={{
+              margin: 0,
+              padding: 12,
+              background: 'var(--bg)',
+              borderRadius: 8,
+              fontSize: 11,
+              lineHeight: 1.5,
+              color: 'var(--text)',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              overflowWrap: 'anywhere',
+              maxHeight: 220,
+              overflowY: 'auto',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            }}
+          >
+            {picked ? JSON.stringify(picked, null, 2) : '–'}
+          </pre>
         </div>
       </Stretched>
     );
