@@ -123,13 +123,20 @@
 .tb-btn{padding:5px 6px;border-radius:6px;color:var(--text-muted);border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
 .tb-btn:hover{background:var(--accent-light);color:var(--accent)}
 .tb-btn.danger:hover{background:#fee2e2;color:var(--danger)}
-/* Mini emoji picker + bubble more-menu — also anchor above to avoid side overflow */
-.mini-emoji-picker{position:absolute;bottom:calc(100% + 44px);left:0;z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg)}
+/* Mini emoji picker + bubble more-menu — anchor just above the toolbar.
+   The toolbar is ~32px tall and overlaps the bubble top by 4px, so its top edge
+   sits ~28px above the bubble top. A 34px offset leaves a 6px visual gap
+   between the toolbar and the menu. */
+.mini-emoji-picker{position:absolute;bottom:calc(100% + 34px);left:0;z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg)}
 .mini-emoji-picker.own{left:auto;right:0}
-.mini-emoji-picker.flip-up{bottom:auto;top:calc(100% + 6px)}
-.bubble-menu{position:absolute;bottom:calc(100% + 44px);left:0;z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-width:160px;box-shadow:var(--shadow-lg);overflow:hidden}
+/* When flipped, dock the menu right below the toolbar as a dropdown that
+   overlays the bubble (toolbar bottom sits 4px below the wrapper top, add
+   a 6px gap → 10px). This keeps the menu attached to the tooltip instead of
+   floating far below when the bubble is followed by a date separator. */
+.mini-emoji-picker.flip-up{bottom:auto;top:10px}
+.bubble-menu{position:absolute;bottom:calc(100% + 34px);left:0;z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-width:160px;box-shadow:var(--shadow-lg);overflow:hidden}
 .bubble-menu.own{left:auto;right:0}
-.bubble-menu.flip-up{bottom:auto;top:calc(100% + 6px)}
+.bubble-menu.flip-up{bottom:auto;top:10px}
 
 /* ── MESSAGE BUBBLES ── */
 .msg-row{display:flex;align-items:flex-start;gap:10px;position:relative;padding:2px 0}
