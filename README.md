@@ -1,16 +1,41 @@
-# React + Vite
+# CometChat Storybook Component Library
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This branch contains the Storybook component library for the CometChat sample
+app. It showcases the UI kit (base elements, mobile surfaces, web surfaces, and
+app screens) in isolation, with live controls and auto-generated docs.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm ci
+npm run storybook
+```
 
-## React Compiler
+Storybook starts on http://localhost:6006.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Build
 
-## Expanding the ESLint configuration
+```bash
+npm run build-storybook
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Outputs a static site to `storybook-static/`. GitHub Pages deployment is
+handled by `.github/workflows/deploy.yml`, which builds this branch and serves
+it under `/storybook/` alongside the sample app built from `main`.
+
+## Layout
+
+- `.storybook/` — Storybook config (framework, addons, global decorators)
+- `src/ui-kit/` — story files
+  - `base-elements/` — Avatar, Button, Icons, Input, etc.
+  - `mobile/` — mobile component stories
+  - `web/` — web component stories
+  - `app-screens/` — full-screen compositions (AppShell, LoginScreen)
+  - `_helpers.jsx` — shared fixtures and layout wrappers
+  - `Overview.mdx` — library landing page
+- `src/components/` — the components the stories render
+- `src/App.jsx`, `src/data.js` — shared app state, error boundary, and sample
+  data consumed by stories
+
+The standalone sample app entry points (`index.html`, `src/main.jsx`) live on
+the `main` branch.
