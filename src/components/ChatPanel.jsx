@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { getUserById, getConvName, CURRENT_USER, formatTime, formatFullTime, EMOJIS, EMOJI_CATEGORIES } from '../data';
+import { getUserById, getConvName, CURRENT_USER, EMOJI_CATEGORIES } from '../data';
 import { Avatar, StatusDot } from './Avatar';
 import { FileIcon } from './FileIcon';
 import { MessageBubble } from './MessageBubble';
 import {
-  SearchIcon, CloseIcon, PhoneIcon, VideoIcon, UserIcon, UsersIcon,
+  SearchIcon, CloseIcon, PhoneIcon, VideoIcon,
   PlusIcon, EmojiIcon, SendIcon, CheckIcon, EditIcon, PollIcon,
-  ChevronUpIcon, ChevronDownIcon, MicIcon, StopIcon, TrashIcon, PinIcon,
+  ChevronUpIcon, ChevronDownIcon, MicIcon, TrashIcon,
 } from './Icons';
 
 // Detect mobile for bottom sheet rendering
@@ -365,7 +365,7 @@ const ChatPanel = ({
   conv, messages, currentUser, allUsers,
   onSend, onReact, onDelete, onEdit, onVote,
   onThreadOpen, onCallStart, onViewProfile, onViewMembers,
-  typingUsers, density, blockedUsers,
+  density, blockedUsers,
   isMobile, onBack, onMarkUnread: onMarkUnreadProp,
 }) => {
   const [input, setInput] = useState('');
@@ -748,7 +748,7 @@ const ChatPanel = ({
           if (mediaRecorderRef.current.stream) {
             mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
           }
-        } catch (e) { /* ignore */ }
+        } catch { /* ignore */ }
       }
       clearInterval(recordingTimerRef.current);
     };
@@ -1057,7 +1057,6 @@ const ChatPanel = ({
                 prevMsg={item.prev}
                 isOwn={item.msg.senderId === currentUser.id}
                 isGroup={conv.type === 'group'}
-                allUsers={allUsers}
                 currentUser={currentUser}
                 onReact={onReact}
                 onDelete={onDelete}

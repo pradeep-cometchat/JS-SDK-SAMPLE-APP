@@ -145,9 +145,6 @@ export const getConvColor = (conv) => {
   return conv.color;
 };
 
-export const FILE_ICONS = { image: '🖼️', doc: '📄', pdf: '📑', zip: '🗜️', video: '🎬', audio: '🎵', default: '📎' };
-export const getFileIcon = (type) => FILE_ICONS[type] || FILE_ICONS.default;
-
 export const CALL_HISTORY = [
   { id: 'c1', type: 'video', withUserId: 'u2', direction: 'outgoing', status: 'completed', duration: 847, ts: hrs(2) },
   { id: 'c2', type: 'audio', withUserId: 'u3', direction: 'incoming', status: 'missed',    duration: 0,   ts: hrs(5) },

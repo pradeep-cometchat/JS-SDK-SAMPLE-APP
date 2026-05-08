@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { STATUS_COLORS } from '../data';
 
 const lighten = (hex, pct) => {
   const n = parseInt(hex.replace('#', ''), 16);

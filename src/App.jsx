@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, Component } from 'react';
 import {
   CURRENT_USER, USERS, ALL_USERS, CONVERSATIONS,
   INITIAL_MESSAGES, THREAD_MESSAGES, CALL_HISTORY,
-  getUserById,
 } from './data';
 import { Avatar } from './components/Avatar';
 import { Sidebar } from './components/Sidebar';
@@ -374,11 +373,6 @@ const App = () => {
           onDeleteConv={handleDeleteConv} onPinConv={handlePinConv}
           onLogout={handleLogout} callHistory={callHistory} onCallStart={handleCallStart}
           allMessages={messages}
-          onCallSelect={(call) => {
-            const dmId = 'dm_' + call.withUserId;
-            const ex = conversations.find(c => c.id === dmId || (c.type === 'dm' && c.userId === call.withUserId));
-            if (ex) handleSelect(ex.id);
-          }}
         />
       )}
 
@@ -392,7 +386,7 @@ const App = () => {
               onDelete={handleDelete} onEdit={handleEdit} onVote={handleVote}
               onThreadOpen={handleThreadOpen} onCallStart={handleCallStart}
               onViewProfile={handleViewProfile} onViewMembers={handleViewMembers}
-              typingUsers={[]} density="comfortable"
+              density="comfortable"
               blockedUsers={blockedUsers}
               isMobile={isMobile}
               onBack={handleBackToSidebar}
@@ -448,7 +442,7 @@ const App = () => {
 
       {activeCall && <CallOverlay call={activeCall} currentUser={loggedInUser} onAccept={() => { callStartTimeRef.current = Date.now(); }} onEnd={handleCallEnd} />}
       {showGroupModal && <GroupModal allUsers={USERS} currentUser={loggedInUser} onClose={() => setShowGroupModal(false)} onCreate={handleCreateGroup} />}
-      {showNewDM && <NewDMModal allUsers={USERS} currentUser={loggedInUser} conversations={conversations} onClose={() => setShowNewDM(false)} onSelect={handleNewDM} />}
+      {showNewDM && <NewDMModal allUsers={USERS} currentUser={loggedInUser} onClose={() => setShowNewDM(false)} onSelect={handleNewDM} />}
     </div>
     </ErrorBoundary>
   );

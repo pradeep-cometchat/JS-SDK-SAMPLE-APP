@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { getUserById, formatTime, formatFullTime, EMOJIS, STATUS_COLORS } from '../data';
+import { getUserById, formatTime, formatFullTime, EMOJIS } from '../data';
 import { Avatar } from './Avatar';
 import { FileIcon } from './FileIcon';
 import { ThreadIcon, EditIcon, TrashIcon, MoreDotsIcon, EmojiIcon, CopyIcon, PinIcon, BellIcon, DownloadIcon, CloseIcon, InfoIcon, PhoneIcon, VideoIcon } from './Icons';
@@ -129,7 +129,7 @@ const PollMessage = ({ poll, msgId, currentUserId, onVote, isOwn }) => {
 /* ─── VOICE NOTE PLAYER (WhatsApp style) ──────────────── */
 const WAVEFORM_BARS = Array.from({ length: 28 }, () => Math.random() * 0.7 + 0.3);
 
-const VoiceNotePlayer = ({ file, isOwn }) => {
+const VoiceNotePlayer = ({ file }) => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -207,7 +207,7 @@ const VoiceNotePlayer = ({ file, isOwn }) => {
 
 /* ─── MESSAGE BUBBLE ─────────────────────────────────────── */
 export const MessageBubble = ({
-  msg, prevMsg, isOwn, allUsers, currentUser,
+  msg, prevMsg, isOwn, currentUser,
   onReact, onDelete, onEditRequest, onThreadOpen,
   onReply, density, onVote, onMarkUnread, onPin, pinnedMsgIds, isGroup
 }) => {
@@ -222,7 +222,6 @@ export const MessageBubble = ({
   const [showMobileActions, setShowMobileActions] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const anchorRef = useRef(null);
-  const addBtnRef = useRef(null);
   const overflowRef = useRef(null);
   const longPressTimer = useRef(null);
   const isMobile = useIsMobile();
@@ -427,7 +426,7 @@ export const MessageBubble = ({
                   )}
                 </div>
               ) : msg.file.type === 'audio' && msg.file.previewUrl ? (
-                <VoiceNotePlayer file={msg.file} isOwn={isOwn} />
+                <VoiceNotePlayer file={msg.file} />
               ) : (msg.file.type === 'whiteboard' || msg.file.type === 'collab-doc') ? (
                 <div className="collab-card" style={{ marginTop: msg.text ? 8 : 0 }}>
                   {msg.file.previewUrl && (

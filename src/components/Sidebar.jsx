@@ -5,7 +5,6 @@ import {
   getConvName,
   getConvColor,
   getConvInitials,
-  STATUS_COLORS,
   formatTime,
   formatFullTime,
   fmtCallDuration,
@@ -183,7 +182,7 @@ const ConvItem = ({ conv, active, onSelect, onDelete, onPin }) => {
 /* ═══════════════════════════════════════════════════════════
    CallHistoryList — Shown when "Calls" tab is active
    ═══════════════════════════════════════════════════════════ */
-const CallHistoryList = ({ callHistory, onCallSelect, onCallStart, search = '' }) => {
+const CallHistoryList = ({ callHistory, onCallStart, search = '' }) => {
   const [expandedIdx, setExpandedIdx] = useState(-1);
 
   const filtered = callHistory.filter((c) => {
@@ -395,7 +394,6 @@ const Sidebar = ({
   onDeleteConv,
   onPinConv,
   callHistory,
-  onCallSelect,
   onCallStart,
   onLogout,
   allMessages,
@@ -571,7 +569,6 @@ const Sidebar = ({
         {section === 'calls' ? (
           <CallHistoryList
             callHistory={callHistory}
-            onCallSelect={onCallSelect}
             onCallStart={onCallStart}
             search={search}
           />

@@ -697,7 +697,7 @@ export const GroupModal = ({ allUsers, currentUser, onClose, onCreate }) => {
 };
 
 /* ─── NEW DM MODAL ─────────────────────────────────────────── */
-export const NewDMModal = ({ allUsers, currentUser, conversations, onClose, onSelect }) => {
+export const NewDMModal = ({ allUsers, currentUser, onClose, onSelect }) => {
   const [search, setSearch] = useState('');
   const inputRef = useRef(null);
   const others = allUsers.filter(u => u.id !== currentUser.id);

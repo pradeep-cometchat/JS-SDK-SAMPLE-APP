@@ -28,14 +28,6 @@ export const VideoIcon = ({ size = 16 }) => (
   <MIcon name="videocam" size={size} />
 );
 
-export const UserIcon = ({ size = 15 }) => (
-  <MIcon name="person" size={size} />
-);
-
-export const UsersIcon = ({ size = 15 }) => (
-  <MIcon name="group" size={size} />
-);
-
 export const ThreadIcon = ({ size = 14 }) => (
   <MIcon name="chat_bubble_outline" size={size} />
 );
@@ -76,24 +68,8 @@ export const StarIcon = ({ size = 13 }) => (
   <MIcon name="star_outline" size={size} />
 );
 
-export const MuteIcon = ({ size = 13 }) => (
-  <MIcon name="mic_off" size={size} />
-);
-
-export const UnmuteIcon = ({ size = 13 }) => (
-  <MIcon name="mic" size={size} />
-);
-
-export const BlockIcon = ({ size = 14 }) => (
-  <MIcon name="block" size={size} />
-);
-
 export const CopyIcon = ({ size = 13 }) => (
   <MIcon name="content_copy" size={size} />
-);
-
-export const ForwardIcon = ({ size = 13 }) => (
-  <MIcon name="shortcut" size={size} />
 );
 
 export const PinIcon = ({ size = 13 }) => (
@@ -142,10 +118,6 @@ export const NewGroupIcon = () => (
 
 export const MicIcon = ({ size = 17 }) => (
   <MIcon name="mic" size={size} />
-);
-
-export const StopIcon = ({ size = 17 }) => (
-  <MIcon name="stop" size={size} fill />
 );
 
 export const InfoIcon = ({ size = 13 }) => (
