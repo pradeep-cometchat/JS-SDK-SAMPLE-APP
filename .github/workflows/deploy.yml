@@ -2,7 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - storybook-component-library
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,16 +20,57 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # ─── Checkout main branch → build the sample app ──────────────
+      - name: Checkout main (sample app)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-app
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Build sample app
+        working-directory: main-app
+        run: |
+          npm ci
+          npm run build
+
+      # ─── Checkout storybook branch → build the component library ──
+      - name: Checkout storybook branch
+        uses: actions/checkout@v4
         with:
-          path: dist
+          ref: storybook-component-library
+          path: storybook-app
+
+      - name: Build Storybook
+        working-directory: storybook-app
+        run: |
+          npm ci
+          # Build Storybook. We try to pass a base path so asset URLs
+          # resolve under /JS-SDK-SAMPLE-APP/storybook/, falling back to
+          # the default (which also works because the asset paths are
+          # relative).
+          npx storybook build -o storybook-static
+
+      # ─── Combine outputs into one deploy folder ───────────────────
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          # Main app goes at the root
+          cp -R main-app/dist/* _site/
+          # Storybook goes under /storybook/
+          mkdir -p _site/storybook
+          cp -R storybook-app/storybook-static/* _site/storybook/
+          ls -la _site
+          ls -la _site/storybook
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
   deploy:
     needs: build
