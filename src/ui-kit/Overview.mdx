@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview" />
+
+# CometChat Sample App — Component Library
+
+Storybook for the CometChat React sample app, modeled after the structure of
+the [CometChat Angular Storybook](https://storybook.cometchat.io/angular/).
+
+Every component page has a **Docs** tab at the top that lists:
+
+- A short description
+- A props / controls table (built from the component's interface)
+- Each story rendered with its **source code expanded** below
+- An **All Variants Showcase** at the bottom for a single-glance view
+
+---
+
+## Base Elements
+
+Shared primitives that are not tied to the chat domain. Used by nearly every
+component in the library.
+
+- **Avatar** — user image with initials fallback
+- **Status Dot** — green "online" indicator
+- **Button** — every button class used in the app (Primary, Ghost, Icon,
+  Header, Composer, Call controls, Region, Attach menu tile)
+- **Input** — every text input variant (form, login, sidebar search, chat
+  search, chat textarea, rich-text editor, emoji search, error)
+- **File Icon** — typed icons (image, pdf, video, audio, doc, default)
+- **Icons** — the full Material Symbols library (~70 icons)
+- **Emoji Keyboard** — categorized emoji picker
+- **Date** — timestamp helpers (formatTime, formatFullTime, fmtCallDuration)
+- **Bottom Sheet** — mobile action sheet patterns
+
+## App Screens
+
+Full end-to-end screens composed from the components below. Great for seeing
+how everything fits together.
+
+- **Web**
+  - **Login Screen** — Sign-In and App Credentials views
+  - **App Shell** — sidebar + chat, with threads, profile panels, group
+    members panel, call overlays, and modals
+- **Mobile**
+  - **Login Screen** — Sign-In and App Credentials on a phone viewport
+  - **App Shell** — sidebar and chat stacked, full-screen thread / profile /
+    call overlays, bottom-sheet modals
+
+## Web
+
+Web-specific renderings of each domain component.
+
+- **Conversations** — Conversations (full sidebar) · Conversation Item
+- **Messages** — Message Header · Message List · Message Composer · Thread Header · Thread View
+- **Bubbles** — Message Bubble (text, rich text, image, video, audio/voice-note, file, poll, whiteboard, collab doc, call card, deleted, edited)
+- **Users** — Users · User Item
+- **Groups** — Groups · Group Item · Group Members · Group Member Item
+- **Calls** — Call Buttons · Call Logs · Incoming Call · Ongoing Call · Outgoing Call
+- **Misc** — Attach Menu · Create Poll · Error Boundary · Message Preview · Profile Panel · Reactions · Typing Indicator
+
+## Mobile
+
+The same domain components rendered inside a 390×740 phone viewport iframe,
+where the `@media (max-width: 768px)` CSS activates (bottom sheets, stacked
+layout, full-screen overlays).
+
+- **Conversations** — Conversations · Conversation Item
+- **Messages** — Message Composer · Thread View
+- **Bubbles** — Message Bubble
+- **Users** — Users
+- **Groups** — Groups · Group Members
+- **Calls** — Call Logs · Incoming Call · Outgoing Call
+- **Misc** — Profile Panel
+
+---
+
+## Conventions
+
+Every component has a **Default** story and an **All Variants Showcase** story.
+Intermediate variant stories use descriptive names: `WithUnreadCount`,
+`Selected`, `EmptyState`, `LoadingState`, `ErrorState`.
+
+All story frames are centered in the canvas. Panel-like components are sized
+to their native width so there's no empty space on either side.

@@ -1,0 +1,60 @@
+import { useState } from 'react';
+import { ProfilePanel } from '../../components/Overlays';
+import { USERS, noop } from '../_helpers';
+
+export default {
+  title: 'Web/Misc/Profile Panel',
+  component: ProfilePanel,
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Side panel showing a user profile, About section, Call / Video actions, and Block / Unblock with confirm.',
+      },
+    },
+  },
+};
+
+const Frame = ({ children }) => (
+  <div style={{ display: 'flex', justifyContent: 'center', padding: 24, background: 'var(--bg)', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ height: 720, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', display: 'flex' }}>
+      {children}
+    </div>
+  </div>
+);
+
+export const Default = {
+  render: () => <Frame><ProfilePanel user={USERS[0]} onClose={noop} onCall={noop} onBlock={noop} blockedUsers={new Set()} /></Frame>,
+};
+
+export const OnlineUser = Default;
+
+export const OfflineUser = {
+  render: () => <Frame><ProfilePanel user={USERS[1]} onClose={noop} onCall={noop} onBlock={noop} blockedUsers={new Set()} /></Frame>,
+};
+
+export const BlockedUser = {
+  render: () => <Frame><ProfilePanel user={USERS[1]} onClose={noop} onCall={noop} onBlock={noop} blockedUsers={new Set(['u3'])} /></Frame>,
+};
+
+export const Interactive = {
+  render: () => {
+    const [blocked, setBlocked] = useState(new Set());
+    return (
+      <Frame>
+        <ProfilePanel
+          user={USERS[0]} onClose={noop}
+          onCall={(type, user) => alert(`Starting ${type} call with ${user.name}`)}
+          onBlock={(id) => setBlocked(prev => {
+            const next = new Set(prev);
+            next.has(id) ? next.delete(id) : next.add(id);
+            return next;
+          })}
+          blockedUsers={blocked}
+        />
+      </Frame>
+    );
+  },
+};
+
+export const AllVariantsShowcase = Default;

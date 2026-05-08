@@ -11,10 +11,11 @@ import {
   CallOverlay, ThreadPanel, ProfilePanel,
   GroupModal, NewDMModal, GroupMembersPanel,
 } from './components/Overlays';
+import { CheckIcon, BackIcon, ChatBubbleIcon } from './components/Icons';
 import './app.css';
 
 /* ─── ERROR BOUNDARY ──────────────────────────────────── */
-class ErrorBoundary extends Component {
+export class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -44,7 +45,7 @@ class ErrorBoundary extends Component {
 }
 
 /* ─── LOGIN SCREEN ────────────────────────────────────── */
-const LoginScreen = ({ onLogin }) => {
+export const LoginScreen = ({ onLogin }) => {
   const [selected, setSelected] = useState(CURRENT_USER.id);
   const [uid, setUid] = useState('');
   const [error, setError] = useState('');
@@ -129,7 +130,7 @@ const LoginScreen = ({ onLogin }) => {
               onClick={() => { setSelected(user.id); setUid(''); setError(''); }}>
               {selected === user.id && (
                 <div className="login-check">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  <CheckIcon size={10} />
                 </div>
               )}
               <div className="login-user-avatar"><Avatar user={user} size={avatarSize} /></div>
@@ -158,131 +159,6 @@ const LoginScreen = ({ onLogin }) => {
 /* ─── TWEAKS DEFAULTS ─────────────────────────────────── */
 const TWEAK_DEFAULTS = { theme: 'light', density: 'comfortable', accentColor: '#004EEB' };
 
-/* ─── DRAGGABLE FAB ────────────────────────────────────── */
-const DraggableFab = ({ showTweaks, setShowTweaks, tweaks, saveTweaks, setActiveCall, callStartTimeRef, setShowGroupModal, setShowNewDM, users }) => {
-  const [fabPos, setFabPos] = useState({ x: window.innerWidth - 60, y: window.innerHeight - 120 });
-  const [dragging, setDragging] = useState(false);
-  const dragStart = useRef(null);
-  const wasDragged = useRef(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setFabPos(prev => ({
-        x: Math.min(prev.x, window.innerWidth - 40),
-        y: Math.min(prev.y, window.innerHeight - 40),
-      }));
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (!dragging) return;
-    const handleMove = (e) => {
-      if (!dragStart.current) return;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      const dx = clientX - dragStart.current.mx;
-      const dy = clientY - dragStart.current.my;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) wasDragged.current = true;
-      setFabPos({
-        x: Math.max(0, Math.min(window.innerWidth - 40, dragStart.current.x + dx)),
-        y: Math.max(0, Math.min(window.innerHeight - 40, dragStart.current.y + dy)),
-      });
-    };
-    const handleUp = () => {
-      setDragging(false);
-      dragStart.current = null;
-    };
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('mouseup', handleUp);
-    window.addEventListener('touchmove', handleMove, { passive: false });
-    window.addEventListener('touchend', handleUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleUp);
-      window.removeEventListener('touchmove', handleMove);
-      window.removeEventListener('touchend', handleUp);
-    };
-  }, [dragging]);
-
-  const handleStart = (e) => {
-    wasDragged.current = false;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    dragStart.current = { x: fabPos.x, y: fabPos.y, mx: clientX, my: clientY };
-    setDragging(true);
-  };
-
-  const handleClick = () => {
-    if (!wasDragged.current) setShowTweaks(v => !v);
-  };
-
-  // Position tweaks panel relative to FAB
-  const panelStyle = {
-    position: 'fixed',
-    left: Math.min(fabPos.x, window.innerWidth - 260),
-    top: Math.max(0, fabPos.y - 320),
-    zIndex: 300,
-  };
-
-  return (
-    <>
-      <button
-        onMouseDown={handleStart}
-        onTouchStart={handleStart}
-        onClick={handleClick}
-        style={{
-          position: 'fixed', left: fabPos.x, top: fabPos.y, zIndex: 301,
-          width: 40, height: 40, borderRadius: '50%', background: 'var(--accent)', color: '#fff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 16px var(--accent-glow)', border: 'none',
-          cursor: dragging ? 'grabbing' : 'grab', userSelect: 'none',
-        }}
-        title="Tweaks"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
-      </button>
-      {showTweaks && (
-        <div className="tweaks-panel visible" style={panelStyle}>
-          <div className="tweaks-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
-            Tweaks
-          </div>
-          <div className="tweak-row">
-            <span className="tweak-label">Dark mode</span>
-            <button className={`tweak-toggle${tweaks.theme === 'dark' ? ' on' : ''}`} onClick={() => saveTweaks({ ...tweaks, theme: tweaks.theme === 'dark' ? 'light' : 'dark' })} />
-          </div>
-          <div className="tweak-row">
-            <span className="tweak-label">Density</span>
-            <select className="tweak-select" value={tweaks.density} onChange={e => saveTweaks({ ...tweaks, density: e.target.value })}>
-              <option value="comfortable">Comfortable</option>
-              <option value="compact">Compact</option>
-            </select>
-          </div>
-          <div className="tweak-row">
-            <span className="tweak-label">Accent color</span>
-            <input type="color" value={tweaks.accentColor} onChange={e => saveTweaks({ ...tweaks, accentColor: e.target.value })} style={{ width: 36, height: 28, border: '1px solid var(--border)', borderRadius: 6, cursor: 'pointer', padding: 2, background: 'none' }} />
-          </div>
-          <div style={{ height: 1, background: 'var(--border)', margin: '4px 0 12px' }} />
-          <div className="tweak-row">
-            <span className="tweak-label">Trigger call demo</span>
-            <button className="btn-primary-sm" style={{ fontSize: 11 }} onClick={() => { callStartTimeRef.current = Date.now(); setActiveCall({ type: 'video', user: users[1], incoming: true }); }}>Ring</button>
-          </div>
-          <div className="tweak-row">
-            <span className="tweak-label">Create group</span>
-            <button className="btn-ghost-sm" style={{ fontSize: 11 }} onClick={() => setShowGroupModal(true)}>Open</button>
-          </div>
-          <div className="tweak-row">
-            <span className="tweak-label">New message</span>
-            <button className="btn-ghost-sm" style={{ fontSize: 11 }} onClick={() => setShowNewDM(true)}>Open</button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
 /* ─── APP ─────────────────────────────────────────────── */
 const App = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -290,7 +166,6 @@ const App = () => {
     try { return { ...TWEAK_DEFAULTS, ...JSON.parse(localStorage.getItem('cc_tweaks') || '{}') }; }
     catch { return { ...TWEAK_DEFAULTS }; }
   });
-  const [showTweaks, setShowTweaks] = useState(false);
 
   // Mobile responsive state
   const [showSidebar, setShowSidebar] = useState(true);
@@ -565,11 +440,11 @@ const App = () => {
             <div className="empty-state">
               {isMobile && (
                 <button className="mobile-back-btn" onClick={handleBackToSidebar} style={{position:'absolute',top:16,left:16}}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                  <BackIcon size={20} />
                 </button>
               )}
               <div className="empty-state-icon">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <ChatBubbleIcon size={64} />
               </div>
               <h3 className="empty-state-title">Welcome to CometChat</h3>
               <p className="empty-state-text">Select a conversation from the sidebar to start chatting</p>
@@ -610,9 +485,6 @@ const App = () => {
       {activeCall && <CallOverlay call={activeCall} currentUser={loggedInUser} onAccept={() => { callStartTimeRef.current = Date.now(); }} onEnd={handleCallEnd} />}
       {showGroupModal && <GroupModal allUsers={USERS} currentUser={loggedInUser} onClose={() => setShowGroupModal(false)} onCreate={handleCreateGroup} />}
       {showNewDM && <NewDMModal allUsers={USERS} currentUser={loggedInUser} conversations={conversations} onClose={() => setShowNewDM(false)} onSelect={handleNewDM} />}
-
-      {/* Draggable Tweaks FAB */}
-      <DraggableFab showTweaks={showTweaks} setShowTweaks={setShowTweaks} tweaks={tweaks} saveTweaks={saveTweaks} setActiveCall={setActiveCall} callStartTimeRef={callStartTimeRef} setShowGroupModal={setShowGroupModal} setShowNewDM={setShowNewDM} users={USERS} />
     </div>
     </ErrorBoundary>
   );
