@@ -16,6 +16,27 @@ const useIsMobile = () => {
   return mobile;
 };
 
+// The floating menus (emoji picker, more-menu, delete confirm) sit ABOVE the
+// bubble by default. If the bubble is near the top of its scroll container
+// (e.g. the first visible message), there isn't enough room above and the menu
+// would be clipped by the chat header / scroll boundary. In that case we flip
+// the menu DOWN below the bubble. We measure against the scrollable ancestor
+// (`.msg-list`) rather than the viewport, so the behaviour is correct even
+// when the chat panel isn't at the top of the page.
+const shouldFlipDown = (anchorEl, menuHeight) => {
+  if (!anchorEl) return false;
+  const anchorRect = anchorEl.getBoundingClientRect();
+  // Find the scrollable ancestor — the .msg-list container.
+  const scroller = anchorEl.closest('.msg-list') || document.scrollingElement;
+  const scrollerTop = scroller
+    ? scroller.getBoundingClientRect().top
+    : 0;
+  // The menu pops up with a ~34px toolbar gap on top of its own height.
+  const GAP = 34;
+  const spaceAbove = anchorRect.top - scrollerTop;
+  return spaceAbove < (menuHeight + GAP);
+};
+
 /* ─── POLL VOTES MODAL ────────────────────────────────── */
 const PollVotesModal = ({ poll, onClose }) => {
   return createPortal(
@@ -462,10 +483,11 @@ export const MessageBubble = ({
           </div>
           {/* Emoji picker */}
           {showEmojiPicker && !isMobile && (() => {
-            const rect = anchorRef.current?.getBoundingClientRect();
-            const nearBottom = rect && rect.bottom > window.innerHeight - 280;
+            // Flip down when there isn't enough room above the bubble within the
+            // scroll container to fit the picker + toolbar gap.
+            const nearTop = shouldFlipDown(anchorRef.current, 260);
             return (
-              <div className={`mini-emoji-picker${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`}>
+              <div className={`mini-emoji-picker${isOwn ? ' own' : ''}${nearTop ? ' flip-up' : ''}`}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 4 }}>
                   {EMOJIS.map(e => (
                     <button key={e} className="emoji-btn" onClick={() => handleReact(e)}>{e}</button>
@@ -476,10 +498,11 @@ export const MessageBubble = ({
           })()}
           {/* More menu */}
           {showMoreMenu && !isMobile && (() => {
-            const rect = anchorRef.current?.getBoundingClientRect();
-            const nearBottom = rect && rect.bottom > window.innerHeight - 200;
+            // Own messages show 4 items (Copy/Pin/Mark unread/Message info), others show 3.
+            const menuHeight = isOwn ? 176 : 134;
+            const nearTop = shouldFlipDown(anchorRef.current, menuHeight);
             return (
-            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`}>
+            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearTop ? ' flip-up' : ''}`}>
               <button className="more-menu-item" onClick={() => {
                 const plain = msg.text ? new DOMParser().parseFromString(msg.text, 'text/html').body.textContent : '';
                 navigator.clipboard?.writeText(plain).then(() => { setCopiedToast(true); setTimeout(() => setCopiedToast(false), 1500); });
@@ -509,10 +532,9 @@ export const MessageBubble = ({
           )}
           {/* Delete confirm */}
           {showDeleteConfirm && !isMobile && (() => {
-            const rect = anchorRef.current?.getBoundingClientRect();
-            const nearBottom = rect && rect.bottom > window.innerHeight - 200;
+            const nearTop = shouldFlipDown(anchorRef.current, 60);
             return (
-            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearBottom ? ' flip-up' : ''}`} style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap', minWidth: 240 }}>
+            <div className={`bubble-menu${isOwn ? ' own' : ''}${nearTop ? ' flip-up' : ''}`} style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap', minWidth: 240 }}>
               <span style={{ fontSize: 13, flex: 1 }}>Delete this message?</span>
               <button className="btn-ghost-sm" onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
               <button className="btn-danger-sm" onClick={() => { onDelete(msg.id); setShowDeleteConfirm(false); }}>Delete</button>
